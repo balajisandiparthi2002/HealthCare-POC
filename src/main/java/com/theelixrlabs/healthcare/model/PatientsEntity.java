@@ -10,26 +10,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.UUID;
 
 /**
- * Entity class of Patient
+ * Entity class of Patients
  */
 @AllArgsConstructor
 @Data
-@Document(collection = "patient")
-public class Patient {
+@Document(collection = PatientConstants.PATIENTS_COLLECTION_NAME)
+public class PatientsEntity {
 
     @Id
-    private String uuId;
+    private UUID id;
 
-    @NotNull(message = PatientConstants.MANDATORY_FIELD_MESSAGE)
+    @NotNull(message = PatientConstants.FIRST_NAME_MISSING_MESSAGE)
     private String patientFirstName;
 
-    @NotNull(message = PatientConstants.MANDATORY_FIELD_MESSAGE)
+    @NotNull(message = PatientConstants.LAST_NAME_MISSING_MESSAGE)
     private String patientLastName;
 
-    @NotNull(message = PatientConstants.MANDATORY_FIELD_MESSAGE)
+    @NotNull(message = PatientConstants.AADHAAR_NUMBER_MISSING_MESSAGE)
     private String patientAadhaarNumber;
 
-    public Patient() {
-        this.uuId = UUID.randomUUID().toString();
+    public PatientsEntity() {
+        this.id = UUID.randomUUID();
     }
 }

@@ -1,10 +1,15 @@
 package com.theelixrlabs.healthcare.repository;
 
-import com.theelixrlabs.healthcare.model.Patient;
+import com.theelixrlabs.healthcare.model.PatientsEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-public interface PatientRepository extends MongoRepository<Patient, Integer> {
+import java.util.UUID;
+
+/**
+ * Repository layer of Patient module which will interact with the database
+ */
+public interface PatientRepository extends MongoRepository<PatientsEntity, UUID> {
     /**
      * Checks if the aadhaar number is present in the database
      *
