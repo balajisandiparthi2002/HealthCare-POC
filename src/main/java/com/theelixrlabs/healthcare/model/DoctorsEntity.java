@@ -19,7 +19,7 @@ public class DoctorsEntity {
     private String firstName;
     private String lastName;
     private String department;
-    private String aadhaarNumber;
+    private long aadhaarNumber;
 
     /**
      * Constructor to initialize a new DoctorsEntity object with a randomly generated UUID as ID.
