@@ -1,21 +1,20 @@
 package com.theelixrlabs.healthcare.repository;
 
-import com.theelixrlabs.healthcare.model.PatientsEntity;
+import com.theelixrlabs.healthcare.model.PatientModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * Repository layer of Patient module which will interact with the database
  */
-public interface PatientRepository extends MongoRepository<PatientsEntity, UUID> {
+public interface PatientRepository extends MongoRepository<PatientModel, UUID> {
     /**
-     * Checks if the aadhaar number is present in the database
+     * Checks for any document with specified aadhaarNumber present in db
      *
-     * @param aadhaarNumber aadhaar number as string
-     * @return true : if aadhaar number exists , false : if doesn't exists
+     * @param patientAadhaarNumber Patient Aadhaar Number as String
+     * @return PatientModel object
      */
-    @Query(value = "{ 'aadhaarNumber': ?0 }", exists = true)
-    boolean isAadhaarNumberExists(String aadhaarNumber);
+    Optional<PatientModel> findByPatientAadhaarNumber(String patientAadhaarNumber);
 }
