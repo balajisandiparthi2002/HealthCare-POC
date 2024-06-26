@@ -1,6 +1,7 @@
 package com.theelixrlabs.healthcare.model;
 
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
+import com.theelixrlabs.healthcare.constants.MessageConstants;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,14 +19,14 @@ import java.util.UUID;
 public class DoctorsEntity {
     @Id
     private UUID id;
-    @NotBlank(message = DoctorConstants.FIRST_NAME_SHOULD_BE_MANDATORY)
+    @NotBlank(message = MessageConstants.FIRST_NAME_SHOULD_BE_MANDATORY)
     private String firstName;
-    @NotBlank(message = DoctorConstants.LAST_NAME_SHOULD_BE_MANDATORY)
+    @NotBlank(message = MessageConstants.LAST_NAME_SHOULD_BE_MANDATORY)
     private String lastName;
-    @NotBlank(message = DoctorConstants.DEPARTMENT_SHOULD_BE_MANDATORY)
+    @NotBlank(message = MessageConstants.DEPARTMENT_SHOULD_BE_MANDATORY)
     private String department;
-    @NotBlank(message = DoctorConstants.AADHAAR_NUMBER_SHOULD_BE_MANDATORY)
-    @Pattern(regexp = DoctorConstants.AADHAAR_NUMBER_PATTERN, message = DoctorConstants.INVALID_AADHAAR_NUMBER_FORMAT)
+    @NotBlank(message = MessageConstants.AADHAAR_NUMBER_SHOULD_BE_MANDATORY)
+    @Pattern(regexp = DoctorConstants.AADHAAR_NUMBER_PATTERN, message = MessageConstants.INVALID_AADHAAR_NUMBER_FORMAT)
     private String aadhaarNumber;
 
     /**
