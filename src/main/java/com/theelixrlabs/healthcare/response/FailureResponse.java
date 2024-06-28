@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class FailureResponse {
-   private Boolean success;
+   private boolean success;
    private List<String> responseErrors;
 }

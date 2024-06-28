@@ -2,6 +2,7 @@ package com.theelixrlabs.healthcare.exceptionHandler;
 
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.response.FailureResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -28,7 +29,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<FailureResponse> handleValidationException(MethodArgumentNotValidException exception) {
         BindingResult errorResults = exception.getBindingResult();
         List<String> errorMessages = errorResults.getFieldErrors().stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
-        return ResponseEntity.badRequest().body(new FailureResponse(false, errorMessages));
+        return new ResponseEntity<>(new FailureResponse(false,errorMessages), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -37,9 +38,11 @@ public class GlobalExceptionHandler {
      * @param exception : exception instance thrown during runtime.
      * @return ResponseEntity failure response with error messages.
      */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<FailureResponse> handleIllegalArgumentException(Exception exception) {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<FailureResponse> handleAadhaarAlreadyPresentException(CustomException exception) {
         List<String> errorMessages = Arrays.asList(exception.getMessage().split(DoctorConstants.COMMA_DELIMITER));
-        return ResponseEntity.badRequest().body(new FailureResponse(false, errorMessages));
+        return new ResponseEntity<>(new FailureResponse(false,errorMessages), HttpStatus.BAD_REQUEST);
     }
+
+
 }

@@ -5,7 +5,6 @@ import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class DoctorController {
+    private final DoctorService doctorService;
 
-    @Autowired
-    DoctorService doctorService;
+    public DoctorController(DoctorService doctorService) {
+        this.doctorService = doctorService;
+    }
 
     /**
      * End point to create new doctor based on provided dto.
@@ -30,6 +31,6 @@ public class DoctorController {
     @PostMapping(DoctorConstants.CREATE_DOCTOR_END_POINT)
     public ResponseEntity<SuccessResponse<DoctorDto>> createDoctor(@Valid @RequestBody DoctorDto doctorDto) {
         DoctorDto createdDoctor = doctorService.saveDoctor(doctorDto);
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>(true, createdDoctor));
+        return new ResponseEntity<>(new SuccessResponse<>(true,createdDoctor),HttpStatus.OK);
     }
 }
