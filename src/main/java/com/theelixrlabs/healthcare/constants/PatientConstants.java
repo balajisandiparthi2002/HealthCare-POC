@@ -9,4 +9,5 @@ public class PatientConstants {
     public static final String INVALID_FIRST_NAME = "Invalid FirstName";
     public static final String INVALID_LAST_NAME = "Invalid LastName";
     public static final String LAST_NAME_SHOULD_NOT_BE_EMPTY = "LastName should not be empty";
+    public static final String PATIENTS_COLLECTION_NAME = "patients";
 }
