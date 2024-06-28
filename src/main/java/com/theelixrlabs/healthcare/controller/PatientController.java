@@ -2,10 +2,10 @@ package com.theelixrlabs.healthcare.controller;
 
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.PatientDTO;
+import com.theelixrlabs.healthcare.exceptionhandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatientService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,20 +19,23 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class PatientController {
-    @Autowired
-    private PatientService patientService;
+
+    private final PatientService patientService;
+
+    //Constructor Injection of PatientService
+    public PatientController(PatientService patientService) {
+        this.patientService = patientService;
+    }
 
     /**
      * Controller method for handling POST requests to create a new patient.
      *
-     * @param patientDTO The data transfer object (DTO) containing patient information.
-     * @return containing a SuccessResponse with the created PatientDTO and HTTP status 201(created).
+     * @param patientDTO    The data transfer object (DTO) containing patient information.
+     * @return ResponseEntity containing a SuccessResponse with the created PatientDTO and HTTP status 201 (created).
+     * @throws CustomException    if validation fails or if there are errors during patient creation.
      */
     @PostMapping(PatientConstants.CREATE_PATIENT_ENDPOINT)
-    public ResponseEntity<SuccessResponse<PatientDTO>> createPatient(@RequestBody @Valid PatientDTO patientDTO) {
-        SuccessResponse<PatientDTO> successResponse = new SuccessResponse<>();
-        successResponse.setSuccess(true);
-        successResponse.setResponseData(patientService.createPatient(patientDTO));
-        return new ResponseEntity<>(successResponse, HttpStatus.CREATED);
+    public ResponseEntity<SuccessResponse<PatientDTO>> addPatientDetails(@RequestBody @Valid PatientDTO patientDTO) throws CustomException {
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.addPatientDetails(patientDTO)), HttpStatus.CREATED);
     }
 }

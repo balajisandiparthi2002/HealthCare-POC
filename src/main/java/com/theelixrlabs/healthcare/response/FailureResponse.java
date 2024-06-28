@@ -13,7 +13,7 @@ public class FailureResponse {
     /**
      * Indicates whether the operation was successful.
      */
-    private Boolean success;
+    private boolean success;
     /**
      * List of error messages indicating the reasons for failure.
      */
