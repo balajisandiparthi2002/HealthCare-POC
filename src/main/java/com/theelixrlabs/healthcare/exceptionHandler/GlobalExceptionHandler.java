@@ -9,9 +9,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Global exception handler to handling exceptions thrown by REST controllers.
@@ -28,8 +29,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<FailureResponse> handleValidationException(MethodArgumentNotValidException exception) {
         BindingResult errorResults = exception.getBindingResult();
-        List<String> errorMessages = errorResults.getFieldErrors().stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
-        return new ResponseEntity<>(new FailureResponse(false,errorMessages), HttpStatus.BAD_REQUEST);
+        List<String> errorMessages = new ArrayList<>();
+        for (FieldError fieldError : errorResults.getFieldErrors()) {
+            errorMessages.add(fieldError.getDefaultMessage());
+        }
+        return new ResponseEntity<>(new FailureResponse(false, errorMessages), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -41,8 +45,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<FailureResponse> handleAadhaarAlreadyPresentException(CustomException exception) {
         List<String> errorMessages = Arrays.asList(exception.getMessage().split(DoctorConstants.COMMA_DELIMITER));
-        return new ResponseEntity<>(new FailureResponse(false,errorMessages), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new FailureResponse(false, errorMessages), HttpStatus.BAD_REQUEST);
     }
-
-
 }

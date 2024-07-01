@@ -32,10 +32,20 @@ public class DoctorService {
             throw new CustomException(DoctorConstants.AADHAAR_ALREADY_PRESENT);
         }
         UUID uuid = UUID.randomUUID();
-        DoctorEntity doctorEntity = DoctorEntity.builder().id(uuid).firstName(doctorDto.getFirstName()).lastName(doctorDto.getLastName()).department(doctorDto.getDepartment()).aadhaarNumber(doctorDto.getAadhaarNumber()).build();
+        DoctorEntity doctorEntity = DoctorEntity.builder()
+                .id(uuid).firstName(doctorDto.getFirstName())
+                .lastName(doctorDto.getLastName())
+                .department(doctorDto.getDepartment())
+                .aadhaarNumber(doctorDto.getAadhaarNumber())
+                .build();
         doctorRepository.save(doctorEntity);
-        DoctorDto savedDoctorDto;
-        savedDoctorDto = DoctorDto.builder().id(doctorEntity.getId()).firstName(doctorEntity.getFirstName()).lastName(doctorEntity.getLastName()).department(doctorEntity.getDepartment()).aadhaarNumber(doctorEntity.getAadhaarNumber()).build();
+        DoctorDto savedDoctorDto = DoctorDto.builder()
+                .id(doctorEntity.getId())
+                .firstName(doctorEntity.getFirstName())
+                .lastName(doctorEntity.getLastName())
+                .department(doctorEntity.getDepartment())
+                .aadhaarNumber(doctorEntity.getAadhaarNumber())
+                .build();
         return savedDoctorDto;
     }
 

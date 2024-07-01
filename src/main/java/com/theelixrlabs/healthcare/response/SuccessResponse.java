@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * A generic success response class to wrap success API responses.
+ *
  * @param <T> Type of data contained in response.
  */
 @Data

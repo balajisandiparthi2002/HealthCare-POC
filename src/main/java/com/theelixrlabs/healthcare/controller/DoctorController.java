@@ -31,6 +31,6 @@ public class DoctorController {
     @PostMapping(DoctorConstants.CREATE_DOCTOR_END_POINT)
     public ResponseEntity<SuccessResponse<DoctorDto>> createDoctor(@Valid @RequestBody DoctorDto doctorDto) {
         DoctorDto createdDoctor = doctorService.saveDoctor(doctorDto);
-        return new ResponseEntity<>(new SuccessResponse<>(true,createdDoctor),HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, createdDoctor), HttpStatus.OK);
     }
 }

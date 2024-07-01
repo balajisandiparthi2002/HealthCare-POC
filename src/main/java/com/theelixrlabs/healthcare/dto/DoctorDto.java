@@ -4,9 +4,7 @@ import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.UUID;
@@ -14,8 +12,6 @@ import java.util.UUID;
 /**
  * Data transfer object representing doctor information.
  */
-@Getter
-@Setter
 @NoArgsConstructor
 @Data
 @SuperBuilder
