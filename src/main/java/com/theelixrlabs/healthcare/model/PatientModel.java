@@ -1,8 +1,9 @@
 package com.theelixrlabs.healthcare.model;
 
 import com.theelixrlabs.healthcare.constants.PatientConstants;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,9 +12,10 @@ import java.util.UUID;
 /**
  * Entity class of Patients
  */
-@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Document(collection = PatientConstants.PATIENTS_COLLECTION_NAME)
+@SuperBuilder
 public class PatientModel {
 
     @Id
@@ -21,8 +23,4 @@ public class PatientModel {
     private String patientFirstName;
     private String patientLastName;
     private String patientAadhaarNumber;
-
-    public PatientModel() {
-        this.id = UUID.randomUUID();
-    }
 }
