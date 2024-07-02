@@ -6,9 +6,14 @@ import com.theelixrlabs.healthcare.exceptionhandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatientService;
 import jakarta.validation.Valid;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
@@ -21,10 +26,12 @@ import java.util.UUID;
 public class PatientController {
 
     private final PatientService patientService;
+    private final MessageSource messageSource;
 
-    //Constructor Injection of PatientService
-    public PatientController(PatientService patientService) {
+    //Constructor Injection of PatientService and MessageSource
+    public PatientController(PatientService patientService, MessageSource messageSource) {
         this.patientService = patientService;
+        this.messageSource = messageSource;
     }
 
     /**
@@ -51,8 +58,10 @@ public class PatientController {
         UUID patientId;
         try {
             patientId = UUID.fromString(id);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            throw new CustomException(PatientConstants.INVALID_UUID_KEY,messageSource);
         } catch (Exception exception) {
-            throw new CustomException(PatientConstants.INVALID_UUID);
+            throw new CustomException(exception.getMessage());
         }
         return new ResponseEntity<>(new SuccessResponse<>(true, patientService.getPatientById(patientId)), HttpStatus.OK);
     }
