@@ -12,10 +12,9 @@ public class DoctorConstants {
     public static final String COMMA_DELIMITER = ", ";
     public static final String CREATE_DOCTOR_END_POINT = "/saveDoctors";
     public static final String DEPARTMENT_SHOULD_BE_MANDATORY = "Department name should be mandatory!";
+    public static final String DOCTORS_COLLECTION_NAME = "doctors";
     public static final String FIRST_NAME_MUST_BE_CHARACTER = "First name should be character only!";
     public static final String FIRST_NAME_SHOULD_BE_MANDATORY = "First name should be mandatory!";
     public static final String LAST_NAME_MUST_BE_CHARACTER = "Last name should be character only!";
     public static final String LAST_NAME_SHOULD_BE_MANDATORY = "Last name should be mandatory!";
-    public static final String DOCTORS_COLLECTION_NAME = "doctors";
-    public static final String AADHAAR_NUMBER_PATTERN = "^\\d{12}$";
 }

@@ -2,7 +2,6 @@ package com.theelixrlabs.healthcare.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
 import java.util.List;
 
 /**
