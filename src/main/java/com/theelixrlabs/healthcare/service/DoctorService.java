@@ -2,11 +2,10 @@ package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
-import com.theelixrlabs.healthcare.modal.DoctorEntity;
+import com.theelixrlabs.healthcare.model.DoctorsEntity;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 /**
@@ -28,15 +27,19 @@ public class DoctorService {
      */
     public DoctorDto saveDoctor(DoctorDto doctorDto) throws CustomException {
         validateDoctor(doctorDto);
+        String aadhaarNumber = doctorDto.getAadhaarNumber();
+        String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + " " +
+                aadhaarNumber.substring(4, 8) + " " +
+                aadhaarNumber.substring(8, 12);
         if (doctorRepository.findByAadhaarNumber(doctorDto.getAadhaarNumber()).isPresent()) {
             throw new CustomException(DoctorConstants.AADHAAR_ALREADY_PRESENT);
         }
         UUID uuid = UUID.randomUUID();
-        DoctorEntity doctorEntity = DoctorEntity.builder()
+        DoctorsEntity doctorEntity = DoctorsEntity.builder()
                 .id(uuid).firstName(doctorDto.getFirstName())
                 .lastName(doctorDto.getLastName())
                 .department(doctorDto.getDepartment())
-                .aadhaarNumber(doctorDto.getAadhaarNumber())
+                .aadhaarNumber(formattedAadhaarNumber)
                 .build();
         doctorRepository.save(doctorEntity);
         DoctorDto savedDoctorDto = DoctorDto.builder()
@@ -55,7 +58,7 @@ public class DoctorService {
      * @param doctorDto : DoctorDto object containing doctor information.
      * @throws CustomException : Class to handle custom exception
      */
-    public void validateDoctor(DoctorDto doctorDto) throws CustomException {
+    private void validateDoctor(DoctorDto doctorDto) throws CustomException {
         if (!(doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
             throw new CustomException(DoctorConstants.FIRST_NAME_MUST_BE_CHARACTER);
         }
