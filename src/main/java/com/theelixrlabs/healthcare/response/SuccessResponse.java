@@ -5,12 +5,13 @@ import lombok.Data;
 
 /**
  * Represents a generic success response structure for API responses.
+ * A generic success response class to wrap success API responses.
  *
- * @param <User> the type of data included in the response.
+ * @param <T> Type of data contained in response.
  */
 @Data
 @AllArgsConstructor
-public class SuccessResponse<User> {
+public class SuccessResponse<T> {
     /**
      * Indicates whether the operation was successful.
      */
@@ -18,5 +19,5 @@ public class SuccessResponse<User> {
     /**
      * The data payload returned as part of the success response.
      */
-    private User responseData;
+    private T responseData;
 }

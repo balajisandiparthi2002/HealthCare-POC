@@ -5,6 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * A failure response class to wrap failure API responses.
  * Represents a failure response structure for API responses.
  */
 @Data
