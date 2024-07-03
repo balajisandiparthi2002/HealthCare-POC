@@ -1,46 +1,50 @@
-package com.theelixrlabs.healthcare.exceptionhandler;
+package com.theelixrlabs.healthcare.exceptionHandler;
 
+import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.response.FailureResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * Global exception handler to handle exceptions thrown by controller and service layers.
- * Validates input parameters based on the specified annotations.
+ * Global exception handler to handling exceptions thrown by REST controllers.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     /**
-     * Handles MethodArgumentNotValidException thrown when input parameters fail validation.
+     * Exception handler for MethodArgumentNotValidException.
      *
-     * @param methodArgumentNotValidException    The exception instance thrown during validation.
-     * @return ResponseEntity with FailureResponse containing validation error message and HTTP status BAD_REQUEST.
+     * @param exception : MethodArgumentNotValidException exception
+     * @return ResponseEntity failure response with error messages.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<FailureResponse> handleInvalidArgument(MethodArgumentNotValidException methodArgumentNotValidException) {
-        List<String> errors = new ArrayList<>();
-        for (FieldError fieldError : methodArgumentNotValidException.getBindingResult().getFieldErrors()) {
-            errors.add(fieldError.getDefaultMessage());
+    public ResponseEntity<FailureResponse> handleValidationException(MethodArgumentNotValidException exception) {
+        BindingResult errorResults = exception.getBindingResult();
+        List<String> errorMessages = new ArrayList<>();
+        for (FieldError fieldError : errorResults.getFieldErrors()) {
+            errorMessages.add(fieldError.getDefaultMessage());
         }
-        return new ResponseEntity<>(new FailureResponse(false, errors), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new FailureResponse(false, errorMessages), HttpStatus.BAD_REQUEST);
     }
 
     /**
-     * Handles RuntimeExceptions thrown by the application.
+     * Exception handler for custom exceptions and validations.
      *
-     * @param customException    The runtime exception instance.
-     * @return ResponseEntity with FailureResponse containing the runtime exception message.
+     * @param exception : exception instance thrown during runtime.
+     * @return ResponseEntity failure response with error messages.
      */
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<FailureResponse> handleExistingData(CustomException customException) {
-        List<String> errors = new ArrayList<>();
-        errors.add(customException.getMessage());
-        return new ResponseEntity<>(new FailureResponse(false, errors), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<FailureResponse> handleAadhaarAlreadyPresentException(CustomException exception) {
+        List<String> errorMessages = Arrays.asList(exception.getMessage().split(DoctorConstants.COMMA_DELIMITER));
+        return new ResponseEntity<>(new FailureResponse(false, errorMessages), HttpStatus.BAD_REQUEST);
     }
 }
