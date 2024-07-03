@@ -2,7 +2,7 @@ package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
-import com.theelixrlabs.healthcare.model.DoctorsEntity;
+import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import org.springframework.stereotype.Service;
@@ -35,19 +35,19 @@ public class DoctorService {
             throw new CustomException(DoctorConstants.AADHAAR_ALREADY_PRESENT);
         }
         UUID uuid = UUID.randomUUID();
-        DoctorsEntity doctorEntity = DoctorsEntity.builder()
+        DoctorModel doctorModel = DoctorModel.builder()
                 .id(uuid).firstName(doctorDto.getFirstName())
                 .lastName(doctorDto.getLastName())
                 .department(doctorDto.getDepartment())
                 .aadhaarNumber(formattedAadhaarNumber)
                 .build();
-        doctorRepository.save(doctorEntity);
+        doctorRepository.save(doctorModel);
         DoctorDto savedDoctorDto = DoctorDto.builder()
-                .id(doctorEntity.getId())
-                .firstName(doctorEntity.getFirstName())
-                .lastName(doctorEntity.getLastName())
-                .department(doctorEntity.getDepartment())
-                .aadhaarNumber(doctorEntity.getAadhaarNumber())
+                .id(doctorModel.getId())
+                .firstName(doctorModel.getFirstName())
+                .lastName(doctorModel.getLastName())
+                .department(doctorModel.getDepartment())
+                .aadhaarNumber(doctorModel.getAadhaarNumber())
                 .build();
         return savedDoctorDto;
     }
