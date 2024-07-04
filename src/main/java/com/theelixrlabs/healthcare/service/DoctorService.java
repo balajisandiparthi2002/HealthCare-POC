@@ -7,7 +7,6 @@ import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,12 +33,13 @@ public class DoctorService {
         if (doctorRepository.findByAadhaarNumber(aadhaarNumber).isPresent()) {
             throw new CustomException(DoctorConstants.AADHAAR_ALREADY_PRESENT);
         }
-        String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + " " +
-                aadhaarNumber.substring(4, 8) + " " +
+        String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + DoctorConstants.EMPTY_SPACE +
+                aadhaarNumber.substring(4, 8) + DoctorConstants.EMPTY_SPACE +
                 aadhaarNumber.substring(8, 12);
         UUID uuid = UUID.randomUUID();
         DoctorModel doctorModel = DoctorModel.builder()
-                .id(uuid).firstName(doctorDto.getFirstName())
+                .id(uuid)
+                .firstName(doctorDto.getFirstName())
                 .lastName(doctorDto.getLastName())
                 .department(doctorDto.getDepartment())
                 .aadhaarNumber(formattedAadhaarNumber)
@@ -81,7 +81,7 @@ public class DoctorService {
     public DoctorDto getDoctorById(UUID doctorId) throws CustomException {
         Optional<DoctorModel> doctorModelOptional = doctorRepository.findById(doctorId);
         if (doctorModelOptional.isEmpty()) {
-            throw new CustomException(MessageConstants.DOCTOR_NOT_FOUND);
+            throw new CustomException(MessageConstants.DOCTOR_UNAVAILABLE);
         }
         DoctorModel doctorModel = doctorModelOptional.get();
         return DoctorDto.builder()

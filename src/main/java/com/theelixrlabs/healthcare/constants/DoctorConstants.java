@@ -13,6 +13,7 @@ public class DoctorConstants {
     public static final String CREATE_DOCTOR_END_POINT = "/saveDoctors";
     public static final String DEPARTMENT_SHOULD_BE_MANDATORY = "Department name should be mandatory!";
     public static final String DOCTORS_COLLECTION_NAME = "doctors";
+    public static final String EMPTY_SPACE = " ";
     public static final String FIRST_NAME_MUST_BE_CHARACTER = "First name should be character only!";
     public static final String FIRST_NAME_SHOULD_BE_MANDATORY = "First name should be mandatory!";
     public static final String GET_DOCTOR_BY_ID_ENDPOINT = "/getDoctorById/{doctorId}";
