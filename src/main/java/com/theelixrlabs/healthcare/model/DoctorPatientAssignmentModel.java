@@ -1,5 +1,6 @@
 package com.theelixrlabs.healthcare.model;
 
+import com.theelixrlabs.healthcare.constants.DoctorPatientAssignmentConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @Data
 @SuperBuilder
-@Document(collection = MessageConstants.DB_COLLECTION_NAME)
+@Document(collection = DoctorPatientAssignmentConstants.DB_COLLECTION_NAME)
 public class DoctorPatientAssignmentModel {
     @Id
     private UUID id;
