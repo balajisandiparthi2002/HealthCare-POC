@@ -3,7 +3,6 @@ package com.theelixrlabs.healthcare.model;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
