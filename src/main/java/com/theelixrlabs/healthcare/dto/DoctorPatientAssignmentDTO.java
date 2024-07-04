@@ -21,13 +21,13 @@ public class DoctorPatientAssignmentDTO {
      * Required field marked with @NotNull validation.
      */
     @NotNull(message = MessageConstants.DOCTOR_ID_IS_MANDATORY)
-    private UUID doctorID;
+    private String doctorID;
     /**
      * Identifier of the patient associated with this assignment/unassignment.
      * Required field marked with @NotNull validation.
      */
     @NotNull(message = MessageConstants.PATIENT_ID_IS_MANDATORY)
-    private UUID patientID;
+    private String patientID;
     //Date when the operation (assign/unassign) occurred.
     private Date dateOfOperation;
 }
