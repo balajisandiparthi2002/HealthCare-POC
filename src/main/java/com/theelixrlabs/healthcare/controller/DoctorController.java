@@ -46,7 +46,7 @@ public class DoctorController {
      * @return ResponseEntity containing a success response with the retrieved DoctorDto.
      */
     @GetMapping(DoctorConstants.GET_DOCTOR_BY_ID_ENDPOINT)
-    public ResponseEntity<?> getDoctorById(@PathVariable("doctorId") String id) {
+    public ResponseEntity<?> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String id) {
         UUID doctorId;
         try {
             doctorId = UUID.fromString(id);

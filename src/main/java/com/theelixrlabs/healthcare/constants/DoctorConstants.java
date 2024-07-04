@@ -19,4 +19,5 @@ public class DoctorConstants {
     public static final String GET_DOCTOR_BY_ID_ENDPOINT = "/getDoctorById/{doctorId}";
     public static final String LAST_NAME_MUST_BE_CHARACTER = "Last name should be character only!";
     public static final String LAST_NAME_SHOULD_BE_MANDATORY = "Last name should be mandatory!";
+    public static final String PATH_VARIABLE_DOCTOR_ID = "doctorId";
 }
