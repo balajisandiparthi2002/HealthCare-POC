@@ -4,7 +4,7 @@ import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -13,11 +13,11 @@ import java.util.UUID;
 @Repository
 public interface DoctorPatientAssignmentRepository extends MongoRepository<DoctorPatientAssignmentModel, UUID> {
     /**
-     * Method declaration to find a DoctorPatientAssignmentModel by DoctorID and PatientID.
+     * Method declaration to find a DoctorPatientAssignmentModel by DoctorID and PatientID and date of unassignment not null
      *
-     * @param doctorID    UUID of the doctor associated with the assignment.
-     * @param patientID    UUID of the patient associated with the assignment.
+     * @param doctorId    UUID of the doctor associated with the assignment.
+     * @param patientId    UUID of the patient associated with the assignment.
      * @return Optional containing DoctorPatientAssignmentModel if found, empty otherwise.
      */
-    List<DoctorPatientAssignmentModel> findByDoctorIDAndPatientID(UUID doctorID, UUID patientID);
+    Optional<DoctorPatientAssignmentModel> findByDoctorIdAndPatientIdAndDateOfUnassignmentNull(UUID doctorId, UUID patientId);
 }

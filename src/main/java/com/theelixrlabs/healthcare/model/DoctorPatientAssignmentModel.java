@@ -20,9 +20,9 @@ public class DoctorPatientAssignmentModel {
     @Id
     private UUID id;
     @NotNull(message = MessageConstants.DOCTOR_ID_IS_MANDATORY)
-    private UUID doctorID;
+    private UUID doctorId;
     @NotNull(message = MessageConstants.PATIENT_ID_IS_MANDATORY)
-    private UUID patientID;
+    private UUID patientId;
     private Date dateOfAssignment;
     private Date dateOfUnassignment;
 }
