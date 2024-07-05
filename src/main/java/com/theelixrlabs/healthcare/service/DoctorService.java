@@ -33,12 +33,13 @@ public class DoctorService {
     public DoctorDto saveDoctor(DoctorDto doctorDto) throws CustomException {
         validateDoctor(doctorDto);
         String aadhaarNumber = doctorDto.getAadhaarNumber();
-        if (doctorRepository.findByAadhaarNumber(aadhaarNumber).isPresent()) {
-            throw new CustomException(DoctorConstants.AADHAAR_ALREADY_PRESENT);
-        }
+
         String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + DoctorConstants.EMPTY_SPACE +
                 aadhaarNumber.substring(4, 8) + DoctorConstants.EMPTY_SPACE +
                 aadhaarNumber.substring(8, 12);
+        if (doctorRepository.findByAadhaarNumber(formattedAadhaarNumber).isPresent()) {
+            throw new CustomException(MessageConstants.AADHAAR_ALREADY_PRESENT,messageSource);
+        }
         UUID uuid = UUID.randomUUID();
         DoctorModel doctorModel = DoctorModel.builder()
                 .id(uuid)
@@ -65,14 +66,21 @@ public class DoctorService {
      * @throws CustomException : Class to handle custom exception
      */
     private void validateDoctor(DoctorDto doctorDto) throws CustomException {
-        if (!(doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
-            throw new CustomException(DoctorConstants.FIRST_NAME_MUST_BE_CHARACTER);
+
+        if (doctorDto.getFirstName().isEmpty()) {
+            throw new CustomException(MessageConstants.FIRST_NAME_SHOULD_NOT_EMPTY,messageSource);
+        } else if (!(doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
+            throw new CustomException(MessageConstants.INVALID_FIRSTNAME,messageSource);
         }
-        if (!(doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
-            throw new CustomException(DoctorConstants.LAST_NAME_MUST_BE_CHARACTER);
+        if (doctorDto.getLastName().isEmpty()) {
+            throw new CustomException(MessageConstants.LAST_NAME_SHOULD_NOT_EMPTY,messageSource);
+        } else if (!(doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
+            throw new CustomException(MessageConstants.INVALID_LASTNAME,messageSource);
         }
-        if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
-            throw new CustomException(DoctorConstants.AADHAAR_NUMBER_PATTERN_MESSAGE);
+        if (doctorDto.getAadhaarNumber().isEmpty()) {
+            throw new CustomException(MessageConstants.AADHAAR_SHOULD_NOT_EMPTY,messageSource);
+        } else if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
+            throw new CustomException(MessageConstants.INVALID_AADHAAR_NUMBER,messageSource);
         }
     }
 
@@ -84,7 +92,7 @@ public class DoctorService {
     public DoctorDto getDoctorById(UUID doctorId) throws CustomException {
         Optional<DoctorModel> doctorModelOptional = doctorRepository.findById(doctorId);
         if (doctorModelOptional.isEmpty()) {
-            throw new CustomException(MessageConstants.DOCTOR_UNAVAILABLE,messageSource);
+            throw new CustomException(MessageConstants.DOCTOR_UNAVAILABLE, messageSource);
         }
         DoctorModel doctorModel = doctorModelOptional.get();
         return DoctorDto.builder()
