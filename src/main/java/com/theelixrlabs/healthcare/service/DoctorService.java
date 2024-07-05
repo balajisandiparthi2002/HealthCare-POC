@@ -6,6 +6,7 @@ import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,9 +17,11 @@ import java.util.UUID;
 @Service
 public class DoctorService {
     private final DoctorRepository doctorRepository;
+    private final MessageSource messageSource;
 
-    public DoctorService(DoctorRepository doctorRepository) {
+    public DoctorService(DoctorRepository doctorRepository, MessageSource messageSource) {
         this.doctorRepository = doctorRepository;
+        this.messageSource = messageSource;
     }
 
     /**
@@ -81,7 +84,7 @@ public class DoctorService {
     public DoctorDto getDoctorById(UUID doctorId) throws CustomException {
         Optional<DoctorModel> doctorModelOptional = doctorRepository.findById(doctorId);
         if (doctorModelOptional.isEmpty()) {
-            throw new CustomException(MessageConstants.DOCTOR_UNAVAILABLE);
+            throw new CustomException(MessageConstants.DOCTOR_UNAVAILABLE,messageSource);
         }
         DoctorModel doctorModel = doctorModelOptional.get();
         return DoctorDto.builder()

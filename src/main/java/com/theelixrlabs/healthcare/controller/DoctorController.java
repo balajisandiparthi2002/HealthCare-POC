@@ -7,6 +7,7 @@ import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import jakarta.validation.Valid;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +23,11 @@ import java.util.UUID;
 @RestController
 public class DoctorController {
     private final DoctorService doctorService;
+    private final MessageSource messageSource;
 
-    public DoctorController(DoctorService doctorService) {
+    public DoctorController(DoctorService doctorService, MessageSource messageSource) {
         this.doctorService = doctorService;
+        this.messageSource = messageSource;
     }
 
     /**
@@ -51,7 +54,7 @@ public class DoctorController {
         try {
             doctorId = UUID.fromString(id);
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(MessageConstants.INVALID_UUID);
+            throw new CustomException(MessageConstants.INVALID_UUID, messageSource);
         }
         DoctorDto doctorDto = doctorService.getDoctorById(doctorId);
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDto), HttpStatus.OK);
