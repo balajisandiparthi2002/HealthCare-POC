@@ -27,6 +27,6 @@ public class DoctorDto {
     @NotBlank(message = DoctorConstants.DEPARTMENT_SHOULD_BE_MANDATORY)
     private String department;
 
-    @NotNull(message = DoctorConstants.AADHAAR_SHOULD_BE_MANDATORY)
+    @NotBlank(message = DoctorConstants.AADHAAR_SHOULD_BE_MANDATORY)
     private String aadhaarNumber;
 }

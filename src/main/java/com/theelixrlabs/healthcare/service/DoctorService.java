@@ -31,9 +31,10 @@ public class DoctorService {
         String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + " " +
                 aadhaarNumber.substring(4, 8) + " " +
                 aadhaarNumber.substring(8, 12);
-        if (doctorRepository.findByAadhaarNumber(doctorDto.getAadhaarNumber()).isPresent()) {
+        if (doctorRepository.findByAadhaarNumber(formattedAadhaarNumber).isPresent()) {
             throw new CustomException(DoctorConstants.AADHAAR_ALREADY_PRESENT);
         }
+
         UUID uuid = UUID.randomUUID();
         DoctorModel doctorModel = DoctorModel.builder()
                 .id(uuid).firstName(doctorDto.getFirstName())
@@ -52,21 +53,22 @@ public class DoctorService {
         return savedDoctorDto;
     }
 
-    /**
-     * Custom validation method for checking regex pattern of firstname lastname and Aadhaar number
-     *
-     * @param doctorDto : DoctorDto object containing doctor information.
-     * @throws CustomException : Class to handle custom exception
-     */
     private void validateDoctor(DoctorDto doctorDto) throws CustomException {
-        if (!(doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
-            throw new CustomException(DoctorConstants.FIRST_NAME_MUST_BE_CHARACTER);
+
+        if (doctorDto.getFirstName().isEmpty()) {
+            throw new CustomException(DoctorConstants.FIRST_NAME_SHOULD_NOT_EMPTY);
+        } else if (!(doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
+            throw new CustomException(DoctorConstants.INVALID_FIRSTNAME);
         }
-        if (!(doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
-            throw new CustomException(DoctorConstants.LAST_NAME_MUST_BE_CHARACTER);
+        if (doctorDto.getLastName().isEmpty()) {
+            throw new CustomException(DoctorConstants.LAST_NAME_SHOULD_NOT_EMPTY);
+        } else if (!(doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
+            throw new CustomException(DoctorConstants.INVALID_LASTNAME);
         }
-        if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
-            throw new CustomException(DoctorConstants.AADHAAR_NUMBER_PATTERN_MESSAGE);
+        if (doctorDto.getAadhaarNumber().isEmpty()) {
+            throw new CustomException(DoctorConstants.LAST_NAME_SHOULD_NOT_EMPTY);
+        } else if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
+            throw new CustomException(DoctorConstants.INVALID_AADHAAR_NUMBER);
         }
     }
 }
