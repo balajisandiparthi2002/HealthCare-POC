@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -21,13 +22,13 @@ public class DoctorPatientAssignmentDTO {
      * Required field marked with @NotNull validation.
      */
     @NotNull(message = MessageConstants.DOCTOR_ID_IS_MANDATORY)
-    private UUID doctorID;
+    private UUID doctorId;
     /**
      * Identifier of the patient associated with this assignment/unassignment.
      * Required field marked with @NotNull validation.
      */
     @NotNull(message = MessageConstants.PATIENT_ID_IS_MANDATORY)
-    private UUID patientID;
+    private UUID patientId;
     //Date when the operation (assign/unassign) occurred.
     private Date dateOfOperation;
 }

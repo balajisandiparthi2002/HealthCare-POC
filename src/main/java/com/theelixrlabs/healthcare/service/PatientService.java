@@ -1,13 +1,17 @@
 package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.PatientConstants;
+import com.theelixrlabs.healthcare.dao.DoctorPatientAssignmentRepository;
 import com.theelixrlabs.healthcare.dto.PatientDTO;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
+import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.PatientRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,10 +26,13 @@ public class PatientService {
 
     private final MessageSource messageSource;
 
+    private final DoctorPatientAssignmentRepository doctorPatientAssignmentRepository;
+
     //Constructor injection of PatientRepository and MessageSource
-    public PatientService(PatientRepository patientRepository, MessageSource messageSource) {
+    public PatientService(PatientRepository patientRepository, MessageSource messageSource, DoctorPatientAssignmentRepository doctorPatientAssignmentRepository) {
         this.patientRepository = patientRepository;
         this.messageSource = messageSource;
+        this.doctorPatientAssignmentRepository = doctorPatientAssignmentRepository;
     }
 
     /**
@@ -38,17 +45,27 @@ public class PatientService {
 
         //Validate first name
         if (patientDTO.getPatientFirstName().isEmpty()) {
-            throw new CustomException(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY,messageSource);
+            throw new CustomException(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY, messageSource);
         } else if (!patientDTO.getPatientFirstName().matches(PatientConstants.ALPHA_CHARACTERS_ONLY_REGEX)) {
-            throw new CustomException(PatientConstants.INVALID_FIRST_NAME_KEY,messageSource);
+            throw new CustomException(PatientConstants.INVALID_FIRST_NAME_KEY, messageSource);
         }
 
         //Validate last name
         if (patientDTO.getPatientLastName().isEmpty()) {
-            throw new CustomException(PatientConstants.LAST_NAME_SHOULD_NOT_EMPTY_KEY,messageSource);
+            throw new CustomException(PatientConstants.LAST_NAME_SHOULD_NOT_EMPTY_KEY, messageSource);
         } else if (!patientDTO.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_ONLY_REGEX)) {
-            throw new CustomException(PatientConstants.INVALID_LAST_NAME_KEY,messageSource);
+            throw new CustomException(PatientConstants.INVALID_LAST_NAME_KEY, messageSource);
         }
+    }
+
+    private UUID validateUUID(String id) {
+        UUID patientId;
+        try {
+            patientId = UUID.fromString(id);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            throw new CustomException(PatientConstants.INVALID_UUID_KEY, messageSource);
+        }
+        return patientId;
     }
 
     /**
@@ -69,7 +86,7 @@ public class PatientService {
 
         //Check if aadhaar number already exists.
         if (patientRepository.findByPatientAadhaarNumber(formattedAadhaarNumber).isPresent()) {
-            throw new CustomException(PatientConstants.AADHAAR_NUMBER_EXISTS_KEY,messageSource);
+            throw new CustomException(PatientConstants.AADHAAR_NUMBER_EXISTS_KEY, messageSource);
         }
 
         //Generate UUID for new Patient
@@ -102,9 +119,11 @@ public class PatientService {
      * @return PatientDTO object for the ID
      * @throws CustomException If no patient found with the ID
      */
-    public PatientDTO getPatientById(UUID patientId) throws CustomException {
-        Optional<PatientModel> patientModelOptional = patientRepository.findById(patientId);
-        if (patientModelOptional.isEmpty()) throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY,messageSource);
+    public PatientDTO getPatientById(String patientId) throws CustomException {
+        UUID patientID = validateUUID(patientId);
+        Optional<PatientModel> patientModelOptional = patientRepository.findById(patientID);
+        if (patientModelOptional.isEmpty())
+            throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY, messageSource);
         PatientModel patientModel = patientModelOptional.get();
         //mapping patient model to patientDTO
         return PatientDTO.builder()
@@ -113,5 +132,26 @@ public class PatientService {
                 .patientLastName(patientModel.getPatientLastName())
                 .patientAadhaarNumber(patientModel.getPatientAadhaarNumber())
                 .build();
+    }
+
+    /**
+     * Deletes a patient by their ID, if conditions are met.
+     *
+     * @param patientId The ID of the patient to delete.
+     * @return A success message upon successful deletion.
+     * @throws CustomException If the patient is not found or is currently assigned to a doctor.
+     */
+    public String deletePatientById(String patientId) throws CustomException {
+        UUID validPatientId = validateUUID(patientId);
+        Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
+        if (patientModelOptional.isEmpty())
+            throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY, messageSource);
+        List<DoctorPatientAssignmentModel> patientAssignmentList = doctorPatientAssignmentRepository.findByPatientId(validPatientId);
+        if (!patientAssignmentList.isEmpty()) {
+            throw new CustomException(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR, messageSource);
+        }
+        patientRepository.deleteById(validPatientId);
+        Object[] dynamicArguments = {patientId};
+        return messageSource.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, dynamicArguments, Locale.getDefault());
     }
 }
