@@ -3,7 +3,6 @@ package com.theelixrlabs.healthcare.controller;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
-import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
@@ -76,7 +75,7 @@ public class DoctorController {
     @GetMapping(DoctorConstants.GET_DOCTORS_BY_NAME_ENDPOINT)
     public ResponseEntity<SuccessResponse<List<DoctorDto>>> getDoctorsByName
     (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) {
-        List<DoctorDto> doctorDtoList = doctorService.searchDoctorByName(doctorName);
+        List<DoctorDto> doctorDtoList = doctorService.getDoctorsByName(doctorName);
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDtoList), HttpStatus.OK);
     }
 }

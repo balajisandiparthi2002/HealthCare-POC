@@ -10,7 +10,6 @@ import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +114,7 @@ public class DoctorService {
      * @param doctorName doctorName the name of the doctor to search for
      * @return a list of DoctorDto objects representing the matching doctors
      */
-    public List<DoctorDto> searchDoctorByName(String doctorName) {
+    public List<DoctorDto> getDoctorsByName(String doctorName) {
         doctorModelValidator.validateDoctorName(doctorName);
         List<DoctorModel> doctorModelList = doctorRepository.searchByDoctorName(doctorName);
         if (doctorModelList.isEmpty()) {
