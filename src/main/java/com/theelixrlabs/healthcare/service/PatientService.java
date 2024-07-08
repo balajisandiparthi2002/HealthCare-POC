@@ -10,6 +10,7 @@ import com.theelixrlabs.healthcare.repository.PatientRepository;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -94,11 +95,12 @@ public class PatientService {
     /**
      * Get the PatientModel object associated with ID
      *
-     * @param validPatientId    Patient ID as UUID
+     * @param patientId    Patient ID as UUID
      * @return PatientDTO object for the ID
      * @throws CustomException    If no patient found with the ID
      */
-    public PatientDTO getPatientById(UUID validPatientId) throws CustomException {
+    public PatientDTO getPatientById(String patientId) throws CustomException {
+        UUID validPatientId = validator.validateUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
         if (patientModelOptional.isEmpty())
             throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY, messageSource);
@@ -115,12 +117,15 @@ public class PatientService {
     /**
      * Deletes a patient by their ID, if conditions are met.
      *
-     * @param validPatientId    The ID of the patient to delete.
+     * @param patientId    The ID of the patient to delete.
      * @return A success message upon successful deletion.
      * @throws CustomException    If the patient is not found or is currently assigned to a doctor.
      */
-    public String deletePatientById(UUID validPatientId) throws CustomException {
-        getPatientById(validPatientId);
+    public String deletePatientById(String patientId) throws CustomException {
+        UUID validPatientId = validator.validateUUID(patientId, PatientConstants.INVALID_UUID_KEY);
+        Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
+        if (patientModelOptional.isEmpty())
+            throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY, messageSource);
         if (isPatientAssignedToDoctor(validPatientId)) {
             throw new CustomException(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR, messageSource);
         }

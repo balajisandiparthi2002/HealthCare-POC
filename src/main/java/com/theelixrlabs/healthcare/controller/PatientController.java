@@ -5,9 +5,7 @@ import com.theelixrlabs.healthcare.dto.PatientDTO;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatientService;
-import com.theelixrlabs.healthcare.validation.Validator;
 import jakarta.validation.Valid;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
-
-import java.util.UUID;
 
 /**
  * Patient Controller layer, which interacts with the user.
@@ -29,12 +25,9 @@ public class PatientController {
 
     private final PatientService patientService;
 
-    private final Validator validator;
-
     //Constructor Injection of PatientService and MessageSource
-    public PatientController(PatientService patientService, Validator validator) {
+    public PatientController(PatientService patientService) {
         this.patientService = patientService;
-        this.validator=validator;
     }
 
     /**
@@ -58,8 +51,7 @@ public class PatientController {
      */
     @GetMapping(PatientConstants.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<?> getPatientById(@PathVariable String patientId) throws CustomException {
-        UUID validPatientId=validator.validateUUID(patientId,PatientConstants.INVALID_UUID_KEY);
-        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.getPatientById(validPatientId)), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.getPatientById(patientId)), HttpStatus.OK);
     }
 
     /**
@@ -71,7 +63,6 @@ public class PatientController {
      */
     @DeleteMapping(PatientConstants.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<String>> deletePatientById(@PathVariable String patientId) throws CustomException {
-        UUID validPatientId=validator.validateUUID(patientId,PatientConstants.INVALID_UUID_KEY);
-        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.deletePatientById(validPatientId)), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.deletePatientById(patientId)), HttpStatus.OK);
     }
 }

@@ -13,11 +13,11 @@ import java.util.UUID;
 @Repository
 public interface DoctorPatientAssignmentRepository extends MongoRepository<DoctorPatientAssignmentModel, UUID> {
     /**
-     * Method declaration to find a DoctorPatientAssignmentModel by DoctorID and PatientID.
+     * Retrieves a list of DoctorPatientAssignmentModel objects based on the provided doctorId and patientId.
      *
-     * @param doctorId    UUID of the doctor associated with the assignment.
-     * @param patientId    UUID of the patient associated with the assignment.
-     * @return Optional containing DoctorPatientAssignmentModel if found, empty otherwise.
+     * @param doctorId The UUID of the doctor associated with the assignments to search for.
+     * @param patientId The UUID of the patient associated with the assignments to search for.
+     * @return A list of DoctorPatientAssignmentModel objects that match both the given doctorId and patientId.
      */
     List<DoctorPatientAssignmentModel> findByDoctorIdAndPatientId(UUID doctorId, UUID patientId);
 
