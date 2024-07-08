@@ -9,6 +9,8 @@ import com.theelixrlabs.healthcare.dto.DoctorDto;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -33,12 +35,11 @@ public class DoctorService {
     public DoctorDto saveDoctor(DoctorDto doctorDto) throws CustomException {
         validateDoctor(doctorDto);
         String aadhaarNumber = doctorDto.getAadhaarNumber();
-
         String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + DoctorConstants.EMPTY_SPACE +
                 aadhaarNumber.substring(4, 8) + DoctorConstants.EMPTY_SPACE +
                 aadhaarNumber.substring(8, 12);
         if (doctorRepository.findByAadhaarNumber(formattedAadhaarNumber).isPresent()) {
-            throw new CustomException(MessageConstants.AADHAAR_ALREADY_PRESENT,messageSource);
+            throw new CustomException(MessageConstants.AADHAAR_ALREADY_PRESENT, messageSource);
         }
         UUID uuid = UUID.randomUUID();
         DoctorModel doctorModel = DoctorModel.builder()
@@ -66,21 +67,20 @@ public class DoctorService {
      * @throws CustomException : Class to handle custom exception
      */
     private void validateDoctor(DoctorDto doctorDto) throws CustomException {
-
         if (doctorDto.getFirstName().isEmpty()) {
-            throw new CustomException(MessageConstants.FIRST_NAME_SHOULD_NOT_EMPTY,messageSource);
+            throw new CustomException(MessageConstants.FIRST_NAME_SHOULD_NOT_EMPTY, messageSource);
         } else if (!(doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
-            throw new CustomException(MessageConstants.INVALID_FIRSTNAME,messageSource);
+            throw new CustomException(MessageConstants.INVALID_FIRSTNAME, messageSource);
         }
         if (doctorDto.getLastName().isEmpty()) {
-            throw new CustomException(MessageConstants.LAST_NAME_SHOULD_NOT_EMPTY,messageSource);
+            throw new CustomException(MessageConstants.LAST_NAME_SHOULD_NOT_EMPTY, messageSource);
         } else if (!(doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
-            throw new CustomException(MessageConstants.INVALID_LASTNAME,messageSource);
+            throw new CustomException(MessageConstants.INVALID_LASTNAME, messageSource);
         }
         if (doctorDto.getAadhaarNumber().isEmpty()) {
-            throw new CustomException(MessageConstants.AADHAAR_SHOULD_NOT_EMPTY,messageSource);
+            throw new CustomException(MessageConstants.AADHAAR_SHOULD_NOT_EMPTY, messageSource);
         } else if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
-            throw new CustomException(MessageConstants.INVALID_AADHAAR_NUMBER,messageSource);
+            throw new CustomException(MessageConstants.INVALID_AADHAAR_NUMBER, messageSource);
         }
     }
 
@@ -102,5 +102,27 @@ public class DoctorService {
                 .department(doctorModel.getDepartment())
                 .aadhaarNumber(doctorModel.getAadhaarNumber())
                 .build();
+    }
+
+    /**
+     * Searches for doctors by their name and returns a list of DoctorDto objects.
+     *
+     * @param doctorName doctorName the name of the doctor to search for
+     * @return a list of DoctorDto objects representing the matching doctors
+     */
+    public List<DoctorDto> searchDoctorByName(String doctorName) {
+        List<DoctorModel> doctorModelList = doctorRepository.searchByDoctorName(doctorName);
+        List<DoctorDto> doctorDtoList = new ArrayList<>();
+        for (DoctorModel doctorModel : doctorModelList) {
+            DoctorDto doctorDto = DoctorDto.builder()
+                    .id(doctorModel.getId())
+                    .firstName(doctorModel.getFirstName())
+                    .lastName(doctorModel.getLastName())
+                    .department(doctorModel.getDepartment())
+                    .aadhaarNumber(doctorModel.getAadhaarNumber())
+                    .build();
+            doctorDtoList.add(doctorDto);
+        }
+        return doctorDtoList;
     }
 }
