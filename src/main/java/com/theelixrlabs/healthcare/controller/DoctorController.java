@@ -3,6 +3,7 @@ package com.theelixrlabs.healthcare.controller;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
+import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
@@ -77,7 +78,7 @@ public class DoctorController {
         doctorModelValidator.validateDoctorName(doctorName);
         List<DoctorDto> doctorDtoList = doctorService.searchDoctorByName(doctorName);
         if (doctorDtoList.isEmpty()) {
-            throw new CustomException(MessageConstants.NO_DOCTOR_FOUND, messageSource);
+            throw new ResourceNotFoundException(MessageConstants.NO_DOCTOR_FOUND, messageSource);
         }
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDtoList), HttpStatus.OK);
     }
