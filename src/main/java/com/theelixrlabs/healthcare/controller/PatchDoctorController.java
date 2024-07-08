@@ -31,21 +31,21 @@ public class PatchDoctorController {
     /**
      * Controller method for handling incoming Patch request.
      *
-     * @param id        Doctor id as string.
+     * @param doctorId  Doctor id as string.
      * @param doctorDto Data transfer object containing doctor information.
      * @return ResponseEntity containing success response alone with modified doctor details.
      */
     @PatchMapping(DoctorConstants.PATCH_DOCTOR_ENDPOINT)
-    public ResponseEntity<SuccessResponse<DoctorDto>> patchDoctorById(@PathVariable String id, @RequestBody DoctorDto doctorDto) {
-        UUID doctorId;
+    public ResponseEntity<SuccessResponse<DoctorDto>> patchDoctorById(@PathVariable String doctorId, @RequestBody DoctorDto doctorDto) {
+        UUID uuid;
         try {
-            doctorId = UUID.fromString(id);
+            uuid = UUID.fromString(doctorId);
         } catch (IllegalArgumentException illegalArgumentException) {
             throw new CustomException(MessageConstants.INVALID_UUID);
         } catch (Exception exception) {
             throw new CustomException(exception.getMessage());
         }
-        DoctorDto newDoctorDto = patchDoctorService.patchDoctorById(doctorId, doctorDto);
+        DoctorDto newDoctorDto = patchDoctorService.patchDoctorById(uuid, doctorDto);
         return new ResponseEntity<>(new SuccessResponse<>(true, newDoctorDto), HttpStatus.OK);
     }
 }

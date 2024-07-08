@@ -15,26 +15,26 @@ public class Validator {
     public void validateDoctor(DoctorDto doctorDto) throws CustomException {
         if (doctorDto.getFirstName() != null) {
             if (doctorDto.getFirstName().isEmpty()) {
-                throw new CustomException(MessageConstants.FIRST_NAME_SHOULD_NOT_EMPTY);
+                throw new CustomException(MessageConstants.FIRST_NAME_SHOULD_NOT_BE_EMPTY);
             } else if (!doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN)) {
                 throw new CustomException(MessageConstants.INVALID_FIRSTNAME);
             }
         }
         if (doctorDto.getLastName() != null) {
             if (doctorDto.getLastName().isEmpty()) {
-                throw new CustomException(MessageConstants.LAST_NAME_SHOULD_NOT_EMPTY);
+                throw new CustomException(MessageConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY);
             } else if (!doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN)) {
                 throw new CustomException(MessageConstants.INVALID_LASTNAME);
             }
         }
         if (doctorDto.getDepartment() != null) {
             if (doctorDto.getDepartment().isEmpty()) {
-                throw new CustomException(MessageConstants.DEPARTMENT_SHOULD_NOT_EMPTY);
+                throw new CustomException(MessageConstants.DOCTOR_DEPARTMENT_SHOULD_NOT_BE_EMPTY);
             }
         }
         if (doctorDto.getAadhaarNumber() != null) {
             if (doctorDto.getAadhaarNumber().isEmpty()) {
-                throw new CustomException(MessageConstants.AADHAAR_SHOULD_NOT_EMPTY);
+                throw new CustomException(MessageConstants.AADHAAR_SHOULD_NOT_BE_EMPTY);
             } else if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
                 throw new CustomException(MessageConstants.INVALID_AADHAAR_NUMBER);
             }

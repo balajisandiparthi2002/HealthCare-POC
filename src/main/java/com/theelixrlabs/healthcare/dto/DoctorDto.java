@@ -2,7 +2,6 @@ package com.theelixrlabs.healthcare.dto;
 
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;

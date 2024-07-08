@@ -33,8 +33,8 @@ public class PatchDoctorService {
      * @throws CustomException If validation fails or doctor already exists.
      */
     public DoctorDto patchDoctorById(UUID doctorId, DoctorDto doctorDto) throws CustomException {
-        Validator doctorsValidation = new Validator();
-        doctorsValidation.validateDoctor(doctorDto);
+        Validator doctorValidator = new Validator();
+        doctorValidator.validateDoctor(doctorDto);
         Optional<DoctorModel> optionalDoctor = doctorRepository.findById(doctorId);
         if (optionalDoctor.isPresent()) {
             DoctorModel existingDoctor = optionalDoctor.get();

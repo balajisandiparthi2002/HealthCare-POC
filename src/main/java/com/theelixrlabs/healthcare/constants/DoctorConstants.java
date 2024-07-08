@@ -11,6 +11,6 @@ public class DoctorConstants {
     public static final String DOCTORS_COLLECTION_NAME = "doctors";
     public static final String EMPTY_SPACE = " ";
     public static final String GET_DOCTOR_BY_ID_ENDPOINT = "/getDoctorById/{doctorId}";
-    public static final String PATCH_DOCTOR_ENDPOINT = "/patchDoctor/{id}";
+    public static final String PATCH_DOCTOR_ENDPOINT = "/patchDoctor/{doctorId}";
     public static final String PATH_VARIABLE_DOCTOR_ID = "doctorId";
 }
