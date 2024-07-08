@@ -5,6 +5,7 @@ import com.theelixrlabs.healthcare.dto.PatientDTO;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatientService;
+import com.theelixrlabs.healthcare.validation.Validator;
 import jakarta.validation.Valid;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
+import java.util.UUID;
+
 /**
  * Patient Controller layer, which interacts with the user.
  * All the requests will be handled by PatientController.
@@ -26,9 +29,12 @@ public class PatientController {
 
     private final PatientService patientService;
 
+    private final Validator validator;
+
     //Constructor Injection of PatientService and MessageSource
-    public PatientController(PatientService patientService, MessageSource messageSource) {
+    public PatientController(PatientService patientService, Validator validator) {
         this.patientService = patientService;
+        this.validator=validator;
     }
 
     /**
@@ -40,7 +46,6 @@ public class PatientController {
      */
     @PostMapping(PatientConstants.CREATE_PATIENT_ENDPOINT)
     public ResponseEntity<SuccessResponse<PatientDTO>> addPatientDetails(@RequestBody @Valid PatientDTO patientDTO) throws CustomException {
-
         return new ResponseEntity<>(new SuccessResponse<>(true, patientService.addPatientDetails(patientDTO)), HttpStatus.CREATED);
     }
 
@@ -51,9 +56,10 @@ public class PatientController {
      * @return ResponseEntity containing a SuccessResponse with the Patient Associated with the ID and HTTP status 200 (OK)
      * @throws CustomException    if validation fails or if there are errors during getting patient through ID.
      */
-    @GetMapping(PatientConstants.GET_PATIENT_BY_ID_ENDPOINT)
+    @GetMapping(PatientConstants.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<?> getPatientById(@PathVariable String patientId) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.getPatientById(patientId)), HttpStatus.OK);
+        UUID validPatientId=validator.validateUUID(patientId,PatientConstants.INVALID_UUID_KEY);
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.getPatientById(validPatientId)), HttpStatus.OK);
     }
 
     /**
@@ -63,8 +69,9 @@ public class PatientController {
      * @return ResponseEntity containing a SuccessResponse indicating success or failure.
      * @throws CustomException    if there's an issue during the deletion process.
      */
-    @DeleteMapping(PatientConstants.DELETE_PATIENT_BY_ID_ENDPOINT)
+    @DeleteMapping(PatientConstants.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<String>> deletePatientById(@PathVariable String patientId) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.deletePatientById(patientId)), HttpStatus.OK);
+        UUID validPatientId=validator.validateUUID(patientId,PatientConstants.INVALID_UUID_KEY);
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.deletePatientById(validPatientId)), HttpStatus.OK);
     }
 }

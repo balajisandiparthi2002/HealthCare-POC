@@ -7,6 +7,7 @@ import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.PatientRepository;
+import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -16,7 +17,6 @@ import java.util.UUID;
 
 /**
  * Service class for managing patient-related operations.
- * Validations on the input parameters are done in this class.
  */
 @Service
 public class PatientService {
@@ -27,52 +27,14 @@ public class PatientService {
 
     private final DoctorPatientAssignmentRepository doctorPatientAssignmentRepository;
 
-    //Constructor injection of PatientRepository and MessageSource
-    public PatientService(PatientRepository patientRepository, MessageSource messageSource, DoctorPatientAssignmentRepository doctorPatientAssignmentRepository) {
+    private final Validator validator;
+
+    //Constructor injection
+    public PatientService(PatientRepository patientRepository, MessageSource messageSource, DoctorPatientAssignmentRepository doctorPatientAssignmentRepository, Validator validator) {
         this.patientRepository = patientRepository;
         this.messageSource = messageSource;
         this.doctorPatientAssignmentRepository = doctorPatientAssignmentRepository;
-    }
-
-    /**
-     * Validates the PatientDTO before adding details.
-     *
-     * @param patientDTO    The data transfer object containing patient information.
-     * @throws CustomException    If validation fails (e.g., empty first name or invalid characters).
-     */
-    private void validatePatientDTO(PatientDTO patientDTO) throws CustomException {
-
-        //Validate first name
-        if (patientDTO.getPatientFirstName().isEmpty()) {
-            throw new CustomException(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY, messageSource);
-        } else if (!patientDTO.getPatientFirstName().matches(PatientConstants.ALPHA_CHARACTERS_ONLY_REGEX)) {
-            throw new CustomException(PatientConstants.INVALID_FIRST_NAME_KEY, messageSource);
-        }
-
-        //Validate last name
-        if (patientDTO.getPatientLastName().isEmpty()) {
-            throw new CustomException(PatientConstants.LAST_NAME_SHOULD_NOT_EMPTY_KEY, messageSource);
-        } else if (!patientDTO.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_ONLY_REGEX)) {
-            throw new CustomException(PatientConstants.INVALID_LAST_NAME_KEY, messageSource);
-        }
-    }
-
-    /**
-     * Validates and converts a given string representation of UUID into a UUID object.
-     * Throws a CustomException if the string is not a valid UUID format.
-     *
-     * @param id    The string representation of UUID to validate and convert.
-     * @return The UUID object parsed from the input string.
-     * @throws CustomException    If the input string is not a valid UUID format.
-     */
-    private UUID validateUUID(String id) throws CustomException {
-        UUID patientId;
-        try {
-            patientId = UUID.fromString(id);
-        } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(PatientConstants.INVALID_UUID_KEY, messageSource);
-        }
-        return patientId;
+        this.validator = validator;
     }
 
     /**
@@ -96,7 +58,7 @@ public class PatientService {
     public PatientDTO addPatientDetails(PatientDTO patientDTO) throws CustomException {
 
         //Validate the incoming patientDTO
-        validatePatientDTO(patientDTO);
+        validator.validatePatientDTO(patientDTO);
 
         //Format Aadhaar number
         String aadhaarNumber = patientDTO.getPatientAadhaarNumber();
@@ -106,7 +68,6 @@ public class PatientService {
         if (patientRepository.findByPatientAadhaarNumber(formattedAadhaarNumber).isPresent()) {
             throw new CustomException(PatientConstants.AADHAAR_NUMBER_EXISTS_KEY, messageSource);
         }
-
         //Generate UUID for new Patient
         UUID uuid = UUID.randomUUID();
 
@@ -133,13 +94,12 @@ public class PatientService {
     /**
      * Get the PatientModel object associated with ID
      *
-     * @param patientId    Patient ID as UUID
+     * @param validPatientId    Patient ID as UUID
      * @return PatientDTO object for the ID
      * @throws CustomException    If no patient found with the ID
      */
-    public PatientDTO getPatientById(String patientId) throws CustomException {
-        UUID patientID = validateUUID(patientId);
-        Optional<PatientModel> patientModelOptional = patientRepository.findById(patientID);
+    public PatientDTO getPatientById(UUID validPatientId) throws CustomException {
+        Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
         if (patientModelOptional.isEmpty())
             throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY, messageSource);
         PatientModel patientModel = patientModelOptional.get();
@@ -155,17 +115,16 @@ public class PatientService {
     /**
      * Deletes a patient by their ID, if conditions are met.
      *
-     * @param patientId    The ID of the patient to delete.
+     * @param validPatientId    The ID of the patient to delete.
      * @return A success message upon successful deletion.
      * @throws CustomException    If the patient is not found or is currently assigned to a doctor.
      */
-    public String deletePatientById(String patientId) throws CustomException {
-        UUID validPatientId = validateUUID(patientId);
-        getPatientById(patientId);
+    public String deletePatientById(UUID validPatientId) throws CustomException {
+        getPatientById(validPatientId);
         if (isPatientAssignedToDoctor(validPatientId)) {
             throw new CustomException(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR, messageSource);
         }
         patientRepository.deleteById(validPatientId);
-        return messageSource.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, new Object[]{patientId}, Locale.getDefault());
+        return messageSource.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, new Object[]{validPatientId}, Locale.getDefault());
     }
 }
