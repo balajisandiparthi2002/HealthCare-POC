@@ -3,11 +3,14 @@ package com.theelixrlabs.healthcare.service;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
+import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
+import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +23,12 @@ import java.util.UUID;
 public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final MessageSource messageSource;
+    private final DoctorModelValidator doctorModelValidator;
 
-    public DoctorService(DoctorRepository doctorRepository, MessageSource messageSource) {
+    public DoctorService(DoctorRepository doctorRepository, MessageSource messageSource, DoctorModelValidator doctorModelValidator) {
         this.doctorRepository = doctorRepository;
         this.messageSource = messageSource;
+        this.doctorModelValidator = doctorModelValidator;
     }
 
     /**
@@ -111,7 +116,11 @@ public class DoctorService {
      * @return a list of DoctorDto objects representing the matching doctors
      */
     public List<DoctorDto> searchDoctorByName(String doctorName) {
+        doctorModelValidator.validateDoctorName(doctorName);
         List<DoctorModel> doctorModelList = doctorRepository.searchByDoctorName(doctorName);
+        if (doctorModelList.isEmpty()) {
+            throw new ResourceNotFoundException(MessageConstants.NO_DOCTOR_FOUND, messageSource);
+        }
         List<DoctorDto> doctorDtoList = new ArrayList<>();
         for (DoctorModel doctorModel : doctorModelList) {
             DoctorDto doctorDto = DoctorDto.builder()

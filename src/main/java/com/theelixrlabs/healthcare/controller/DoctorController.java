@@ -7,7 +7,7 @@ import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
-import com.theelixrlabs.healthcare.validations.DoctorModelValidator;
+import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import jakarta.validation.Valid;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.UUID;
 import java.util.List;
 
@@ -75,11 +76,7 @@ public class DoctorController {
     @GetMapping(DoctorConstants.GET_DOCTORS_BY_NAME_ENDPOINT)
     public ResponseEntity<SuccessResponse<List<DoctorDto>>> getDoctorsByName
     (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) {
-        doctorModelValidator.validateDoctorName(doctorName);
         List<DoctorDto> doctorDtoList = doctorService.searchDoctorByName(doctorName);
-        if (doctorDtoList.isEmpty()) {
-            throw new ResourceNotFoundException(MessageConstants.NO_DOCTOR_FOUND, messageSource);
-        }
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDtoList), HttpStatus.OK);
     }
 }
