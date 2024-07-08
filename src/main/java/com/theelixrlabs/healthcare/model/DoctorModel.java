@@ -3,6 +3,7 @@ package com.theelixrlabs.healthcare.model;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Data
 @Document(collection = DoctorConstants.DOCTORS_COLLECTION_NAME)
 @SuperBuilder
+@NoArgsConstructor
 public class DoctorModel {
     @Id
     private UUID id;
