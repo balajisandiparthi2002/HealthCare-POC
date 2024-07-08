@@ -31,7 +31,7 @@ public class DoctorPatientAssignmentService {
         this.messageUtil = messageUtil;
     }
 
-    private void validateDoctorPatientAssignmentDto(DoctorPatientAssignmentDto doctorPatientAssignmentDTO) throws CustomException {
+    private Optional<DoctorPatientAssignmentModel> validateDoctorPatientAssignment(DoctorPatientAssignmentDto doctorPatientAssignmentDTO) throws CustomException {
         UUID doctorId, patientId;
         try {
             doctorId = UUID.fromString(doctorPatientAssignmentDTO.getDoctorId());
@@ -47,6 +47,7 @@ public class DoctorPatientAssignmentService {
             throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_NOT_FOUND_KEY));
         if (!patientRepository.existsById(patientId))
             throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_NOT_FOUND_KEY));
+        return doctorPatientAssignmentRepository.findByDoctorIdAndPatientIdAndDateOfUnassignmentNull(doctorId, patientId);
     }
 
     /**
@@ -57,18 +58,14 @@ public class DoctorPatientAssignmentService {
      * @throws CustomException if any exception occurs
      */
     public DoctorPatientAssignmentDto assignDoctorToPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
-        validateDoctorPatientAssignmentDto(doctorPatientAssignmentDto);
-        Optional<DoctorPatientAssignmentModel> activeDoctorPatientAssignmentModel =
-                doctorPatientAssignmentRepository.findByDoctorIdAndPatientIdAndDateOfUnassignmentNull
-                        (UUID.fromString(doctorPatientAssignmentDto.getDoctorId()),
-                                UUID.fromString(doctorPatientAssignmentDto.getPatientId()));
+        Optional<DoctorPatientAssignmentModel> activeDoctorPatientAssignmentModel = validateDoctorPatientAssignment(doctorPatientAssignmentDto);
         if (activeDoctorPatientAssignmentModel.isPresent()) {
             throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_ALREADY_ASSIGNED_KEY));
         }
-        return mapDoctorPatientAssignmentDtoToModel(doctorPatientAssignmentDto);
+        return mapDoctorPatientAssignment(doctorPatientAssignmentDto);
     }
 
-    private DoctorPatientAssignmentDto mapDoctorPatientAssignmentDtoToModel(DoctorPatientAssignmentDto doctorPatientAssignmentDTO) {
+    private DoctorPatientAssignmentDto mapDoctorPatientAssignment(DoctorPatientAssignmentDto doctorPatientAssignmentDTO) {
         DoctorPatientAssignmentDto responseDoctorPatientAssignmentDto;
         DoctorPatientAssignmentModel doctorPatientAssignmentModel = DoctorPatientAssignmentModel.builder()
                 .id(UUID.randomUUID())
