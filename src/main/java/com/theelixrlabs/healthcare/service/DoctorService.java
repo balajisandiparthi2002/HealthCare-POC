@@ -6,6 +6,7 @@ import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -17,11 +18,11 @@ import java.util.UUID;
 @Service
 public class DoctorService {
     private final DoctorRepository doctorRepository;
-    private final MessageSource messageSource;
+    private final MessageUtil messageUtil;
 
-    public DoctorService(DoctorRepository doctorRepository, MessageSource messageSource) {
+    public DoctorService(DoctorRepository doctorRepository, MessageUtil messageUtil) {
         this.doctorRepository = doctorRepository;
-        this.messageSource = messageSource;
+        this.messageUtil = messageUtil;
     }
 
     /**
@@ -38,7 +39,7 @@ public class DoctorService {
                 aadhaarNumber.substring(4, 8) + DoctorConstants.EMPTY_SPACE +
                 aadhaarNumber.substring(8, 12);
         if (doctorRepository.findByAadhaarNumber(formattedAadhaarNumber).isPresent()) {
-            throw new CustomException(MessageConstants.AADHAAR_ALREADY_PRESENT,messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.AADHAAR_ALREADY_PRESENT));
         }
         UUID uuid = UUID.randomUUID();
         DoctorModel doctorModel = DoctorModel.builder()
@@ -68,19 +69,19 @@ public class DoctorService {
     private void validateDoctor(DoctorDto doctorDto) throws CustomException {
 
         if (doctorDto.getFirstName().isEmpty()) {
-            throw new CustomException(MessageConstants.FIRST_NAME_SHOULD_NOT_EMPTY,messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.FIRST_NAME_SHOULD_NOT_EMPTY));
         } else if (!(doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
-            throw new CustomException(MessageConstants.INVALID_FIRSTNAME,messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.INVALID_FIRSTNAME));
         }
         if (doctorDto.getLastName().isEmpty()) {
-            throw new CustomException(MessageConstants.LAST_NAME_SHOULD_NOT_EMPTY,messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.LAST_NAME_SHOULD_NOT_EMPTY));
         } else if (!(doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
-            throw new CustomException(MessageConstants.INVALID_LASTNAME,messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.INVALID_LASTNAME));
         }
         if (doctorDto.getAadhaarNumber().isEmpty()) {
-            throw new CustomException(MessageConstants.AADHAAR_SHOULD_NOT_EMPTY,messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.AADHAAR_SHOULD_NOT_EMPTY));
         } else if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
-            throw new CustomException(MessageConstants.INVALID_AADHAAR_NUMBER,messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.INVALID_AADHAAR_NUMBER));
         }
     }
 
@@ -92,7 +93,7 @@ public class DoctorService {
     public DoctorDto getDoctorById(UUID doctorId) throws CustomException {
         Optional<DoctorModel> doctorModelOptional = doctorRepository.findById(doctorId);
         if (doctorModelOptional.isEmpty()) {
-            throw new CustomException(MessageConstants.DOCTOR_UNAVAILABLE, messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_UNAVAILABLE));
         }
         DoctorModel doctorModel = doctorModelOptional.get();
         return DoctorDto.builder()
