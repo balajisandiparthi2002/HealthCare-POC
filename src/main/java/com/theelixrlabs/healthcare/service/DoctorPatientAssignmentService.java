@@ -31,7 +31,24 @@ public class DoctorPatientAssignmentService {
         this.messageUtil = messageUtil;
     }
 
-    private Optional<DoctorPatientAssignmentModel> validateDoctorPatientAssignment(DoctorPatientAssignmentDto doctorPatientAssignmentDTO) throws CustomException {
+    /**
+     * Checks if doctor is previously assigned to same patient and if not then saves the doctorPatientAssignmentDto
+     *
+     * @param doctorPatientAssignmentDto DTO object containing doctorId and patientId
+     * @return DoctorPatientAssignmentDto
+     * @throws CustomException if any exception occurs
+     */
+    public DoctorPatientAssignmentDto assignDoctorToPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
+        validateDoctorPatientAssignment(doctorPatientAssignmentDto);
+        UUID doctorId = UUID.fromString(doctorPatientAssignmentDto.getDoctorId());
+        UUID patientId = UUID.fromString(doctorPatientAssignmentDto.getPatientId());
+        if (isDoctorAlreadyAssigned(doctorId, patientId)) {
+            throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_ALREADY_ASSIGNED_KEY));
+        }
+        return mapDoctorPatientAssignment(doctorPatientAssignmentDto);
+    }
+
+    private void validateDoctorPatientAssignment(DoctorPatientAssignmentDto doctorPatientAssignmentDTO) throws CustomException {
         UUID doctorId, patientId;
         try {
             doctorId = UUID.fromString(doctorPatientAssignmentDTO.getDoctorId());
@@ -43,26 +60,18 @@ public class DoctorPatientAssignmentService {
         } catch (IllegalArgumentException illegalArgumentException) {
             throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_ID_INVALID_KEY));
         }
-        if (!doctorRepository.existsById(doctorId))
+        if (!doctorRepository.existsById(doctorId)) {
             throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_NOT_FOUND_KEY));
-        if (!patientRepository.existsById(patientId))
+        }
+        if (!patientRepository.existsById(patientId)) {
             throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_NOT_FOUND_KEY));
-        return doctorPatientAssignmentRepository.findByDoctorIdAndPatientIdAndDateOfUnassignmentNull(doctorId, patientId);
+        }
     }
 
-    /**
-     * Checks if doctor is previously assigned to same patient and if not then saves the doctorPatientAssignmentDto
-     *
-     * @param doctorPatientAssignmentDto DTO object containing doctorId and patientId
-     * @return DoctorPatientAssignmentDto
-     * @throws CustomException if any exception occurs
-     */
-    public DoctorPatientAssignmentDto assignDoctorToPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
-        Optional<DoctorPatientAssignmentModel> activeDoctorPatientAssignmentModel = validateDoctorPatientAssignment(doctorPatientAssignmentDto);
-        if (activeDoctorPatientAssignmentModel.isPresent()) {
-            throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_ALREADY_ASSIGNED_KEY));
-        }
-        return mapDoctorPatientAssignment(doctorPatientAssignmentDto);
+    private boolean isDoctorAlreadyAssigned(UUID doctorId, UUID patientId) {
+        Optional<DoctorPatientAssignmentModel> activeDoctorPatientAssignmentModel = doctorPatientAssignmentRepository
+                .findByDoctorIdAndPatientIdAndDateOfUnassignmentNull(doctorId, patientId);
+        return activeDoctorPatientAssignmentModel.isPresent();
     }
 
     private DoctorPatientAssignmentDto mapDoctorPatientAssignment(DoctorPatientAssignmentDto doctorPatientAssignmentDTO) {
