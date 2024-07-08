@@ -1,10 +1,12 @@
 package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
+import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
+import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -31,26 +33,27 @@ public class PatchDoctorService {
      * @throws CustomException If validation fails or doctor already exists.
      */
     public DoctorDto patchDoctorById(UUID doctorId, DoctorDto doctorDto) throws CustomException {
+        Validator doctorsValidation = new Validator();
+        doctorsValidation.validateDoctor(doctorDto);
         Optional<DoctorModel> optionalDoctor = doctorRepository.findById(doctorId);
-        validateDoctor(doctorDto);
         if (optionalDoctor.isPresent()) {
             DoctorModel existingDoctor = optionalDoctor.get();
-            if (doctorDto.getFirstName() != null) {
+            if (doctorDto.getFirstName() != null && !doctorDto.getFirstName().equals(existingDoctor.getFirstName())) {
                 existingDoctor.setFirstName(doctorDto.getFirstName());
             }
-            if (doctorDto.getLastName() != null) {
+            if (doctorDto.getLastName() != null && !doctorDto.getLastName().equals(existingDoctor.getLastName())) {
                 existingDoctor.setLastName(doctorDto.getLastName());
             }
-            if (doctorDto.getDepartment() != null) {
+            if (doctorDto.getDepartment() != null && !doctorDto.getDepartment().equals(existingDoctor.getDepartment())) {
                 existingDoctor.setDepartment(doctorDto.getDepartment());
             }
-            if (doctorDto.getAadhaarNumber() != null) {
+            if (doctorDto.getAadhaarNumber() != null && !doctorDto.getAadhaarNumber().equals(existingDoctor.getAadhaarNumber())) {
                 String aadhaarNumber = doctorDto.getAadhaarNumber();
-                String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + " " +
-                        aadhaarNumber.substring(4, 8) + " " +
+                String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + DoctorConstants.EMPTY_SPACE +
+                        aadhaarNumber.substring(4, 8) + DoctorConstants.EMPTY_SPACE +
                         aadhaarNumber.substring(8, 12);
                 if (doctorRepository.findByAadhaarNumber(formattedAadhaarNumber).isPresent()) {
-                    throw new CustomException(DoctorConstants.AADHAAR_ALREADY_PRESENT);
+                    throw new CustomException(MessageConstants.AADHAAR_ALREADY_PRESENT);
                 }
                 existingDoctor.setAadhaarNumber(formattedAadhaarNumber);
             }
@@ -63,36 +66,7 @@ public class PatchDoctorService {
                     .aadhaarNumber(existingDoctor.getAadhaarNumber())
                     .build();
         } else {
-            throw new CustomException(DoctorConstants.DOCTOR_NOT_FOUND);
-        }
-    }
-
-    private void validateDoctor(DoctorDto doctorDto) throws CustomException {
-        if (doctorDto.getFirstName() != null) {
-            if (doctorDto.getFirstName().isEmpty()) {
-                throw new CustomException(DoctorConstants.FIRST_NAME_SHOULD_NOT_EMPTY);
-            } else if (!doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN)) {
-                throw new CustomException(DoctorConstants.INVALID_FIRSTNAME);
-            }
-        }
-        if (doctorDto.getLastName() != null) {
-            if (doctorDto.getLastName().isEmpty()) {
-                throw new CustomException(DoctorConstants.LAST_NAME_SHOULD_NOT_EMPTY);
-            } else if (!doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN)) {
-                throw new CustomException(DoctorConstants.INVALID_LASTNAME);
-            }
-        }
-        if (doctorDto.getDepartment() != null) {
-            if (doctorDto.getLastName().isEmpty()) {
-                throw new CustomException(DoctorConstants.LAST_NAME_SHOULD_NOT_EMPTY);
-            }
-        }
-        if (doctorDto.getAadhaarNumber() != null) {
-            if (doctorDto.getAadhaarNumber().isEmpty()) {
-                throw new CustomException(DoctorConstants.AADHAAR_SHOULD_NOT_EMPTY);
-            } else if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
-                throw new CustomException(DoctorConstants.INVALID_AADHAAR_NUMBER);
-            }
+            throw new CustomException(MessageConstants.DOCTOR_UNAVAILABLE);
         }
     }
 }

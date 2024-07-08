@@ -1,6 +1,7 @@
 package com.theelixrlabs.healthcare.controller;
 
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
+import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
@@ -40,7 +41,7 @@ public class PatchDoctorController {
         try {
             doctorId = UUID.fromString(id);
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(DoctorConstants.INVALID_UUID_FORMAT_MESSAGE);
+            throw new CustomException(MessageConstants.INVALID_UUID);
         } catch (Exception exception) {
             throw new CustomException(exception.getMessage());
         }

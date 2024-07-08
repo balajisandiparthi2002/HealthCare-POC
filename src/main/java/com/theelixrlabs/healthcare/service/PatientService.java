@@ -2,7 +2,7 @@ package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.PatientDTO;
-import com.theelixrlabs.healthcare.exceptionhandler.CustomException;
+import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.PatientRepository;
 import org.springframework.context.MessageSource;
@@ -38,16 +38,16 @@ public class PatientService {
 
         //Validate first name
         if (patientDTO.getPatientFirstName().isEmpty()) {
-            throw new CustomException(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY,messageSource);
+            throw new CustomException(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY, messageSource);
         } else if (!patientDTO.getPatientFirstName().matches(PatientConstants.ALPHA_CHARACTERS_ONLY_REGEX)) {
-            throw new CustomException(PatientConstants.INVALID_FIRST_NAME_KEY,messageSource);
+            throw new CustomException(PatientConstants.INVALID_FIRST_NAME_KEY, messageSource);
         }
 
         //Validate last name
         if (patientDTO.getPatientLastName().isEmpty()) {
-            throw new CustomException(PatientConstants.LAST_NAME_SHOULD_NOT_EMPTY_KEY,messageSource);
+            throw new CustomException(PatientConstants.LAST_NAME_SHOULD_NOT_EMPTY_KEY, messageSource);
         } else if (!patientDTO.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_ONLY_REGEX)) {
-            throw new CustomException(PatientConstants.INVALID_LAST_NAME_KEY,messageSource);
+            throw new CustomException(PatientConstants.INVALID_LAST_NAME_KEY, messageSource);
         }
     }
 
@@ -69,7 +69,7 @@ public class PatientService {
 
         //Check if aadhaar number already exists.
         if (patientRepository.findByPatientAadhaarNumber(formattedAadhaarNumber).isPresent()) {
-            throw new CustomException(PatientConstants.AADHAAR_NUMBER_EXISTS_KEY,messageSource);
+            throw new CustomException(PatientConstants.AADHAAR_NUMBER_EXISTS_KEY, messageSource);
         }
 
         //Generate UUID for new Patient
@@ -104,7 +104,8 @@ public class PatientService {
      */
     public PatientDTO getPatientById(UUID patientId) throws CustomException {
         Optional<PatientModel> patientModelOptional = patientRepository.findById(patientId);
-        if (patientModelOptional.isEmpty()) throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY,messageSource);
+        if (patientModelOptional.isEmpty())
+            throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY, messageSource);
         PatientModel patientModel = patientModelOptional.get();
         //mapping patient model to patientDTO
         return PatientDTO.builder()

@@ -1,25 +1,16 @@
 package com.theelixrlabs.healthcare.constants;
 
 /**
- * Constant class containing error messages and patters related to doctor.
+ * Constant class containing error messages and patterns related to doctor.
  */
 public class DoctorConstants {
-    public static final String AADHAAR_ALREADY_PRESENT = "Aadhaar already present in database";
     public static final String AADHAAR_REGEX_PATTERN = "^[2-9]{1}[0-9]{11}$";
-    public static final String AADHAAR_SHOULD_BE_MANDATORY = "Aadhaar should be mandatory!";
-    public static final String AADHAAR_SHOULD_NOT_EMPTY = "Aadhaar should not empty!";
     public static final String CHARACTER_ONLY_REGEX_PATTERN = "^[a-zA-Z]+$";
+    public static final String COMMA_DELIMITER = ", ";
     public static final String CREATE_DOCTOR_END_POINT = "/saveDoctors";
-    public static final String DEPARTMENT_SHOULD_BE_MANDATORY = "Department name should be mandatory!";
     public static final String DOCTORS_COLLECTION_NAME = "doctors";
-    public static final String DOCTOR_NOT_FOUND = "Doctor not found with this id";
-    public static final String FIRST_NAME_SHOULD_BE_MANDATORY = "First name should be mandatory!";
-    public static final String FIRST_NAME_SHOULD_NOT_EMPTY = "FirstName should not be empty";
-    public static final String INVALID_AADHAAR_NUMBER = "Invalid Aadhaar number";
-    public static final String INVALID_FIRSTNAME = "Invalid first name!";
-    public static final String INVALID_LASTNAME = "Invalid last name!";
-    public static final String INVALID_UUID_FORMAT_MESSAGE = "Invalid UUID format";
-    public static final String LAST_NAME_SHOULD_BE_MANDATORY = "Last name should be mandatory!";
-    public static final String LAST_NAME_SHOULD_NOT_EMPTY = "LastName should not be empty";
-    public static final String PATCH_DOCTOR_ENDPOINT = "/doctor/{id}";
+    public static final String EMPTY_SPACE = " ";
+    public static final String GET_DOCTOR_BY_ID_ENDPOINT = "/getDoctorById/{doctorId}";
+    public static final String PATCH_DOCTOR_ENDPOINT = "/patchDoctor/{id}";
+    public static final String PATH_VARIABLE_DOCTOR_ID = "doctorId";
 }
