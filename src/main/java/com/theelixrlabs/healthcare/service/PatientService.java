@@ -1,5 +1,6 @@
 package com.theelixrlabs.healthcare.service;
 
+import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dao.DoctorPatientAssignmentRepository;
 import com.theelixrlabs.healthcare.dto.PatientDTO;
@@ -8,12 +9,10 @@ import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.PatientRepository;
 import com.theelixrlabs.healthcare.validation.Validator;
-import org.springframework.context.MessageSource;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,7 +31,7 @@ public class PatientService {
     private final Validator validator;
 
     //Constructor injection
-    public PatientService(PatientRepository patientRepository, MessageSource messageSource, DoctorPatientAssignmentRepository doctorPatientAssignmentRepository, Validator validator, MessageUtil messageUtil) {
+    public PatientService(PatientRepository patientRepository, DoctorPatientAssignmentRepository doctorPatientAssignmentRepository, Validator validator, MessageUtil messageUtil) {
         this.patientRepository = patientRepository;
         this.doctorPatientAssignmentRepository = doctorPatientAssignmentRepository;
         this.validator = validator;
@@ -68,7 +67,7 @@ public class PatientService {
 
         //Check if aadhaar number already exists.
         if (patientRepository.findByPatientAadhaarNumber(formattedAadhaarNumber).isPresent()) {
-            throw new CustomException(messageUtil.getMessage(PatientConstants.AADHAAR_NUMBER_EXISTS_KEY));
+            throw new CustomException(messageUtil.getMessage(MessageConstants.PATIENT_AADHAAR_NUMBER_EXISTS));
         }
         //Generate UUID for new Patient
         UUID uuid = UUID.randomUUID();
@@ -101,7 +100,7 @@ public class PatientService {
      * @throws CustomException    If no patient found with the ID
      */
     public PatientDTO getPatientById(String patientId) throws CustomException {
-        UUID validPatientId = validator.validateUUID(patientId, PatientConstants.INVALID_UUID_KEY);
+        UUID validPatientId = validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
         if (patientModelOptional.isEmpty())
             throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
@@ -123,9 +122,8 @@ public class PatientService {
      * @throws CustomException    If the patient is not found or is currently assigned to a doctor.
      */
     public String deletePatientById(String patientId) throws CustomException {
-        UUID validPatientId = validator.validateUUID(patientId, PatientConstants.INVALID_UUID_KEY);
-        Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
-        if (patientModelOptional.isEmpty())
+        UUID validPatientId = validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY);
+        if (!patientRepository.existsById(validPatientId))
             throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
         if (isPatientAssignedToDoctor(validPatientId)) {
             throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR));

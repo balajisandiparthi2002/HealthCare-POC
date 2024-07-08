@@ -3,7 +3,7 @@ package com.theelixrlabs.healthcare.validation;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.PatientDTO;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
-import org.springframework.context.MessageSource;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -11,10 +11,10 @@ import java.util.UUID;
 @Component
 public class Validator {
 
-    private final MessageSource messageSource;
+    private final MessageUtil messageUtil;
 
-    public Validator(MessageSource messageSource) {
-        this.messageSource = messageSource;
+    public Validator(MessageUtil messageUtil) {
+        this.messageUtil = messageUtil;
     }
 
     /**
@@ -26,12 +26,12 @@ public class Validator {
      * @return The UUID object parsed from the input string.
      * @throws CustomException    If the input string is not a valid UUID format.
      */
-    public UUID validateUUID(String id, String errorMessage) throws CustomException {
+    public UUID validateAndConvertToUUID(String id, String errorMessage) throws CustomException {
         UUID patientId;
         try {
             patientId = UUID.fromString(id);
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(errorMessage, messageSource);
+            throw new CustomException(messageUtil.getMessage(errorMessage));
         }
         return patientId;
     }
@@ -46,16 +46,16 @@ public class Validator {
 
         //Validate first name
         if (patientDTO.getPatientFirstName().isEmpty()) {
-            throw new CustomException(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY, messageSource);
+            throw new CustomException(messageUtil.getMessage(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY));
         } else if (!patientDTO.getPatientFirstName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
-            throw new CustomException(PatientConstants.INVALID_FIRST_NAME_KEY, messageSource);
+            throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_FIRST_NAME_KEY));
         }
 
         //Validate last name
         if (patientDTO.getPatientLastName().isEmpty()) {
-            throw new CustomException(PatientConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY, messageSource);
+            throw new CustomException(messageUtil.getMessage(PatientConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY));
         } else if (!patientDTO.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
-            throw new CustomException(PatientConstants.INVALID_LAST_NAME_KEY, messageSource);
+            throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_LAST_NAME_KEY));
         }
     }
 }
