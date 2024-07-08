@@ -5,6 +5,7 @@ import com.theelixrlabs.healthcare.dto.PatientDTO;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatientService;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import jakarta.validation.Valid;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -26,12 +27,12 @@ import java.util.UUID;
 public class PatientController {
 
     private final PatientService patientService;
-    private final MessageSource messageSource;
+    private final MessageUtil messageUtil;
 
     //Constructor Injection of PatientService and MessageSource
-    public PatientController(PatientService patientService, MessageSource messageSource) {
+    public PatientController(PatientService patientService, MessageUtil messageUtil) {
         this.patientService = patientService;
-        this.messageSource = messageSource;
+        this.messageUtil = messageUtil;
     }
 
     /**
@@ -59,7 +60,7 @@ public class PatientController {
         try {
             patientId = UUID.fromString(id);
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(PatientConstants.INVALID_UUID_KEY,messageSource);
+            throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_UUID_KEY));
         } catch (Exception exception) {
             throw new CustomException(exception.getMessage());
         }
