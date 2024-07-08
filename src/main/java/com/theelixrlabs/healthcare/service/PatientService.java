@@ -9,7 +9,6 @@ import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.PatientRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -38,8 +37,8 @@ public class PatientService {
     /**
      * Validates the PatientDTO before adding details.
      *
-     * @param patientDTO The data transfer object containing patient information.
-     * @throws CustomException If validation fails (e.g., empty first name or invalid characters).
+     * @param patientDTO    The data transfer object containing patient information.
+     * @throws CustomException    If validation fails (e.g., empty first name or invalid characters).
      */
     private void validatePatientDTO(PatientDTO patientDTO) throws CustomException {
 
@@ -58,7 +57,15 @@ public class PatientService {
         }
     }
 
-    private UUID validateUUID(String id) {
+    /**
+     * Validates and converts a given string representation of UUID into a UUID object.
+     * Throws a CustomException if the string is not a valid UUID format.
+     *
+     * @param id    The string representation of UUID to validate and convert.
+     * @return The UUID object parsed from the input string.
+     * @throws CustomException    If the input string is not a valid UUID format.
+     */
+    private UUID validateUUID(String id) throws CustomException {
         UUID patientId;
         try {
             patientId = UUID.fromString(id);
@@ -69,11 +76,22 @@ public class PatientService {
     }
 
     /**
+     * Checks if a patient is assigned to any doctor based on the given patient ID.
+     *
+     * @param validPatientId    The UUID of the patient to check assignment for.
+     * @return true if the patient is assigned to at least one doctor, false otherwise.
+     */
+    private boolean isPatientAssignedToDoctor(UUID validPatientId) {
+        List<DoctorPatientAssignmentModel> patientAssignmentList = doctorPatientAssignmentRepository.findByPatientId(validPatientId);
+        return !patientAssignmentList.isEmpty();
+    }
+
+    /**
      * Creates a new patient based on the provided PatientDTO.
      *
-     * @param patientDTO The data transfer object containing patient information.
+     * @param patientDTO    The data transfer object containing patient information.
      * @return The PatientDTO of the newly created patient, with ID populated.
-     * @throws CustomException If validation fails or if the Aadhaar number already exists.
+     * @throws CustomException    If validation fails or if the Aadhaar number already exists.
      */
     public PatientDTO addPatientDetails(PatientDTO patientDTO) throws CustomException {
 
@@ -115,9 +133,9 @@ public class PatientService {
     /**
      * Get the PatientModel object associated with ID
      *
-     * @param patientId Patient ID as UUID
+     * @param patientId    Patient ID as UUID
      * @return PatientDTO object for the ID
-     * @throws CustomException If no patient found with the ID
+     * @throws CustomException    If no patient found with the ID
      */
     public PatientDTO getPatientById(String patientId) throws CustomException {
         UUID patientID = validateUUID(patientId);
@@ -137,21 +155,17 @@ public class PatientService {
     /**
      * Deletes a patient by their ID, if conditions are met.
      *
-     * @param patientId The ID of the patient to delete.
+     * @param patientId    The ID of the patient to delete.
      * @return A success message upon successful deletion.
-     * @throws CustomException If the patient is not found or is currently assigned to a doctor.
+     * @throws CustomException    If the patient is not found or is currently assigned to a doctor.
      */
     public String deletePatientById(String patientId) throws CustomException {
         UUID validPatientId = validateUUID(patientId);
-        Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
-        if (patientModelOptional.isEmpty())
-            throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY, messageSource);
-        List<DoctorPatientAssignmentModel> patientAssignmentList = doctorPatientAssignmentRepository.findByPatientId(validPatientId);
-        if (!patientAssignmentList.isEmpty()) {
+        getPatientById(patientId);
+        if (isPatientAssignedToDoctor(validPatientId)) {
             throw new CustomException(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR, messageSource);
         }
         patientRepository.deleteById(validPatientId);
-        Object[] dynamicArguments = {patientId};
-        return messageSource.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, dynamicArguments, Locale.getDefault());
+        return messageSource.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, new Object[]{patientId}, Locale.getDefault());
     }
 }
