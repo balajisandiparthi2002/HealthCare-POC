@@ -68,17 +68,17 @@ public class DoctorService {
      */
     private void validateDoctor(DoctorDto doctorDto) throws CustomException {
         if (doctorDto.getFirstName().isEmpty()) {
-            throw new CustomException(MessageConstants.FIRST_NAME_SHOULD_NOT_EMPTY, messageSource);
+            throw new CustomException(MessageConstants.FIRST_NAME_SHOULD_NOT_BE_EMPTY, messageSource);
         } else if (!(doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
             throw new CustomException(MessageConstants.INVALID_FIRSTNAME, messageSource);
         }
         if (doctorDto.getLastName().isEmpty()) {
-            throw new CustomException(MessageConstants.LAST_NAME_SHOULD_NOT_EMPTY, messageSource);
+            throw new CustomException(MessageConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY, messageSource);
         } else if (!(doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
             throw new CustomException(MessageConstants.INVALID_LASTNAME, messageSource);
         }
         if (doctorDto.getAadhaarNumber().isEmpty()) {
-            throw new CustomException(MessageConstants.AADHAAR_SHOULD_NOT_EMPTY, messageSource);
+            throw new CustomException(MessageConstants.AADHAAR_SHOULD_NOT_BE_EMPTY, messageSource);
         } else if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
             throw new CustomException(MessageConstants.INVALID_AADHAAR_NUMBER, messageSource);
         }
