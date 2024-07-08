@@ -9,6 +9,7 @@ import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.PatientRepository;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.context.MessageSource;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,18 +25,18 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
 
-    private final MessageSource messageSource;
+    private final MessageUtil messageUtil;
 
     private final DoctorPatientAssignmentRepository doctorPatientAssignmentRepository;
 
     private final Validator validator;
 
     //Constructor injection
-    public PatientService(PatientRepository patientRepository, MessageSource messageSource, DoctorPatientAssignmentRepository doctorPatientAssignmentRepository, Validator validator) {
+    public PatientService(PatientRepository patientRepository, MessageSource messageSource, DoctorPatientAssignmentRepository doctorPatientAssignmentRepository, Validator validator, MessageUtil messageUtil) {
         this.patientRepository = patientRepository;
-        this.messageSource = messageSource;
         this.doctorPatientAssignmentRepository = doctorPatientAssignmentRepository;
         this.validator = validator;
+        this.messageUtil = messageUtil;
     }
 
     /**
@@ -67,7 +68,7 @@ public class PatientService {
 
         //Check if aadhaar number already exists.
         if (patientRepository.findByPatientAadhaarNumber(formattedAadhaarNumber).isPresent()) {
-            throw new CustomException(PatientConstants.AADHAAR_NUMBER_EXISTS_KEY, messageSource);
+            throw new CustomException(messageUtil.getMessage(PatientConstants.AADHAAR_NUMBER_EXISTS_KEY));
         }
         //Generate UUID for new Patient
         UUID uuid = UUID.randomUUID();
@@ -103,7 +104,7 @@ public class PatientService {
         UUID validPatientId = validator.validateUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
         if (patientModelOptional.isEmpty())
-            throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY, messageSource);
+            throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
         PatientModel patientModel = patientModelOptional.get();
         //mapping patient model to patientDTO
         return PatientDTO.builder()
@@ -125,11 +126,11 @@ public class PatientService {
         UUID validPatientId = validator.validateUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
         if (patientModelOptional.isEmpty())
-            throw new CustomException(PatientConstants.PATIENT_NOT_FOUND_KEY, messageSource);
+            throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
         if (isPatientAssignedToDoctor(validPatientId)) {
-            throw new CustomException(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR, messageSource);
+            throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR));
         }
         patientRepository.deleteById(validPatientId);
-        return messageSource.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, new Object[]{validPatientId}, Locale.getDefault());
+        return messageUtil.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, new Object[]{validPatientId});
     }
 }

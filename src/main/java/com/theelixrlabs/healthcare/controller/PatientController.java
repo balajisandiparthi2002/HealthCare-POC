@@ -5,6 +5,7 @@ import com.theelixrlabs.healthcare.dto.PatientDTO;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatientService;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
