@@ -2,21 +2,21 @@ package com.theelixrlabs.healthcare.validation;
 
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DoctorModelValidator {
-    private final MessageSource messageSource;
+    private final MessageUtil messageUtil;
 
-    public DoctorModelValidator(MessageSource messageSource) {
-        this.messageSource = messageSource;
+    public DoctorModelValidator(MessageUtil messageUtil) {
+        this.messageUtil = messageUtil;
     }
 
     public void validateDoctorName(String doctorName) {
         if (StringUtils.isBlank(doctorName)) {
-            throw new CustomException(MessageConstants.DOCTOR_NAME_CANNOT_BE_EMPTY, messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_NAME_CANNOT_BE_EMPTY));
         }
     }
 }

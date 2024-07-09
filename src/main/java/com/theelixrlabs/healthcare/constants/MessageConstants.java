@@ -12,7 +12,7 @@ public class MessageConstants {
     public static final String DOCTOR_ID_IS_MANDATORY = "{validation.doctorID.mandatory}";
     public static final String DOCTOR_NAME_CANNOT_BE_EMPTY = "doctor.name.cannot.be.empty";
     public static final String DOCTOR_UNAVAILABLE = "doctor.unavailable";
-    public static final String FIRST_NAME_SHOULD_BE_MANDATORY = "doctor.firstName.mandatory";
+    public static final String FIRST_NAME_SHOULD_BE_MANDATORY = "{doctor.firstName.mandatory}";
     public static final String FIRST_NAME_SHOULD_NOT_BE_EMPTY = "doctor.firstName.should.not.be.empty";
     public static final String INVALID_AADHAAR_NUMBER = "doctor.invalid.aadhaar.number";
     public static final String INVALID_FIRSTNAME = "doctor.invalid.firstName";
