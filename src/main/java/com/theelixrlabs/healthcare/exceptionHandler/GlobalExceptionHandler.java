@@ -8,8 +8,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -45,5 +46,11 @@ public class GlobalExceptionHandler {
         List<String> errors = new ArrayList<>();
         errors.add(customException.getMessage());
         return new ResponseEntity<>(new FailureResponse(false, errors), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<FailureResponse> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException) {
+        List<String> errorMessagesList = Collections.singletonList(resourceNotFoundException.getMessage());
+        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.NOT_FOUND);
     }
 }

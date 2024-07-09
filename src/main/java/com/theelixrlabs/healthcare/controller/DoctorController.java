@@ -6,6 +6,7 @@ import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
+import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -26,7 +29,7 @@ public class DoctorController {
     private final DoctorService doctorService;
     private final MessageUtil messageUtil;
 
-    public DoctorController(DoctorService doctorService, MessageUtil messageUtil) {
+    public DoctorController(DoctorService doctorService, DoctorModelValidator doctorModelValidator, MessageUtil messageUtil) {
         this.doctorService = doctorService;
         this.messageUtil = messageUtil;
     }
@@ -59,5 +62,18 @@ public class DoctorController {
         }
         DoctorDto doctorDto = doctorService.getDoctorById(doctorId);
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDto), HttpStatus.OK);
+    }
+
+    /**
+     * Retrieves a list of doctors by their name.
+     *
+     * @param doctorName the name of the doctor to search for
+     * @return a ResponseEntity containing a SuccessResponse with a list of matching DoctorDto objects
+     */
+    @GetMapping(DoctorConstants.GET_DOCTORS_BY_NAME_ENDPOINT)
+    public ResponseEntity<SuccessResponse<List<DoctorDto>>> getDoctorsByName
+    (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) {
+        List<DoctorDto> doctorDtoList = doctorService.getDoctorsByName(doctorName);
+        return new ResponseEntity<>(new SuccessResponse<>(true, doctorDtoList), HttpStatus.OK);
     }
 }
