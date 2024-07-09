@@ -7,8 +7,8 @@ import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import jakarta.validation.Valid;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,13 +27,13 @@ import java.util.List;
 @RestController
 public class DoctorController {
     private final DoctorService doctorService;
-    private final MessageSource messageSource;
     private final DoctorModelValidator doctorModelValidator;
+    private final MessageUtil messageUtil;
 
-    public DoctorController(DoctorService doctorService, MessageSource messageSource, DoctorModelValidator doctorModelValidator) {
+    public DoctorController(DoctorService doctorService, DoctorModelValidator doctorModelValidator, MessageUtil messageUtil) {
         this.doctorService = doctorService;
-        this.messageSource = messageSource;
         this.doctorModelValidator = doctorModelValidator;
+        this.messageUtil = messageUtil;
     }
 
     /**
@@ -60,7 +60,7 @@ public class DoctorController {
         try {
             doctorId = UUID.fromString(id);
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(MessageConstants.INVALID_UUID, messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.INVALID_UUID));
         }
         DoctorDto doctorDto = doctorService.getDoctorById(doctorId);
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDto), HttpStatus.OK);
