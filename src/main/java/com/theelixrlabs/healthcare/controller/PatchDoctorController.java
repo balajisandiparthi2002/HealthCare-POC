@@ -3,9 +3,9 @@ package com.theelixrlabs.healthcare.controller;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
-import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatchDoctorService;
+import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,8 +24,11 @@ public class PatchDoctorController {
 
     private final PatchDoctorService patchDoctorService;
 
-    public PatchDoctorController(PatchDoctorService patchDoctorService) {
+    private final Validator validator;
+
+    public PatchDoctorController(PatchDoctorService patchDoctorService, Validator validator) {
         this.patchDoctorService = patchDoctorService;
+        this.validator = validator;
     }
 
     /**
@@ -37,14 +40,7 @@ public class PatchDoctorController {
      */
     @PatchMapping(DoctorConstants.PATCH_DOCTOR_ENDPOINT)
     public ResponseEntity<SuccessResponse<DoctorDto>> patchDoctorById(@PathVariable String doctorId, @RequestBody DoctorDto doctorDto) {
-        UUID uuid;
-        try {
-            uuid = UUID.fromString(doctorId);
-        } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(MessageConstants.INVALID_UUID);
-        } catch (Exception exception) {
-            throw new CustomException(exception.getMessage());
-        }
+        UUID uuid = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
         DoctorDto newDoctorDto = patchDoctorService.patchDoctorById(uuid, doctorDto);
         return new ResponseEntity<>(new SuccessResponse<>(true, newDoctorDto), HttpStatus.OK);
     }

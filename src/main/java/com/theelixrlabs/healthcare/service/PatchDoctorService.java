@@ -6,6 +6,7 @@ import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +20,13 @@ import java.util.UUID;
 public class PatchDoctorService {
 
     private final DoctorRepository doctorRepository;
+    private final Validator validator;
+    private final MessageUtil messageUtil;
 
-    public PatchDoctorService(DoctorRepository doctorRepository) {
+    public PatchDoctorService(DoctorRepository doctorRepository, Validator validator, MessageUtil messageUtil) {
         this.doctorRepository = doctorRepository;
+        this.validator = validator;
+        this.messageUtil = messageUtil;
     }
 
     /**
@@ -33,8 +38,7 @@ public class PatchDoctorService {
      * @throws CustomException If validation fails or doctor already exists.
      */
     public DoctorDto patchDoctorById(UUID doctorId, DoctorDto doctorDto) throws CustomException {
-        Validator doctorValidator = new Validator();
-        doctorValidator.validateDoctor(doctorDto);
+        validator.validateDoctor(doctorDto);
         Optional<DoctorModel> optionalDoctor = doctorRepository.findById(doctorId);
         if (optionalDoctor.isPresent()) {
             DoctorModel existingDoctor = optionalDoctor.get();
@@ -53,7 +57,7 @@ public class PatchDoctorService {
                         aadhaarNumber.substring(4, 8) + DoctorConstants.EMPTY_SPACE +
                         aadhaarNumber.substring(8, 12);
                 if (doctorRepository.findByAadhaarNumber(formattedAadhaarNumber).isPresent()) {
-                    throw new CustomException(MessageConstants.AADHAAR_ALREADY_PRESENT);
+                    throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_AADHAAR_ALREADY_PRESENT));
                 }
                 existingDoctor.setAadhaarNumber(formattedAadhaarNumber);
             }
@@ -66,7 +70,7 @@ public class PatchDoctorService {
                     .aadhaarNumber(existingDoctor.getAadhaarNumber())
                     .build();
         } else {
-            throw new CustomException(MessageConstants.DOCTOR_UNAVAILABLE);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_UNAVAILABLE));
         }
     }
 }

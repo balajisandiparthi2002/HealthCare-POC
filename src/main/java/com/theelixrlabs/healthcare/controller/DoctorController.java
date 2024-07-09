@@ -6,8 +6,8 @@ import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import jakarta.validation.Valid;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import java.util.UUID;
 
 /**
@@ -23,11 +24,11 @@ import java.util.UUID;
 @RestController
 public class DoctorController {
     private final DoctorService doctorService;
-    private final MessageSource messageSource;
+    private final MessageUtil messageUtil;
 
-    public DoctorController(DoctorService doctorService, MessageSource messageSource) {
+    public DoctorController(DoctorService doctorService, MessageUtil messageUtil) {
         this.doctorService = doctorService;
-        this.messageSource = messageSource;
+        this.messageUtil = messageUtil;
     }
 
     /**
@@ -54,7 +55,7 @@ public class DoctorController {
         try {
             doctorId = UUID.fromString(id);
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(MessageConstants.INVALID_UUID, messageSource);
+            throw new CustomException(messageUtil.getMessage(MessageConstants.INVALID_UUID));
         }
         DoctorDto doctorDto = doctorService.getDoctorById(doctorId);
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDto), HttpStatus.OK);

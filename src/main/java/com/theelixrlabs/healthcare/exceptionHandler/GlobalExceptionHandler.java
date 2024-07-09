@@ -21,12 +21,12 @@ public class GlobalExceptionHandler {
     /**
      * Exception handler for MethodArgumentNotValidException.
      *
-     * @param exception : MethodArgumentNotValidException exception
+     * @param methodArgumentNotValidException MethodArgumentNotValidException exception instance.
      * @return ResponseEntity failure response with error messages.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<FailureResponse> handleValidationException(MethodArgumentNotValidException exception) {
-        BindingResult errorResults = exception.getBindingResult();
+    public ResponseEntity<FailureResponse> handleValidationException(MethodArgumentNotValidException methodArgumentNotValidException) {
+        BindingResult errorResults = methodArgumentNotValidException.getBindingResult();
         List<String> errorMessages = new ArrayList<>();
         for (FieldError fieldError : errorResults.getFieldErrors()) {
             errorMessages.add(fieldError.getDefaultMessage());
@@ -37,13 +37,13 @@ public class GlobalExceptionHandler {
     /**
      * Exception handler for custom exceptions and validations.
      *
-     * @param customException : exception instance thrown during runtime.
+     * @param customException customException instance thrown during runtime.
      * @return ResponseEntity failure response with error messages.
      */
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<FailureResponse> handleExistingData(CustomException customException){
-        List<String> errors=new ArrayList<>();
+    public ResponseEntity<FailureResponse> handleExistingData(CustomException customException) {
+        List<String> errors = new ArrayList<>();
         errors.add(customException.getMessage());
-        return new ResponseEntity<>(new FailureResponse(false,errors),HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new FailureResponse(false, errors), HttpStatus.BAD_REQUEST);
     }
 }

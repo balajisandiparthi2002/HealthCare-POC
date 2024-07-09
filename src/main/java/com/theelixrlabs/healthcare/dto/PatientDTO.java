@@ -1,5 +1,6 @@
 package com.theelixrlabs.healthcare.dto;
 
+import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -19,13 +20,13 @@ public class PatientDTO {
 
     private UUID id;
 
-    @NotNull(message = "{patientFirstName.notnull}")
+    @NotNull(message = MessageConstants.PATIENT_FIRST_NAME_NOT_NULL)
     private String patientFirstName;
 
-    @NotNull(message = "{patientLastName.notnull}")
+    @NotNull(message = MessageConstants.PATIENT_LAST_NAME_NOT_NULL)
     private String patientLastName;
 
-    @NotNull(message = "{patientAadhaarNumber.notnull}")
-    @Pattern(regexp = PatientConstants.AADHAAR_NUMBER_REGEX, message = "{patientAadhaarNumber.invalid}")
+    @NotNull(message = MessageConstants.PATIENT_AADHAAR_NUMBER_NOTNULL)
+    @Pattern(regexp = PatientConstants.AADHAAR_NUMBER_REGEX, message = MessageConstants.PATIENT_AADHAAR_NUMBER_INVALID)
     private String patientAadhaarNumber;
 }
