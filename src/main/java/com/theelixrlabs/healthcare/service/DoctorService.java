@@ -9,7 +9,6 @@ import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.ArrayList;
