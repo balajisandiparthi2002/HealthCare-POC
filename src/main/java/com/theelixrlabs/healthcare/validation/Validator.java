@@ -4,7 +4,7 @@ import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
-import com.theelixrlabs.healthcare.dto.PatientDTO;
+import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.springframework.stereotype.Component;
@@ -42,22 +42,22 @@ public class Validator {
     /**
      * Validates the PatientDTO before adding details.
      *
-     * @param patientDTO The data transfer object containing patient information.
+     * @param patientDto The data transfer object containing patient information.
      * @throws CustomException If validation fails (e.g., empty first name or invalid characters).
      */
-    public void validatePatientDTO(PatientDTO patientDTO) throws CustomException {
+    public void validatePatientDto(PatientDto patientDto) throws CustomException {
 
         //Validate first name
-        if (patientDTO.getPatientFirstName().isEmpty()) {
+        if (patientDto.getPatientFirstName().isEmpty()) {
             throw new CustomException(messageUtil.getMessage(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY));
-        } else if (!patientDTO.getPatientFirstName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
+        } else if (!patientDto.getPatientFirstName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
             throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_FIRST_NAME_KEY));
         }
 
         //Validate last name
-        if (patientDTO.getPatientLastName().isEmpty()) {
+        if (patientDto.getPatientLastName().isEmpty()) {
             throw new CustomException(messageUtil.getMessage(PatientConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY));
-        } else if (!patientDTO.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
+        } else if (!patientDto.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
             throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_LAST_NAME_KEY));
         }
     }
@@ -72,14 +72,16 @@ public class Validator {
         if (doctorDto.getFirstName() != null) {
             if (doctorDto.getFirstName().isEmpty()) {
                 throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_FIRST_NAME_SHOULD_NOT_BE_EMPTY));
-            } else if (!doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN)) {
+            }
+            if (!doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN)) {
                 throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_FIRSTNAME));
             }
         }
         if (doctorDto.getLastName() != null) {
             if (doctorDto.getLastName().isEmpty()) {
                 throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY));
-            } else if (!doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN)) {
+            }
+            if (!doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN)) {
                 throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_LASTNAME));
             }
         }
@@ -91,7 +93,8 @@ public class Validator {
         if (doctorDto.getAadhaarNumber() != null) {
             if (doctorDto.getAadhaarNumber().isEmpty()) {
                 throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_AADHAAR_NUMBER_SHOULD_NOT_BE_EMPTY));
-            } else if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
+            }
+            if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
                 throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_AADHAAR_NUMBER));
             }
         }

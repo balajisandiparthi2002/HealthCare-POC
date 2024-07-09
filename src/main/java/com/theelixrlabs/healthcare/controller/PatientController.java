@@ -1,7 +1,7 @@
 package com.theelixrlabs.healthcare.controller;
 
 import com.theelixrlabs.healthcare.constants.PatientConstants;
-import com.theelixrlabs.healthcare.dto.PatientDTO;
+import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatientService;
@@ -33,13 +33,13 @@ public class PatientController {
     /**
      * Controller method for handling POST requests to create a new patient.
      *
-     * @param patientDTO The data transfer object (DTO) containing patient information.
+     * @param patientDto The data transfer object (DTO) containing patient information.
      * @return ResponseEntity containing a SuccessResponse with the created PatientDTO and HTTP status 201 (created).
      * @throws CustomException if validation fails or if there are errors during patient creation.
      */
     @PostMapping(PatientConstants.CREATE_PATIENT_ENDPOINT)
-    public ResponseEntity<SuccessResponse<PatientDTO>> addPatientDetails(@RequestBody @Valid PatientDTO patientDTO) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.addPatientDetails(patientDTO)), HttpStatus.CREATED);
+    public ResponseEntity<SuccessResponse<PatientDto>> addPatientDetails(@RequestBody @Valid PatientDto patientDto) throws CustomException {
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.addPatientDetails(patientDto)), HttpStatus.CREATED);
     }
 
     /**

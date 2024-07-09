@@ -4,6 +4,7 @@ import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
+import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
@@ -70,7 +71,8 @@ public class PatchDoctorService {
                     .aadhaarNumber(existingDoctor.getAadhaarNumber())
                     .build();
         } else {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_UNAVAILABLE));
+            //throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_UNAVAILABLE));
+            throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_UNAVAILABLE));
         }
     }
 }
