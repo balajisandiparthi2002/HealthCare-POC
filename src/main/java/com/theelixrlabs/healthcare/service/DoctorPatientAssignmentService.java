@@ -52,24 +52,28 @@ public class DoctorPatientAssignmentService {
      * checks for doctor patient assignment and if present then unassigns doctor from patient
      *
      * @param doctorPatientAssignmentDto DTO object containing doctorId and patientId
-     * @return DoctorPatientAssignmentDto
      * @throws CustomException if any exception occurs
      */
-    public DoctorPatientAssignmentDto unassignDoctorFromPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
+    public void unassignDoctorFromPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
         validateDoctorPatientAssignment(doctorPatientAssignmentDto);
         UUID doctorId = UUID.fromString(doctorPatientAssignmentDto.getDoctorId());
         UUID patientId = UUID.fromString(doctorPatientAssignmentDto.getPatientId());
-        Optional<DoctorPatientAssignmentModel> activeDoctorPatientAssignmentModel =
+        Optional<DoctorPatientAssignmentModel> optionalDoctorPatientAssignmentModel =
                 doctorPatientAssignmentRepository.findByDoctorIdAndPatientIdAndDateOfUnassignmentNull(doctorId, patientId);
-        DoctorPatientAssignmentDto responseDoctorPatientAssignmentDto;
         if (!doctorPatientAssignmentRepository.existsByDoctorIdAndPatientId(doctorId, patientId)) {
             throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.NO_ASSIGNMENT_EXISTS_KEY));
-        } else if (activeDoctorPatientAssignmentModel.isEmpty()) {
+        } else if (optionalDoctorPatientAssignmentModel.isEmpty()) {
             throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_ALREADY_UNASSIGNED_KEY));
-        } else {
-            responseDoctorPatientAssignmentDto = mapDoctorPatientUnassignment(activeDoctorPatientAssignmentModel.get());
         }
-        return responseDoctorPatientAssignmentDto;
+        DoctorPatientAssignmentModel activeDoctorPatientAssignmentModel = optionalDoctorPatientAssignmentModel.get();
+        DoctorPatientAssignmentModel doctorPatientAssignmentModel = DoctorPatientAssignmentModel.builder()
+                .id(activeDoctorPatientAssignmentModel.getId())
+                .doctorId(activeDoctorPatientAssignmentModel.getDoctorId())
+                .patientId(activeDoctorPatientAssignmentModel.getPatientId())
+                .dateOfAssignment(activeDoctorPatientAssignmentModel.getDateOfAssignment())
+                .dateOfUnassignment(Date.from(Instant.now()))
+                .build();
+        doctorPatientAssignmentRepository.save(doctorPatientAssignmentModel);
     }
 
     private void validateDoctorPatientAssignment(DoctorPatientAssignmentDto doctorPatientAssignmentDTO) throws CustomException {
@@ -106,25 +110,6 @@ public class DoctorPatientAssignmentService {
                 .patientId(UUID.fromString(doctorPatientAssignmentDTO.getPatientId()))
                 .dateOfAssignment(Date.from(Instant.now()))
                 .dateOfUnassignment(null)
-                .build();
-        doctorPatientAssignmentRepository.save(doctorPatientAssignmentModel);
-        responseDoctorPatientAssignmentDto = DoctorPatientAssignmentDto.builder()
-                .id(doctorPatientAssignmentModel.getId())
-                .doctorId(doctorPatientAssignmentModel.getDoctorId().toString())
-                .patientId(doctorPatientAssignmentModel.getPatientId().toString())
-                .dateOfOperation(doctorPatientAssignmentModel.getDateOfAssignment())
-                .build();
-        return responseDoctorPatientAssignmentDto;
-    }
-
-    private DoctorPatientAssignmentDto mapDoctorPatientUnassignment(DoctorPatientAssignmentModel activeDoctorPatientAssignmentModel) {
-        DoctorPatientAssignmentDto responseDoctorPatientAssignmentDto;
-        DoctorPatientAssignmentModel doctorPatientAssignmentModel = DoctorPatientAssignmentModel.builder()
-                .id(activeDoctorPatientAssignmentModel.getId())
-                .doctorId(activeDoctorPatientAssignmentModel.getDoctorId())
-                .patientId(activeDoctorPatientAssignmentModel.getPatientId())
-                .dateOfAssignment(activeDoctorPatientAssignmentModel.getDateOfAssignment())
-                .dateOfUnassignment(Date.from(Instant.now()))
                 .build();
         doctorPatientAssignmentRepository.save(doctorPatientAssignmentModel);
         responseDoctorPatientAssignmentDto = DoctorPatientAssignmentDto.builder()
