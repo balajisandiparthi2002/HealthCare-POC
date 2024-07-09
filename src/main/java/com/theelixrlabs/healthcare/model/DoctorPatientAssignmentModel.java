@@ -12,9 +12,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Represents a model for assigning doctors to patients in a healthcare system.
+ */
 @Data
-@SuperBuilder
 @NoArgsConstructor
+@SuperBuilder
 @Document(collection = DoctorPatientAssignmentConstants.DB_COLLECTION_NAME)
 public class DoctorPatientAssignmentModel {
     @Id
