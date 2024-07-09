@@ -3,12 +3,17 @@ package com.theelixrlabs.healthcare.service;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
+import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
+import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -17,10 +22,12 @@ import java.util.UUID;
 @Service
 public class DoctorService {
     private final DoctorRepository doctorRepository;
+    private final DoctorModelValidator doctorModelValidator;
     private final MessageUtil messageUtil;
 
-    public DoctorService(DoctorRepository doctorRepository, MessageUtil messageUtil) {
+    public DoctorService(DoctorRepository doctorRepository, DoctorModelValidator doctorModelValidator, MessageUtil messageUtil) {
         this.doctorRepository = doctorRepository;
+        this.doctorModelValidator = doctorModelValidator;
         this.messageUtil = messageUtil;
     }
 
@@ -73,7 +80,7 @@ public class DoctorService {
             throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_FIRSTNAME));
         }
         if (doctorDto.getLastName().isEmpty()) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_LAST_NAME_SHOULD_NOT_EMPTY));
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY));
         } else if (!(doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
             throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_LASTNAME));
         }
@@ -102,5 +109,31 @@ public class DoctorService {
                 .department(doctorModel.getDepartment())
                 .aadhaarNumber(doctorModel.getAadhaarNumber())
                 .build();
+    }
+
+    /**
+     * Searches for doctors by their name and returns a list of DoctorDto objects.
+     *
+     * @param doctorName doctorName the name of the doctor to search for
+     * @return a list of DoctorDto objects representing the matching doctors
+     */
+    public List<DoctorDto> getDoctorsByName(String doctorName) {
+        doctorModelValidator.validateDoctorName(doctorName);
+        List<DoctorModel> doctorModelList = doctorRepository.searchByDoctorName(doctorName);
+        if (doctorModelList.isEmpty()) {
+            throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_NOT_FOUND));
+        }
+        List<DoctorDto> doctorDtoList = new ArrayList<>();
+        for (DoctorModel doctorModel : doctorModelList) {
+            DoctorDto doctorDto = DoctorDto.builder()
+                    .id(doctorModel.getId())
+                    .firstName(doctorModel.getFirstName())
+                    .lastName(doctorModel.getLastName())
+                    .department(doctorModel.getDepartment())
+                    .aadhaarNumber(doctorModel.getAadhaarNumber())
+                    .build();
+            doctorDtoList.add(doctorDto);
+        }
+        return doctorDtoList;
     }
 }
