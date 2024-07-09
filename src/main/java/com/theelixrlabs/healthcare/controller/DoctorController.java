@@ -5,12 +5,11 @@ import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
-import com.theelixrlabs.healthcare.utility.MessageUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 
 /**
  * Rest Controller for handling HTTP request and response.
@@ -57,5 +56,18 @@ public class DoctorController {
     @DeleteMapping(DoctorConstants.DOCTOR_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<String>> deleteDoctorById(@PathVariable String doctorId) throws CustomException {
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorService.deleteDoctorById(doctorId)), HttpStatus.OK);
+    }
+
+    /**
+     * Retrieves a list of doctors by their name.
+     *
+     * @param doctorName the name of the doctor to search for
+     * @return a ResponseEntity containing a SuccessResponse with a list of matching DoctorDto objects
+     */
+    @GetMapping(DoctorConstants.GET_DOCTORS_BY_NAME_ENDPOINT)
+    public ResponseEntity<SuccessResponse<List<DoctorDto>>> getDoctorsByName
+    (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) {
+        List<DoctorDto> doctorDtoList = doctorService.getDoctorsByName(doctorName);
+        return new ResponseEntity<>(new SuccessResponse<>(true, doctorDtoList), HttpStatus.OK);
     }
 }

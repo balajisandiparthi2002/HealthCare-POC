@@ -13,18 +13,19 @@ public class MessageConstants {
     public static final String DOCTOR_DELETION_FAILED_ASSIGNED_TO_PATIENT = "doctor.deletion.failed.assigned.to.patient";
     public static final String DOCTOR_FIRST_NAME_SHOULD_BE_MANDATORY = "{doctor.first.name.mandatory}";
     public static final String DOCTOR_FIRST_NAME_SHOULD_NOT_BE_EMPTY = "doctor.first.name.should.not.be.empty";
-    public static final String DOCTOR_ID_IS_MANDATORY = "validation.doctor.id.mandatory";
+    public static final String DOCTOR_ID_IS_MANDATORY = "{validation.doctor.id.mandatory}";
+    public static final String DOCTOR_ID_NOT_FOUND = "doctor.id.not.found";
     public static final String DOCTOR_INVALID_AADHAAR_NUMBER = "doctor.invalid.aadhaar.number";
     public static final String DOCTOR_INVALID_FIRSTNAME = "doctor.invalid.first.name";
     public static final String DOCTOR_INVALID_LASTNAME = "doctor.invalid.last.name";
     public static final String DOCTOR_LAST_NAME_SHOULD_BE_MANDATORY = "{doctor.last.name.mandatory}";
-    public static final String DOCTOR_LAST_NAME_SHOULD_NOT_EMPTY = "doctor.last.name.should.not.be.empty";
-    public static final String DOCTOR_NOT_FOUND = "doctor.not.found";
+    public static final String DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY = "doctor.last.name.should.not.be.empty";
+    public static final String DOCTOR_NAME_CANNOT_BE_EMPTY = "doctor.name.cannot.be.empty";
     public static final String INVALID_UUID = "uuid.invalid";
     public static final String PATIENT_AADHAAR_NUMBER_EXISTS = "patient.aadhaar.number.exists";
     public static final String PATIENT_AADHAAR_NUMBER_INVALID = "{patient.aadhaar.number.invalid}";
     public static final String PATIENT_AADHAAR_NUMBER_NOTNULL = "{patient.aadhaar.number.notnull}";
     public static final String PATIENT_FIRST_NAME_NOT_NULL = "{patient.first.name.notnull}";
-    public static final String PATIENT_ID_IS_MANDATORY = "validation.patient.id.mandatory";
+    public static final String PATIENT_ID_IS_MANDATORY = "{validation.patient.id.mandatory}";
     public static final String PATIENT_LAST_NAME_NOT_NULL = "{patient.last.name.notnull}";
 }

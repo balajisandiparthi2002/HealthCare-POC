@@ -76,7 +76,7 @@ public class Validator {
             throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_FIRSTNAME));
         }
         if (doctorDto.getLastName().isEmpty()) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_LAST_NAME_SHOULD_NOT_EMPTY));
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY));
         } else if (!(doctorDto.getLastName().matches(DoctorConstants.ALPHA_CHARACTERS_REGEX))) {
             throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_LASTNAME));
         }

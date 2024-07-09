@@ -4,16 +4,19 @@ import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dao.DoctorPatientAssignmentRepository;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
+import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
+import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -24,6 +27,8 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
 
+    private final DoctorModelValidator doctorModelValidator;
+
     private final DoctorPatientAssignmentRepository doctorPatientAssignmentRepository;
 
     private final MessageUtil messageUtil;
@@ -31,9 +36,10 @@ public class DoctorService {
     private final Validator validator;
 
     //Constructor Injection.
-    public DoctorService(DoctorRepository doctorRepository, DoctorPatientAssignmentRepository doctorPatientAssignmentRepository, MessageUtil messageUtil, Validator validator) {
+    public DoctorService(DoctorRepository doctorRepository, DoctorPatientAssignmentRepository doctorPatientAssignmentRepository, DoctorModelValidator doctorModelValidator, MessageUtil messageUtil, Validator validator) {
         this.doctorRepository = doctorRepository;
         this.doctorPatientAssignmentRepository = doctorPatientAssignmentRepository;
+        this.doctorModelValidator = doctorModelValidator;
         this.messageUtil = messageUtil;
         this.validator = validator;
     }
@@ -90,10 +96,10 @@ public class DoctorService {
      * @throws CustomException    Class to handle custom exception
      */
     public DoctorDto getDoctorById(String doctorId) throws CustomException {
-        UUID validDoctorId=validator.validateAndConvertToUUID(doctorId,MessageConstants.DOCTOR_NOT_FOUND);
+        UUID validDoctorId = validator.validateAndConvertToUUID(doctorId, MessageConstants.DOCTOR_ID_NOT_FOUND);
         Optional<DoctorModel> doctorModelOptional = doctorRepository.findById(validDoctorId);
         if (doctorModelOptional.isEmpty()) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_NOT_FOUND));
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_ID_NOT_FOUND));
         }
         DoctorModel doctorModel = doctorModelOptional.get();
         return DoctorDto.builder()
@@ -117,7 +123,7 @@ public class DoctorService {
 
         // Check if a doctor with the validDoctorId exists in the repository.
         if (!doctorRepository.existsById(validDoctorId))
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_NOT_FOUND));
+            throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_ID_NOT_FOUND));
 
         // Check if the doctor is assigned to any patients before deletion.
         if (isDoctorAssignedToPatient(validDoctorId)) {
@@ -127,5 +133,31 @@ public class DoctorService {
         // If no patients are assigned to the doctor, proceed with deletion.
         doctorRepository.deleteById(validDoctorId);
         return messageUtil.getMessage(MessageConstants.DOCTOR_DELETE_SUCCESS_MESSAGE, new Object[]{validDoctorId});
+    }
+
+    /**
+     * Searches for doctors by their name and returns a list of DoctorDto objects.
+     *
+     * @param doctorName    doctorName the name of the doctor to search for
+     * @return a list of DoctorDto objects representing the matching doctors
+     */
+    public List<DoctorDto> getDoctorsByName(String doctorName) {
+        doctorModelValidator.validateDoctorName(doctorName);
+        List<DoctorModel> doctorModelList = doctorRepository.searchByDoctorName(doctorName);
+        if (doctorModelList.isEmpty()) {
+            throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_ID_NOT_FOUND));
+        }
+        List<DoctorDto> doctorDtoList = new ArrayList<>();
+        for (DoctorModel doctorModel : doctorModelList) {
+            DoctorDto doctorDto = DoctorDto.builder()
+                    .id(doctorModel.getId())
+                    .firstName(doctorModel.getFirstName())
+                    .lastName(doctorModel.getLastName())
+                    .department(doctorModel.getDepartment())
+                    .aadhaarNumber(doctorModel.getAadhaarNumber())
+                    .build();
+            doctorDtoList.add(doctorDto);
+        }
+        return doctorDtoList;
     }
 }
