@@ -1,6 +1,9 @@
 package com.theelixrlabs.healthcare.validation;
 
+import com.theelixrlabs.healthcare.constants.DoctorConstants;
+import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
+import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.dto.PatientDTO;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
@@ -56,6 +59,31 @@ public class Validator {
             throw new CustomException(messageUtil.getMessage(PatientConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY));
         } else if (!patientDTO.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
             throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_LAST_NAME_KEY));
+        }
+    }
+
+    /**
+     * Custom validation method for checking regex pattern of firstname lastname and Aadhaar number
+     *
+     * @param doctorDto : DoctorDto object containing doctor information.
+     * @throws CustomException : Class to handle custom exception
+     */
+    public void validateDoctor(DoctorDto doctorDto) throws CustomException {
+
+        if (doctorDto.getFirstName().isEmpty()) {
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_FIRST_NAME_SHOULD_NOT_BE_EMPTY));
+        } else if (!(doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_FIRSTNAME));
+        }
+        if (doctorDto.getLastName().isEmpty()) {
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY));
+        } else if (!(doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_LASTNAME));
+        }
+        if (doctorDto.getAadhaarNumber().isEmpty()) {
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_AADHAAR_NUMBER_SHOULD_NOT_BE_EMPTY));
+        } else if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
+            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_AADHAAR_NUMBER));
         }
     }
 }
