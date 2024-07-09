@@ -23,10 +23,18 @@ public interface DoctorPatientAssignmentRepository extends MongoRepository<Docto
     List<DoctorPatientAssignmentModel> findByPatientId(UUID patientId);
 
     /**
+     * Finds all doctor-patient assignments associated with a given doctor ID.
+     *
+     * @param validDoctorId    The UUID of the doctor to retrieve assignments for.
+     * @return A list of DoctorPatientAssignmentModel objects representing assignments of the doctor to patients.
+     */
+    List<DoctorPatientAssignmentModel> findByDoctorId(UUID validDoctorId);
+
+    /**
      * Method declaration to find a DoctorPatientAssignmentModel by DoctorID and PatientID and date of unassignment not null
      *
-     * @param doctorId  UUID of the doctor associated with the assignment.
-     * @param patientId UUID of the patient associated with the assignment.
+     * @param doctorId    UUID of the doctor associated with the assignment.
+     * @param patientId    UUID of the patient associated with the assignment.
      * @return Optional containing DoctorPatientAssignmentModel if found, empty otherwise.
      */
     Optional<DoctorPatientAssignmentModel> findByDoctorIdAndPatientIdAndDateOfUnassignmentNull(UUID doctorId, UUID patientId);
