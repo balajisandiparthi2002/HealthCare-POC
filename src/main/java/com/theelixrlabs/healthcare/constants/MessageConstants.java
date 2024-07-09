@@ -16,7 +16,9 @@ public class MessageConstants {
     public static final String DOCTOR_INVALID_FIRSTNAME = "doctor.invalid.first.name";
     public static final String DOCTOR_INVALID_LASTNAME = "doctor.invalid.last.name";
     public static final String DOCTOR_LAST_NAME_SHOULD_BE_MANDATORY = "{doctor.last.name.mandatory}";
-    public static final String DOCTOR_LAST_NAME_SHOULD_NOT_EMPTY = "doctor.last.name.should.not.be.empty";
+    public static final String DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY = "doctor.last.name.should.not.be.empty";
+    public static final String DOCTOR_NAME_CANNOT_BE_EMPTY = "doctor.name.cannot.be.empty";
+    public static final String DOCTOR_NOT_FOUND = "doctor.not.found";
     public static final String DOCTOR_UNAVAILABLE = "doctor.unavailable";
     public static final String INVALID_UUID = "uuid.invalid";
     public static final String PATIENT_AADHAAR_NUMBER_EXISTS = "patient.aadhaar.number.exists";
