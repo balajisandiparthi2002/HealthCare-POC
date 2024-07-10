@@ -7,7 +7,6 @@ import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
-import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.stereotype.Service;
@@ -22,13 +21,11 @@ import java.util.UUID;
 @Service
 public class DoctorService {
     private final DoctorRepository doctorRepository;
-    private final DoctorModelValidator doctorModelValidator;
     private final MessageUtil messageUtil;
     private final Validator validator;
 
-    public DoctorService(DoctorRepository doctorRepository, MessageUtil messageUtil, Validator validator,DoctorModelValidator doctorModelValidator) {
+    public DoctorService(DoctorRepository doctorRepository, MessageUtil messageUtil, Validator validator) {
         this.doctorRepository = doctorRepository;
-        this.doctorModelValidator = doctorModelValidator;
         this.messageUtil = messageUtil;
         this.validator = validator;
     }
@@ -94,7 +91,7 @@ public class DoctorService {
      * @return a list of DoctorDto objects representing the matching doctors
      */
     public List<DoctorDto> getDoctorsByName(String doctorName) {
-        doctorModelValidator.validateDoctorName(doctorName);
+        validator.validateNonEmptyString(doctorName, messageUtil.getMessage(MessageConstants.DOCTOR_NAME_CANNOT_BE_EMPTY));
         List<DoctorModel> doctorModelList = doctorRepository.searchByDoctorName(doctorName);
         if (doctorModelList.isEmpty()) {
             throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_NOT_FOUND));

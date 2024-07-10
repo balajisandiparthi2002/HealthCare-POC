@@ -141,7 +141,7 @@ public class PatientService {
      * @return A list of PatientDTO objects representing the matching patients.
      */
     public List<PatientDto> getPatientsByName(String patientName) {
-        validator.validatePatientName(patientName);
+        validator.validateNonEmptyString(patientName, messageUtil.getMessage(MessageConstants.PATIENT_NAME_CANNOT_BE_EMPTY));
         List<PatientModel> patientModelList = patientRepository.searchByPatientName(patientName);
         if (patientModelList.isEmpty()) {
             throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.PATIENT_NAME_NOT_FOUND));

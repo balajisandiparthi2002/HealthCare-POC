@@ -6,7 +6,6 @@ import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
-import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +27,7 @@ public class DoctorController {
     private final DoctorService doctorService;
     private final MessageUtil messageUtil;
 
-    public DoctorController(DoctorService doctorService, DoctorModelValidator doctorModelValidator, MessageUtil messageUtil) {
+    public DoctorController(DoctorService doctorService, MessageUtil messageUtil) {
         this.doctorService = doctorService;
         this.messageUtil = messageUtil;
     }

@@ -2,7 +2,6 @@ package com.theelixrlabs.healthcare.validation;
 
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
-import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.dto.PatientDto;
@@ -10,7 +9,6 @@ import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-
 import java.util.UUID;
 
 @Component
@@ -44,9 +42,8 @@ public class Validator {
     /**
      * Validates the PatientDTO before adding details.
      *
-     * @param patientDTO The data transfer object containing patient information.
-     * @throws CustomException If validation fails (e.g., empty first name or invalid characters).
      * @param patientDto The data transfer object containing patient information.
+     * @throws CustomException If validation fails (e.g., empty first name or invalid characters).
      * @throws CustomException If validation fails (e.g., empty first name or invalid characters).
      */
     public void validatePatientDto(PatientDto patientDto) throws CustomException {
@@ -67,12 +64,14 @@ public class Validator {
     }
 
     /**
-     * Validates the patient name to ensure it is not blank.
-     * @param patientName The patient name to be validated.
+     * Validates that the given input string is not blank.
+     * If the input string is blank (null, empty, or whitespace), a CustomException is thrown with the specified error message.
+     *
+     * @param inputString The string to be validated.
      */
-    public void validatePatientName(String patientName) {
-        if (StringUtils.isBlank(patientName)) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.PATIENT_NAME_CANNOT_BE_EMPTY));
+    public void validateNonEmptyString(String inputString, String errorMessage) {
+        if (StringUtils.isBlank(inputString)) {
+            throw new CustomException(errorMessage);
         }
     }
 
