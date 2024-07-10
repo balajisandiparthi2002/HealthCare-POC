@@ -31,7 +31,7 @@ public class DoctorController {
     /**
      * End point to create new doctor based on provided dto.
      *
-     * @param doctorDto : DTO object containing doctor object.
+     * @param doctorDto    DTO object containing doctor object.
      * @return ResponseEntity containing a success response with created dto.
      */
     @PostMapping(DoctorConstants.CREATE_DOCTOR_END_POINT)
@@ -47,7 +47,7 @@ public class DoctorController {
      * @return ResponseEntity containing a success response with the retrieved DoctorDto.
      */
     @GetMapping(DoctorConstants.DOCTOR_BY_ID_ENDPOINT)
-    public ResponseEntity<?> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String doctorId) throws CustomException {
+    public ResponseEntity<SuccessResponse<DoctorDto>> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String doctorId) throws CustomException {
         DoctorDto doctorDto = doctorService.getDoctorById(doctorId);
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDto), HttpStatus.OK);
     }
@@ -67,7 +67,7 @@ public class DoctorController {
     /**
      * Retrieves a list of doctors by their name.
      *
-     * @param doctorName the name of the doctor to search for
+     * @param doctorName    the name of the doctor to search for
      * @return a ResponseEntity containing a SuccessResponse with a list of matching DoctorDto objects
      */
     @GetMapping(DoctorConstants.GET_DOCTORS_BY_NAME_ENDPOINT)

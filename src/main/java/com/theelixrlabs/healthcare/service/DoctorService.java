@@ -64,7 +64,6 @@ public class DoctorService {
     public DoctorDto saveDoctor(DoctorDto doctorDto) throws CustomException {
         validator.validateDoctor(doctorDto);
         String aadhaarNumber = doctorDto.getAadhaarNumber();
-
         String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + DoctorConstants.EMPTY_SPACE +
                 aadhaarNumber.substring(4, 8) + DoctorConstants.EMPTY_SPACE +
                 aadhaarNumber.substring(8, 12);
