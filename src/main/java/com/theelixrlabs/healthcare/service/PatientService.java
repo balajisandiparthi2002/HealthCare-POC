@@ -3,7 +3,7 @@ package com.theelixrlabs.healthcare.service;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dao.DoctorPatientAssignmentRepository;
-import com.theelixrlabs.healthcare.dto.PatientDTO;
+import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import com.theelixrlabs.healthcare.model.PatientModel;
@@ -52,17 +52,17 @@ public class PatientService {
     /**
      * Creates a new patient based on the provided PatientDTO.
      *
-     * @param patientDTO    The data transfer object containing patient information.
+     * @param patientDto    The data transfer object containing patient information.
      * @return The PatientDTO of the newly created patient, with ID populated.
      * @throws CustomException    If validation fails or if the Aadhaar number already exists.
      */
-    public PatientDTO addPatientDetails(PatientDTO patientDTO) throws CustomException {
+    public PatientDto addPatientDetails(PatientDto patientDto) throws CustomException {
 
-        //Validate the incoming patientDTO
-        validator.validatePatientDTO(patientDTO);
+        //Validate the incoming patientDto
+        validator.validatePatientDto(patientDto);
 
         //Format Aadhaar number
-        String aadhaarNumber = patientDTO.getPatientAadhaarNumber();
+        String aadhaarNumber = patientDto.getPatientAadhaarNumber();
         String formattedAadhaarNumber = String.format(PatientConstants.AADHAAR_FORMAT_PATTERN, aadhaarNumber.substring(0, 4), aadhaarNumber.substring(4, 8), aadhaarNumber.substring(8, 12));
 
         //Check if aadhaar number already exists.
@@ -75,8 +75,8 @@ public class PatientService {
         //create PatientModel instance to save in the database
         PatientModel patientModel = PatientModel.builder()
                 .id(uuid)
-                .patientFirstName(patientDTO.getPatientFirstName())
-                .patientLastName(patientDTO.getPatientLastName())
+                .patientFirstName(patientDto.getPatientFirstName())
+                .patientLastName(patientDto.getPatientLastName())
                 .patientAadhaarNumber(formattedAadhaarNumber)
                 .build();
 
@@ -84,7 +84,7 @@ public class PatientService {
         patientRepository.save(patientModel);
 
         //Populate the generated ID back to PatientDTO and return it.
-        return PatientDTO.builder()
+        return PatientDto.builder()
                 .id(patientModel.getId())
                 .patientFirstName(patientModel.getPatientFirstName())
                 .patientLastName(patientModel.getPatientLastName())
@@ -99,14 +99,14 @@ public class PatientService {
      * @return PatientDTO object for the ID
      * @throws CustomException    If no patient found with the ID
      */
-    public PatientDTO getPatientById(String patientId) throws CustomException {
+    public PatientDto getPatientById(String patientId) throws CustomException {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
         if (patientModelOptional.isEmpty())
             throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
         PatientModel patientModel = patientModelOptional.get();
         //mapping patient model to patientDTO
-        return PatientDTO.builder()
+        return PatientDto.builder()
                 .id(patientModel.getId())
                 .patientFirstName(patientModel.getPatientFirstName())
                 .patientLastName(patientModel.getPatientLastName())

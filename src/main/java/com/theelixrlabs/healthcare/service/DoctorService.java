@@ -26,11 +26,11 @@ public class DoctorService {
     private final MessageUtil messageUtil;
     private final Validator validator;
 
-    public DoctorService(DoctorRepository doctorRepository, DoctorModelValidator doctorModelValidator, MessageUtil messageUtil, Validator validator) {
+    public DoctorService(DoctorRepository doctorRepository, MessageUtil messageUtil, Validator validator,DoctorModelValidator doctorModelValidator) {
         this.doctorRepository = doctorRepository;
         this.doctorModelValidator = doctorModelValidator;
         this.messageUtil = messageUtil;
-        this.validator=validator;
+        this.validator = validator;
     }
 
     /**

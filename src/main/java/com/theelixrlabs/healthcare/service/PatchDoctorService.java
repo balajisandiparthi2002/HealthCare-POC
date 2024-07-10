@@ -4,8 +4,10 @@ import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
+import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,12 @@ public class PatchDoctorService {
 
     private final DoctorRepository doctorRepository;
     private final Validator validator;
+    private final MessageUtil messageUtil;
 
-    public PatchDoctorService(DoctorRepository doctorRepository,Validator validator) {
+    public PatchDoctorService(DoctorRepository doctorRepository, Validator validator, MessageUtil messageUtil) {
         this.doctorRepository = doctorRepository;
         this.validator = validator;
+        this.messageUtil = messageUtil;
     }
 
     /**
@@ -54,7 +58,7 @@ public class PatchDoctorService {
                         aadhaarNumber.substring(4, 8) + DoctorConstants.EMPTY_SPACE +
                         aadhaarNumber.substring(8, 12);
                 if (doctorRepository.findByAadhaarNumber(formattedAadhaarNumber).isPresent()) {
-                    throw new CustomException(MessageConstants.DOCTOR_AADHAAR_ALREADY_PRESENT);
+                    throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_AADHAAR_ALREADY_PRESENT));
                 }
                 existingDoctor.setAadhaarNumber(formattedAadhaarNumber);
             }
@@ -67,19 +71,7 @@ public class PatchDoctorService {
                     .aadhaarNumber(existingDoctor.getAadhaarNumber())
                     .build();
         } else {
-            throw new CustomException(MessageConstants.DOCTOR_UNAVAILABLE);
+            throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_UNAVAILABLE));
         }
-    }
-
-    public UUID convertUuidToString(String doctorId){
-        UUID uuid;
-        try {
-            uuid = UUID.fromString(doctorId);
-        } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(MessageConstants.INVALID_UUID);
-        } catch (Exception exception) {
-            throw new CustomException(exception.getMessage());
-        }
-        return uuid;
     }
 }
