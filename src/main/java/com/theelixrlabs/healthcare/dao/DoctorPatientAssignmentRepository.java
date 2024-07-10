@@ -30,4 +30,13 @@ public interface DoctorPatientAssignmentRepository extends MongoRepository<Docto
      * @return Optional containing DoctorPatientAssignmentModel if found, empty otherwise.
      */
     Optional<DoctorPatientAssignmentModel> findByDoctorIdAndPatientIdAndDateOfUnassignmentNull(UUID doctorId, UUID patientId);
+
+    /**
+     * Method declaration to check for a DoctorPatientAssignment by DoctorID and PatientID
+     *
+     * @param doctorId  UUID of the doctor associated with the assignment.
+     * @param patientId UUID of the patient associated with the assignment.
+     * @return true : if exists , false : if doesn't exists
+     */
+    boolean existsByDoctorIdAndPatientId(UUID doctorId, UUID patientId);
 }
