@@ -46,8 +46,8 @@ public class PatientService {
      * @return true if the patient is assigned to at least one doctor, false otherwise.
      */
     private boolean isPatientAssignedToDoctor(UUID validPatientId) {
-        List<DoctorPatientAssignmentModel> patientAssignmentList = doctorPatientAssignmentRepository.findByPatientId(validPatientId);
-        return !patientAssignmentList.isEmpty();
+        Optional<DoctorPatientAssignmentModel> patientAssignmentList = doctorPatientAssignmentRepository.findByPatientIdAndDateOfUnassignmentNull(validPatientId);
+        return patientAssignmentList.isPresent();
     }
 
     /**

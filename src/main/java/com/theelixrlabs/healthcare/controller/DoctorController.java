@@ -37,7 +37,7 @@ public class DoctorController {
     @PostMapping(DoctorConstants.CREATE_DOCTOR_END_POINT)
     public ResponseEntity<SuccessResponse<DoctorDto>> createDoctor(@Valid @RequestBody DoctorDto doctorDto) {
         DoctorDto createdDoctor = doctorService.saveDoctor(doctorDto);
-        return new ResponseEntity<>(new SuccessResponse<>(true, createdDoctor), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, createdDoctor, null), HttpStatus.OK);
     }
 
     /**
@@ -49,7 +49,7 @@ public class DoctorController {
     @GetMapping(DoctorConstants.DOCTOR_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<DoctorDto>> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String doctorId) throws CustomException {
         DoctorDto doctorDto = doctorService.getDoctorById(doctorId);
-        return new ResponseEntity<>(new SuccessResponse<>(true, doctorDto), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, doctorDto, null), HttpStatus.OK);
     }
 
     /**
@@ -61,7 +61,7 @@ public class DoctorController {
      */
     @DeleteMapping(DoctorConstants.DOCTOR_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<String>> deleteDoctorById(@PathVariable String doctorId) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, doctorService.deleteDoctorById(doctorId)), HttpStatus.OK);
+        return new ResponseEntity<>((new SuccessResponse<>(true, null, doctorService.deleteDoctorById(doctorId))),HttpStatus.OK);
     }
 
     /**
@@ -74,6 +74,6 @@ public class DoctorController {
     public ResponseEntity<SuccessResponse<List<DoctorDto>>> getDoctorsByName
     (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) {
         List<DoctorDto> doctorDtoList = doctorService.getDoctorsByName(doctorName);
-        return new ResponseEntity<>(new SuccessResponse<>(true, doctorDtoList), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, doctorDtoList, null), HttpStatus.OK);
     }
 }

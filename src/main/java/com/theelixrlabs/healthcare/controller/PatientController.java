@@ -39,7 +39,7 @@ public class PatientController {
      */
     @PostMapping(PatientConstants.CREATE_PATIENT_ENDPOINT)
     public ResponseEntity<SuccessResponse<PatientDto>> addPatientDetails(@RequestBody @Valid PatientDto patientDto) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.addPatientDetails(patientDto)), HttpStatus.CREATED);
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.addPatientDetails(patientDto), null), HttpStatus.CREATED);
     }
 
     /**
@@ -51,7 +51,7 @@ public class PatientController {
      */
     @GetMapping(PatientConstants.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<PatientDto>> getPatientById(@PathVariable String patientId) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.getPatientById(patientId)), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.getPatientById(patientId), null), HttpStatus.OK);
     }
 
     /**
@@ -63,6 +63,6 @@ public class PatientController {
      */
     @DeleteMapping(PatientConstants.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<String>> deletePatientById(@PathVariable String patientId) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.deletePatientById(patientId)), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.deletePatientById(patientId), null), HttpStatus.OK);
     }
 }

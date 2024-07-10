@@ -29,6 +29,19 @@ public class DoctorPatientAssignmentController {
      */
     @PostMapping(DoctorPatientAssignmentConstants.ASSIGN_DOCTOR_TO_PATIENT_URL)
     public ResponseEntity<SuccessResponse<DoctorPatientAssignmentDto>> assignDoctorToPatient(@Valid @RequestBody DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, doctorPatientAssignmentService.assignDoctorToPatient(doctorPatientAssignmentDto)), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, doctorPatientAssignmentService.assignDoctorToPatient(doctorPatientAssignmentDto), null), HttpStatus.OK);
+    }
+
+    /**
+     * End point to  unassign doctor from patient based on provided dto.
+     *
+     * @param doctorPatientAssignmentDto : DTO object containing doctorId and patientId.
+     * @return ResponseEntity containing a success response with created dto.
+     * @throws CustomException throws exception if any occurs
+     */
+    @PostMapping(DoctorPatientAssignmentConstants.UNASSIGN_DOCTOR_FROM_PATIENT_URL)
+    public ResponseEntity<SuccessResponse<DoctorPatientAssignmentDto>> unassignDoctorFromPatient(@Valid @RequestBody DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
+        doctorPatientAssignmentService.unassignDoctorFromPatient(doctorPatientAssignmentDto);
+        return new ResponseEntity<>(new SuccessResponse<>(true, null, null), HttpStatus.OK);
     }
 }

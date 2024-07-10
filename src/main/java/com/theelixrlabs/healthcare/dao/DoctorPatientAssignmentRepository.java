@@ -20,7 +20,7 @@ public interface DoctorPatientAssignmentRepository extends MongoRepository<Docto
      * @param patientId The UUID of the patient to find assignments for.
      * @return A list of DoctorPatientAssignmentModel objects associated with the patient ID.
      */
-    List<DoctorPatientAssignmentModel> findByPatientId(UUID patientId);
+    Optional<DoctorPatientAssignmentModel> findByPatientIdAndDateOfUnassignmentNull(UUID patientId);
 
     /**
      * Finds all doctor-patient assignments associated with a given doctor ID.
@@ -28,7 +28,7 @@ public interface DoctorPatientAssignmentRepository extends MongoRepository<Docto
      * @param validDoctorId    The UUID of the doctor to retrieve assignments for.
      * @return A list of DoctorPatientAssignmentModel objects representing assignments of the doctor to patients.
      */
-    List<DoctorPatientAssignmentModel> findByDoctorId(UUID validDoctorId);
+    Optional<DoctorPatientAssignmentModel> findByDoctorIdAndDateOfUnassignmentNull(UUID validDoctorId);
 
     /**
      * Method declaration to find a DoctorPatientAssignmentModel by DoctorID and PatientID and date of unassignment not null
@@ -38,4 +38,13 @@ public interface DoctorPatientAssignmentRepository extends MongoRepository<Docto
      * @return Optional containing DoctorPatientAssignmentModel if found, empty otherwise.
      */
     Optional<DoctorPatientAssignmentModel> findByDoctorIdAndPatientIdAndDateOfUnassignmentNull(UUID doctorId, UUID patientId);
+
+    /**
+     * Method declaration to check for a DoctorPatientAssignment by DoctorID and PatientID
+     *
+     * @param doctorId  UUID of the doctor associated with the assignment.
+     * @param patientId UUID of the patient associated with the assignment.
+     * @return true : if exists , false : if doesn't exists
+     */
+    boolean existsByDoctorIdAndPatientId(UUID doctorId, UUID patientId);
 }

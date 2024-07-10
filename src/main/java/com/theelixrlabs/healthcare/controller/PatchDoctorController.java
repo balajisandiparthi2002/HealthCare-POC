@@ -42,6 +42,6 @@ public class PatchDoctorController {
     public ResponseEntity<SuccessResponse<DoctorDto>> patchDoctorById(@PathVariable String doctorId, @RequestBody DoctorDto doctorDto) {
         UUID uuid = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
         DoctorDto updatedDoctorDto = patchDoctorService.patchDoctorById(uuid, doctorDto);
-        return new ResponseEntity<>(new SuccessResponse<>(true, updatedDoctorDto), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, updatedDoctorDto, null), HttpStatus.OK);
     }
 }
