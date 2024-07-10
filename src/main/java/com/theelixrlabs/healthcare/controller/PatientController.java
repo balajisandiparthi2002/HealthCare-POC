@@ -1,7 +1,7 @@
 package com.theelixrlabs.healthcare.controller;
 
 import com.theelixrlabs.healthcare.constants.PatientConstants;
-import com.theelixrlabs.healthcare.dto.PatientDTO;
+import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatientService;
@@ -25,7 +25,7 @@ public class PatientController {
 
     private final PatientService patientService;
 
-    //Constructor Injection
+    //Constructor Injection of PatientService and MessageSource
     public PatientController(PatientService patientService) {
         this.patientService = patientService;
     }
@@ -33,21 +33,21 @@ public class PatientController {
     /**
      * Controller method for handling POST requests to create a new patient.
      *
-     * @param patientDTO    The data transfer object (DTO) containing patient information.
+     * @param patientDto The data transfer object (DTO) containing patient information.
      * @return ResponseEntity containing a SuccessResponse with the created PatientDTO and HTTP status 201 (created).
-     * @throws CustomException    if validation fails or if there are errors during patient creation.
+     * @throws CustomException if validation fails or if there are errors during patient creation.
      */
     @PostMapping(PatientConstants.CREATE_PATIENT_ENDPOINT)
-    public ResponseEntity<SuccessResponse<PatientDTO>> addPatientDetails(@RequestBody @Valid PatientDTO patientDTO) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.addPatientDetails(patientDTO)), HttpStatus.CREATED);
+    public ResponseEntity<SuccessResponse<PatientDto>> addPatientDetails(@RequestBody @Valid PatientDto patientDto) throws CustomException {
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.addPatientDetails(patientDto)), HttpStatus.CREATED);
     }
 
     /**
      * Controller method for handling GET requests to get a patient by ID
      *
-     * @param patientId    Patient ID as String
+     * @param patientId Patient ID as String
      * @return ResponseEntity containing a SuccessResponse with the Patient Associated with the ID and HTTP status 200 (OK)
-     * @throws CustomException    if validation fails or if there are errors during getting patient through ID.
+     * @throws CustomException if validation fails or if there are errors during getting patient through ID.
      */
     @GetMapping(PatientConstants.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<?> getPatientById(@PathVariable String patientId) throws CustomException {
@@ -57,9 +57,9 @@ public class PatientController {
     /**
      * Endpoint to delete a patient by ID.
      *
-     * @param patientId    The ID of the patient to delete, provided as a path variable.
+     * @param patientId The ID of the patient to delete, provided as a path variable.
      * @return ResponseEntity containing a SuccessResponse indicating success or failure.
-     * @throws CustomException    if there's an issue during the deletion process.
+     * @throws CustomException if there's an issue during the deletion process.
      */
     @DeleteMapping(PatientConstants.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<String>> deletePatientById(@PathVariable String patientId) throws CustomException {

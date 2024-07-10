@@ -9,8 +9,8 @@ import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
+import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +24,13 @@ public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final DoctorModelValidator doctorModelValidator;
     private final MessageUtil messageUtil;
+    private final Validator validator;
 
-    public DoctorService(DoctorRepository doctorRepository, DoctorModelValidator doctorModelValidator, MessageUtil messageUtil) {
+    public DoctorService(DoctorRepository doctorRepository, MessageUtil messageUtil, Validator validator,DoctorModelValidator doctorModelValidator) {
         this.doctorRepository = doctorRepository;
         this.doctorModelValidator = doctorModelValidator;
         this.messageUtil = messageUtil;
+        this.validator = validator;
     }
 
     /**
@@ -38,9 +40,8 @@ public class DoctorService {
      * @return The saved dto object.
      */
     public DoctorDto saveDoctor(DoctorDto doctorDto) throws CustomException {
-        validateDoctor(doctorDto);
+        validator.validateDoctor(doctorDto);
         String aadhaarNumber = doctorDto.getAadhaarNumber();
-
         String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + DoctorConstants.EMPTY_SPACE +
                 aadhaarNumber.substring(4, 8) + DoctorConstants.EMPTY_SPACE +
                 aadhaarNumber.substring(8, 12);
@@ -64,31 +65,6 @@ public class DoctorService {
                 .aadhaarNumber(doctorModel.getAadhaarNumber())
                 .build();
         return savedDoctorDto;
-    }
-
-    /**
-     * Custom validation method for checking regex pattern of firstname lastname and Aadhaar number
-     *
-     * @param doctorDto : DoctorDto object containing doctor information.
-     * @throws CustomException : Class to handle custom exception
-     */
-    private void validateDoctor(DoctorDto doctorDto) throws CustomException {
-
-        if (doctorDto.getFirstName().isEmpty()) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_FIRST_NAME_SHOULD_NOT_BE_EMPTY));
-        } else if (!(doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_FIRSTNAME));
-        }
-        if (doctorDto.getLastName().isEmpty()) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY));
-        } else if (!(doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN))) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_LASTNAME));
-        }
-        if (doctorDto.getAadhaarNumber().isEmpty()) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_AADHAAR_NUMBER_SHOULD_NOT_BE_EMPTY));
-        } else if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_AADHAAR_NUMBER));
-        }
     }
 
     /**
