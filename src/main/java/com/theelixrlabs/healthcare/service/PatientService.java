@@ -12,7 +12,6 @@ import com.theelixrlabs.healthcare.repository.PatientRepository;
 import com.theelixrlabs.healthcare.validation.Validator;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
