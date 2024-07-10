@@ -1,9 +1,11 @@
 package com.theelixrlabs.healthcare.validation;
 
+import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.PatientDTO;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -21,10 +23,10 @@ public class Validator {
      * Validates and converts a given string representation of UUID into a UUID object.
      * Throws a CustomException with a specific error message if the string is not a valid UUID format.
      *
-     * @param id    The string representation of UUID to validate and convert.
-     * @param errorMessage    The error message to use in the CustomException if validation fails.
+     * @param id           The string representation of UUID to validate and convert.
+     * @param errorMessage The error message to use in the CustomException if validation fails.
      * @return The UUID object parsed from the input string.
-     * @throws CustomException    If the input string is not a valid UUID format.
+     * @throws CustomException If the input string is not a valid UUID format.
      */
     public UUID validateAndConvertToUUID(String id, String errorMessage) throws CustomException {
         UUID patientId;
@@ -39,8 +41,8 @@ public class Validator {
     /**
      * Validates the PatientDTO before adding details.
      *
-     * @param patientDTO    The data transfer object containing patient information.
-     * @throws CustomException    If validation fails (e.g., empty first name or invalid characters).
+     * @param patientDTO The data transfer object containing patient information.
+     * @throws CustomException If validation fails (e.g., empty first name or invalid characters).
      */
     public void validatePatientDTO(PatientDTO patientDTO) throws CustomException {
 
@@ -56,6 +58,16 @@ public class Validator {
             throw new CustomException(messageUtil.getMessage(PatientConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY));
         } else if (!patientDTO.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
             throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_LAST_NAME_KEY));
+        }
+    }
+
+    /**
+     * Validates the patient name to ensure it is not blank.
+     * @param patientName The patient name to be validated.
+     */
+    public void validatePatientName(String patientName) {
+        if (StringUtils.isBlank(patientName)) {
+            throw new CustomException(messageUtil.getMessage(MessageConstants.PATIENT_NAME_CANNOT_BE_EMPTY));
         }
     }
 }
