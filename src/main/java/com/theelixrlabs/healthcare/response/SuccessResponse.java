@@ -1,5 +1,6 @@
 package com.theelixrlabs.healthcare.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -19,5 +20,6 @@ public class SuccessResponse<T> {
     /**
      * The data payload returned as part of the success response.
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T responseData;
 }
