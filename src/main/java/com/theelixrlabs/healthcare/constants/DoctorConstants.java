@@ -13,6 +13,7 @@ public class DoctorConstants {
     public static final String EMPTY_SPACE = " ";
     public static final String GET_DOCTOR_BY_ID_ENDPOINT = "/doctors/{doctorId}";
     public static final String GET_DOCTORS_BY_NAME_ENDPOINT = "/getDoctorsByName";
+    public static final String PATCH_DOCTOR_ENDPOINT = "/patchDoctor/{doctorId}";
     public static final String PATH_VARIABLE_DOCTOR_ID = "doctorId";
     public static final String SEARCH_DOCTOR_BY_NAME_QUERY = "{$or:[{firstName:{$regex: '^?0',$options:'i'}},{lastName:{$regex:'^?0',$options:'i'}}]}";
 }

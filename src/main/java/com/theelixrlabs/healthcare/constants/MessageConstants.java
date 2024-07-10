@@ -6,6 +6,7 @@ package com.theelixrlabs.healthcare.constants;
  */
 public class MessageConstants {
     public static final String DEPARTMENT_SHOULD_BE_MANDATORY = "{doctor.department.mandatory}";
+    public static final String DEPARTMENT_SHOULD_NOT_BE_EMPTY = "{doctor.department.should.not.be.empty}";
     public static final String DOCTOR_AADHAAR_ALREADY_PRESENT = "doctor.aadhaar.number.already.present";
     public static final String DOCTOR_AADHAAR_NUMBER_SHOULD_BE_MANDATORY = "{doctor.aadhaar.number.mandatory}";
     public static final String DOCTOR_AADHAAR_NUMBER_SHOULD_NOT_BE_EMPTY = "doctor.aadhaar.number.should.not.be.empty";
