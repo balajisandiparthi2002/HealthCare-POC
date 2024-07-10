@@ -34,8 +34,8 @@ public class PatchDoctorController {
     /**
      * Controller method for handling incoming Patch request.
      *
-     * @param doctorId  Doctor id as string.
-     * @param doctorDto Data transfer object containing doctor information.
+     * @param doctorId    Doctor id as string.
+     * @param doctorDto     Data transfer object containing doctor information.
      * @return ResponseEntity containing success response alone with modified doctor details.
      */
     @PatchMapping(DoctorConstants.PATCH_DOCTOR_ENDPOINT)

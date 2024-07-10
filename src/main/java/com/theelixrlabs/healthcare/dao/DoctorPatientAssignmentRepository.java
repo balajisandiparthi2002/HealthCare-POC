@@ -4,7 +4,6 @@ import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,18 +14,22 @@ import java.util.UUID;
 public interface DoctorPatientAssignmentRepository extends MongoRepository<DoctorPatientAssignmentModel, UUID> {
 
     /**
-     * Finds all doctor-patient assignments associated with a given patient ID.
+     * Retrieves an active assignment for a patient identified by the provided patientId,
+     * where the date of unassignment is null.
      *
-     * @param patientId The UUID of the patient to find assignments for.
-     * @return A list of DoctorPatientAssignmentModel objects associated with the patient ID.
+     * @param validPatientId    The UUID identifying the patient for whom to retrieve the active assignment.
+     * @return An Optional containing the DoctorPatientAssignmentModel if found,
+     * or an empty Optional if no active assignment is found.
      */
-    Optional<DoctorPatientAssignmentModel> findByPatientIdAndDateOfUnassignmentNull(UUID patientId);
+    Optional<DoctorPatientAssignmentModel> findByPatientIdAndDateOfUnassignmentNull(UUID validPatientId);
 
     /**
-     * Finds all doctor-patient assignments associated with a given doctor ID.
+     * Retrieves an active assignment for a doctor identified by the provided validDoctorId,
+     * where the date of unassignment is null.
      *
-     * @param validDoctorId    The UUID of the doctor to retrieve assignments for.
-     * @return A list of DoctorPatientAssignmentModel objects representing assignments of the doctor to patients.
+     * @param validDoctorId    The UUID identifying the doctor for whom to retrieve the active assignment.
+     * @return An Optional containing the DoctorPatientAssignmentModel if found,
+     * or an empty Optional if no active assignment is found.
      */
     Optional<DoctorPatientAssignmentModel> findByDoctorIdAndDateOfUnassignmentNull(UUID validDoctorId);
 
@@ -42,8 +45,8 @@ public interface DoctorPatientAssignmentRepository extends MongoRepository<Docto
     /**
      * Method declaration to check for a DoctorPatientAssignment by DoctorID and PatientID
      *
-     * @param doctorId  UUID of the doctor associated with the assignment.
-     * @param patientId UUID of the patient associated with the assignment.
+     * @param doctorId    UUID of the doctor associated with the assignment.
+     * @param patientId    UUID of the patient associated with the assignment.
      * @return true : if exists , false : if doesn't exists
      */
     boolean existsByDoctorIdAndPatientId(UUID doctorId, UUID patientId);
