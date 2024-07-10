@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     /**
      * Exception handler for MethodArgumentNotValidException.
      *
-     * @param methodArgumentNotValidException    MethodArgumentNotValidException exception instance.
+     * @param methodArgumentNotValidException MethodArgumentNotValidException exception instance.
      * @return ResponseEntity failure response with error messages.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     /**
      * Exception handler for custom exceptions and validations.
      *
-     * @param customException    customException instance thrown during runtime.
+     * @param customException customException instance thrown during runtime.
      * @return ResponseEntity failure response with error messages.
      */
     @ExceptionHandler(CustomException.class)

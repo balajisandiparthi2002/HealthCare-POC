@@ -16,7 +16,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class PatientDTO {
+public class PatientDto {
 
     private UUID id;
 
