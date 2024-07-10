@@ -103,8 +103,8 @@ public class Validator {
     /**
      * Validating method to validate based on incoming request.
      *
-     * @param patientDto Data transfer object containing doctor information.
-     * @throws CustomException If validation fails or doctor already exists .
+     * @param patientDto Data transfer object containing patient information.
+     * @throws CustomException If validation fails or patient already exists .
      */
     public void validatePatchPatient(PatientDto patientDto) throws CustomException {
         if (patientDto.getPatientFirstName() != null) {

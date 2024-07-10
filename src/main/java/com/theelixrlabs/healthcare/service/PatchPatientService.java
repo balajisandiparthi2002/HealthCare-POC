@@ -30,12 +30,12 @@ public class PatchPatientService {
     }
 
     /**
-     * Replace existing doctor details based on request.
+     * Replace existing patient details based on request.
      *
-     * @param patientId  Doctor unique UUID
-     * @param patientDTO Data transfer object containing doctor information.
-     * @return The replaced doctor details.
-     * @throws CustomException If validation fails or doctor already exists.
+     * @param patientId  Patient unique UUID
+     * @param patientDTO Data transfer object containing patient information.
+     * @return The replaced patient details.
+     * @throws CustomException If validation fails or patient already exists.
      */
     public PatientDto patchPatientById(UUID patientId, PatientDto patientDTO) throws CustomException {
         validator.validatePatchPatient(patientDTO);
