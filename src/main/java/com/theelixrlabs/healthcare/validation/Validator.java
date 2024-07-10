@@ -99,4 +99,37 @@ public class Validator {
             }
         }
     }
+
+    /**
+     * Validating method to validate based on incoming request.
+     *
+     * @param patientDto Data transfer object containing doctor information.
+     * @throws CustomException If validation fails or doctor already exists .
+     */
+    public void validatePatchPatient(PatientDto patientDto) throws CustomException {
+        if (patientDto.getPatientFirstName() != null) {
+            if (patientDto.getPatientFirstName().isEmpty()) {
+                throw new CustomException(messageUtil.getMessage(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY));
+            }
+            if (!patientDto.getPatientFirstName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
+                throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_FIRST_NAME_KEY));
+            }
+        }
+        if (patientDto.getPatientLastName() != null) {
+            if (patientDto.getPatientLastName().isEmpty()) {
+                throw new CustomException(messageUtil.getMessage(PatientConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY));
+            }
+            if (!patientDto.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
+                throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_LAST_NAME_KEY));
+            }
+        }
+        if (patientDto.getPatientAadhaarNumber() != null) {
+            if (patientDto.getPatientAadhaarNumber().isEmpty()) {
+                throw new CustomException(messageUtil.getMessage(MessageConstants.PATIENT_AADHAAR_NUMBER_SHOULD_NOT_BE_EMPTY));
+            }
+            if (!(patientDto.getPatientAadhaarNumber().matches(PatientConstants.AADHAAR_NUMBER_REGEX))) {
+                throw new CustomException(messageUtil.getMessage(MessageConstants.PATIENT_INVALID_AADHAAR_NUMBER));
+            }
+        }
+    }
 }
