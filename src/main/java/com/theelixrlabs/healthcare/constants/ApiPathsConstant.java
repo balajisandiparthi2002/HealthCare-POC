@@ -3,7 +3,7 @@ package com.theelixrlabs.healthcare.constants;
 /**
  * Contains endpoint constants used throughout the healthcare application.
  */
-public class ApiPathsConstants {
+public class ApiPathsConstant {
     public static final String ASSIGN_DOCTOR_TO_PATIENT_URL = "/assignDoctorToPatient";
     public static final String CREATE_DOCTOR_END_POINT = "/addDoctor";
     public static final String CREATE_PATIENT_ENDPOINT = "/addPatient";

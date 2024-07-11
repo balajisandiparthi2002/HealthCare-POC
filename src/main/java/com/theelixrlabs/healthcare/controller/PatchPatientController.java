@@ -1,8 +1,6 @@
 package com.theelixrlabs.healthcare.controller;
 
-import com.theelixrlabs.healthcare.constants.ApiPathsConstants;
-import com.theelixrlabs.healthcare.constants.MessageConstants;
-import com.theelixrlabs.healthcare.constants.PatientConstants;
+import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatchPatientService;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
 
 @RestController
 public class PatchPatientController {
@@ -34,7 +30,7 @@ public class PatchPatientController {
      * @param patientDto Data transfer object containing patient information.
      * @return ResponseEntity containing success response alone with modified patient details.
      */
-    @PatchMapping(ApiPathsConstants.PATIENT_BY_ID_ENDPOINT)
+    @PatchMapping(ApiPathsConstant.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<PatientDto>> patchPatientById(@PathVariable String patientId, @RequestBody PatientDto patientDto) {
         PatientDto updatedPatient = patchPatientService.patchPatientById(patientId, patientDto);
         return new ResponseEntity<>(new SuccessResponse<>(true, updatedPatient), HttpStatus.OK);
