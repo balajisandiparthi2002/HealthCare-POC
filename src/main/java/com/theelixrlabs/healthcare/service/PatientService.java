@@ -2,7 +2,7 @@ package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
-import com.theelixrlabs.healthcare.dao.DoctorPatientAssignmentRepository;
+import com.theelixrlabs.healthcare.repository.DoctorPatientAssignmentRepository;
 import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
@@ -42,20 +42,20 @@ public class PatientService {
     /**
      * Checks if a patient is assigned to any doctor based on the given patient ID.
      *
-     * @param validPatientId The UUID of the patient to check assignment for.
+     * @param validPatientId    The UUID of the patient to check assignment for.
      * @return true if the patient is assigned to at least one doctor, false otherwise.
      */
     private boolean isPatientAssignedToDoctor(UUID validPatientId) {
-        List<DoctorPatientAssignmentModel> patientAssignmentList = doctorPatientAssignmentRepository.findByPatientId(validPatientId);
-        return !patientAssignmentList.isEmpty();
+        Optional<DoctorPatientAssignmentModel> patientAssignmentList = doctorPatientAssignmentRepository.findByPatientIdAndDateOfUnassignmentNull(validPatientId);
+        return patientAssignmentList.isPresent();
     }
 
     /**
      * Creates a new patient based on the provided PatientDTO.
      *
-     * @param patientDto The data transfer object containing patient information.
+     * @param patientDto    The data transfer object containing patient information.
      * @return The PatientDTO of the newly created patient, with ID populated.
-     * @throws CustomException If validation fails or if the Aadhaar number already exists.
+     * @throws CustomException    If validation fails or if the Aadhaar number already exists.
      */
     public PatientDto addPatientDetails(PatientDto patientDto) throws CustomException {
 
@@ -96,9 +96,9 @@ public class PatientService {
     /**
      * Get the PatientModel object associated with ID
      *
-     * @param patientId Patient ID as UUID
+     * @param patientId    Patient ID as UUID
      * @return PatientDTO object for the ID
-     * @throws CustomException If no patient found with the ID
+     * @throws CustomException    If no patient found with the ID
      */
     public PatientDto getPatientById(String patientId) throws CustomException {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY);
@@ -118,14 +118,14 @@ public class PatientService {
     /**
      * Deletes a patient by their ID, if conditions are met.
      *
-     * @param patientId The ID of the patient to delete.
+     * @param patientId    The ID of the patient to delete.
      * @return A success message upon successful deletion.
-     * @throws CustomException If the patient is not found or is currently assigned to a doctor.
+     * @throws CustomException    If the patient is not found or is currently assigned to a doctor.
      */
     public String deletePatientById(String patientId) throws CustomException {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         if (!patientRepository.existsById(validPatientId))
-            throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
+            throw new ResourceNotFoundException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
         if (isPatientAssignedToDoctor(validPatientId)) {
             throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR));
         }

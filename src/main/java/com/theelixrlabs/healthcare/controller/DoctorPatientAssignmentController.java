@@ -29,7 +29,7 @@ public class DoctorPatientAssignmentController {
      */
     @PostMapping(ApiPathsConstant.ASSIGN_DOCTOR_TO_PATIENT_URL)
     public ResponseEntity<SuccessResponse<DoctorPatientAssignmentDto>> assignDoctorToPatient(@Valid @RequestBody DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, doctorPatientAssignmentService.assignDoctorToPatient(doctorPatientAssignmentDto)), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, doctorPatientAssignmentService.assignDoctorToPatient(doctorPatientAssignmentDto), null), HttpStatus.OK);
     }
 
     /**
@@ -42,6 +42,6 @@ public class DoctorPatientAssignmentController {
     @PostMapping(ApiPathsConstant.UNASSIGN_DOCTOR_FROM_PATIENT_URL)
     public ResponseEntity<SuccessResponse<DoctorPatientAssignmentDto>> unassignDoctorFromPatient(@Valid @RequestBody DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
         doctorPatientAssignmentService.unassignDoctorFromPatient(doctorPatientAssignmentDto);
-        return new ResponseEntity<>(new SuccessResponse<>(true, null), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, null, null), HttpStatus.OK);
     }
 }

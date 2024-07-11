@@ -22,4 +22,9 @@ public class SuccessResponse<T> {
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T responseData;
+    /**
+     * Optional message providing additional information about the success.
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String responseMessage;
 }
