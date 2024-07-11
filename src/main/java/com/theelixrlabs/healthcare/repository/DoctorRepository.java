@@ -1,6 +1,6 @@
 package com.theelixrlabs.healthcare.repository;
 
-import com.theelixrlabs.healthcare.constants.DoctorConstants;
+import com.theelixrlabs.healthcare.constants.QueryConstants;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -30,6 +30,6 @@ public interface DoctorRepository extends MongoRepository<DoctorModel, UUID> {
      * @param doctorName The starting letters of the doctor name to search for.
      * @return List of DoctorModel objects that match the search criteria.
      */
-    @Query(DoctorConstants.SEARCH_DOCTOR_BY_NAME_QUERY)
+    @Query(QueryConstants.SEARCH_DOCTOR_BY_NAME_QUERY)
     List<DoctorModel> searchByDoctorName(String doctorName);
 }
