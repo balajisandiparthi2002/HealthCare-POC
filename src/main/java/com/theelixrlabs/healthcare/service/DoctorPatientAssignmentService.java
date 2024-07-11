@@ -1,7 +1,7 @@
 package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.DoctorPatientAssignmentConstants;
-import com.theelixrlabs.healthcare.dao.DoctorPatientAssignmentRepository;
+import com.theelixrlabs.healthcare.repository.DoctorPatientAssignmentRepository;
 import com.theelixrlabs.healthcare.dto.DoctorPatientAssignmentDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;

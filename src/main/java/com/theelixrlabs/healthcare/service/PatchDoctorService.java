@@ -71,7 +71,6 @@ public class PatchDoctorService {
                     .aadhaarNumber(existingDoctor.getAadhaarNumber())
                     .build();
         } else {
-            //throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_UNAVAILABLE));
             throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_ID_NOT_FOUND));
         }
     }

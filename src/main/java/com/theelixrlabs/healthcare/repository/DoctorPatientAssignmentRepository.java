@@ -1,4 +1,4 @@
-package com.theelixrlabs.healthcare.dao;
+package com.theelixrlabs.healthcare.repository;
 
 import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
