@@ -1,6 +1,6 @@
 package com.theelixrlabs.healthcare.controller;
 
-import com.theelixrlabs.healthcare.constants.ApiPathsConstants;
+import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.dto.DoctorPatientAssignmentDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
@@ -27,7 +27,7 @@ public class DoctorPatientAssignmentController {
      * @param doctorPatientAssignmentDto : DTO object containing doctorId and patientId.
      * @return ResponseEntity containing a success response with created dto.
      */
-    @PostMapping(ApiPathsConstants.ASSIGN_DOCTOR_TO_PATIENT_URL)
+    @PostMapping(ApiPathsConstant.ASSIGN_DOCTOR_TO_PATIENT_URL)
     public ResponseEntity<SuccessResponse<DoctorPatientAssignmentDto>> assignDoctorToPatient(@Valid @RequestBody DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorPatientAssignmentService.assignDoctorToPatient(doctorPatientAssignmentDto), null), HttpStatus.OK);
     }
@@ -39,7 +39,7 @@ public class DoctorPatientAssignmentController {
      * @return ResponseEntity containing a success response with created dto.
      * @throws CustomException throws exception if any occurs
      */
-    @PostMapping(ApiPathsConstants.UNASSIGN_DOCTOR_FROM_PATIENT_URL)
+    @PostMapping(ApiPathsConstant.UNASSIGN_DOCTOR_FROM_PATIENT_URL)
     public ResponseEntity<SuccessResponse<DoctorPatientAssignmentDto>> unassignDoctorFromPatient(@Valid @RequestBody DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
         doctorPatientAssignmentService.unassignDoctorFromPatient(doctorPatientAssignmentDto);
         return new ResponseEntity<>(new SuccessResponse<>(true, null, null), HttpStatus.OK);
