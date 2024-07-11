@@ -10,7 +10,7 @@ public class PatientConstants {
     public static final String FIRST_NAME_NOT_EMPTY_KEY = "first.name.should.not.be.empty";
     public static final String INVALID_FIRST_NAME_KEY = "first.name.invalid";
     public static final String INVALID_LAST_NAME_KEY = "last.name.invalid";
-    public static final String INVALID_UUID_KEY = "uuid.invalid";
+    public static final String INVALID_UUID_KEY = "invalid.uuid";
     public static final String LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY = "last.name.should.not.be.empty";
     public static final String MESSAGE_RESOURCE_CLASSPATH_NAME = "classpath:messages";
     public static final String PATIENT_DELETE_SUCCESS_MESSAGE = "patient.delete.success.message";

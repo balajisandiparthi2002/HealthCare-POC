@@ -33,14 +33,14 @@ public class PatchDoctorController {
     /**
      * Controller method for handling incoming Patch request.
      *
-     * @param doctorId  Doctor id as string.
-     * @param doctorDto Data transfer object containing doctor information.
+     * @param doctorId    Doctor id as string.
+     * @param doctorDto     Data transfer object containing doctor information.
      * @return ResponseEntity containing success response alone with modified doctor details.
      */
     @PatchMapping(ApiPathsConstant.PATCH_DOCTOR_ENDPOINT)
     public ResponseEntity<SuccessResponse<DoctorDto>> patchDoctorById(@PathVariable String doctorId, @RequestBody DoctorDto doctorDto) {
         UUID uuid = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
         DoctorDto updatedDoctorDto = patchDoctorService.patchDoctorById(uuid, doctorDto);
-        return new ResponseEntity<>(new SuccessResponse<>(true, updatedDoctorDto), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, updatedDoctorDto, null), HttpStatus.OK);
     }
 }

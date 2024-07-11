@@ -24,10 +24,10 @@ public class Validator {
      * Validates and converts a given string representation of UUID into a UUID object.
      * Throws a CustomException with a specific error message if the string is not a valid UUID format.
      *
-     * @param id           The string representation of UUID to validate and convert.
-     * @param errorMessage The error message to use in the CustomException if validation fails.
+     * @param id    The string representation of UUID to validate and convert.
+     * @param errorMessage    The error message to use in the CustomException if validation fails.
      * @return The UUID object parsed from the input string.
-     * @throws CustomException If the input string is not a valid UUID format.
+     * @throws CustomException    If the input string is not a valid UUID format.
      */
     public UUID validateAndConvertToUUID(String id, String errorMessage) throws CustomException {
         UUID uuid;
@@ -86,7 +86,7 @@ public class Validator {
             if (doctorDto.getFirstName().isEmpty()) {
                 throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_FIRST_NAME_SHOULD_NOT_BE_EMPTY));
             }
-            if (!doctorDto.getFirstName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN)) {
+            if (!doctorDto.getFirstName().matches(DoctorConstants.ALPHA_CHARACTERS_REGEX)) {
                 throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_FIRSTNAME));
             }
         }
@@ -94,7 +94,7 @@ public class Validator {
             if (doctorDto.getLastName().isEmpty()) {
                 throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY));
             }
-            if (!doctorDto.getLastName().matches(DoctorConstants.CHARACTER_ONLY_REGEX_PATTERN)) {
+            if (!doctorDto.getLastName().matches(DoctorConstants.ALPHA_CHARACTERS_REGEX)) {
                 throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_LASTNAME));
             }
         }
