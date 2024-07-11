@@ -1,5 +1,6 @@
 package com.theelixrlabs.healthcare.controller;
 
+import com.theelixrlabs.healthcare.constants.ApiPathsConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.PatientDto;
@@ -33,10 +34,9 @@ public class PatchPatientController {
      * @param patientDto Data transfer object containing patient information.
      * @return ResponseEntity containing success response alone with modified patient details.
      */
-    @PatchMapping(PatientConstants.PATCH_PATIENT_ENDPOINT)
+    @PatchMapping(ApiPathsConstants.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<PatientDto>> patchPatientById(@PathVariable String patientId, @RequestBody PatientDto patientDto) {
-        UUID uuid = validator.validateAndConvertToUUID(patientId, MessageConstants.INVALID_UUID);
-        PatientDto updatedPatient = patchPatientService.patchPatientById(uuid, patientDto);
+        PatientDto updatedPatient = patchPatientService.patchPatientById(patientId, patientDto);
         return new ResponseEntity<>(new SuccessResponse<>(true, updatedPatient), HttpStatus.OK);
     }
 }

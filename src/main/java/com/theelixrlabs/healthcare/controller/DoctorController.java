@@ -1,6 +1,6 @@
 package com.theelixrlabs.healthcare.controller;
 
-import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
+import com.theelixrlabs.healthcare.constants.ApiPathsConstants;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
@@ -39,7 +39,7 @@ public class DoctorController {
      * @param doctorDto : DTO object containing doctor object.
      * @return ResponseEntity containing a success response with created dto.
      */
-    @PostMapping(ApiPathsConstant.CREATE_DOCTOR_END_POINT)
+    @PostMapping(ApiPathsConstants.CREATE_DOCTOR_END_POINT)
     public ResponseEntity<SuccessResponse<DoctorDto>> createDoctor(@Valid @RequestBody DoctorDto doctorDto) {
         DoctorDto createdDoctor = doctorService.saveDoctor(doctorDto);
         return new ResponseEntity<>(new SuccessResponse<>(true, createdDoctor), HttpStatus.OK);
@@ -51,7 +51,7 @@ public class DoctorController {
      * @param id The ID of the doctor as a String, which will be converted to a UUID.
      * @return ResponseEntity containing a success response with the retrieved DoctorDto.
      */
-    @GetMapping(ApiPathsConstant.GET_DOCTOR_BY_ID_ENDPOINT)
+    @GetMapping(ApiPathsConstants.DOCTOR_BY_ID_ENDPOINT)
     public ResponseEntity<?> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String id) {
         UUID doctorId;
         try {
@@ -69,7 +69,7 @@ public class DoctorController {
      * @param doctorName the name of the doctor to search for
      * @return a ResponseEntity containing a SuccessResponse with a list of matching DoctorDto objects
      */
-    @GetMapping(ApiPathsConstant.GET_DOCTORS_BY_NAME_ENDPOINT)
+    @GetMapping(ApiPathsConstants.GET_DOCTORS_BY_NAME_ENDPOINT)
     public ResponseEntity<SuccessResponse<List<DoctorDto>>> getDoctorsByName
     (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) {
         List<DoctorDto> doctorDtoList = doctorService.getDoctorsByName(doctorName);

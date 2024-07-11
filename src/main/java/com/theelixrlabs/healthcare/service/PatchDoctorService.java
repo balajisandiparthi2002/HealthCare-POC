@@ -1,6 +1,5 @@
 package com.theelixrlabs.healthcare.service;
 
-import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
@@ -9,6 +8,7 @@ import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -54,8 +54,8 @@ public class PatchDoctorService {
             }
             if (doctorDto.getAadhaarNumber() != null && !doctorDto.getAadhaarNumber().equals(existingDoctor.getAadhaarNumber())) {
                 String aadhaarNumber = doctorDto.getAadhaarNumber();
-                String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + DoctorConstants.EMPTY_SPACE +
-                        aadhaarNumber.substring(4, 8) + DoctorConstants.EMPTY_SPACE +
+                String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + StringUtils.SPACE +
+                        aadhaarNumber.substring(4, 8) + StringUtils.SPACE +
                         aadhaarNumber.substring(8, 12);
                 if (doctorRepository.findByAadhaarNumber(formattedAadhaarNumber).isPresent()) {
                     throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_AADHAAR_ALREADY_PRESENT));
@@ -71,7 +71,6 @@ public class PatchDoctorService {
                     .aadhaarNumber(existingDoctor.getAadhaarNumber())
                     .build();
         } else {
-            //throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_UNAVAILABLE));
             throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_UNAVAILABLE));
         }
     }
