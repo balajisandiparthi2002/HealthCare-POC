@@ -1,14 +1,14 @@
 package com.theelixrlabs.healthcare.validation;
 
-import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
+import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-
 import java.util.UUID;
 
 @Component
@@ -44,6 +44,7 @@ public class Validator {
      *
      * @param patientDto The data transfer object containing patient information.
      * @throws CustomException If validation fails (e.g., empty first name or invalid characters).
+     * @throws CustomException If validation fails (e.g., empty first name or invalid characters).
      */
     public void validatePatientDto(PatientDto patientDto) throws CustomException {
 
@@ -59,6 +60,18 @@ public class Validator {
             throw new CustomException(messageUtil.getMessage(PatientConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY));
         } else if (!patientDto.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
             throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_LAST_NAME_KEY));
+        }
+    }
+
+    /**
+     * Validates that the given input string is not blank.
+     * If the input string is blank (null, empty, or whitespace), a CustomException is thrown with the specified error message.
+     *
+     * @param inputString The string to be validated.
+     */
+    public void validateNonEmptyString(String inputString, String errorMessage) {
+        if (StringUtils.isBlank(inputString)) {
+            throw new CustomException(errorMessage);
         }
     }
 

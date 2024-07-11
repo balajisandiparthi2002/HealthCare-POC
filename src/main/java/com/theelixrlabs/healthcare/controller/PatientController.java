@@ -1,5 +1,6 @@
 package com.theelixrlabs.healthcare.controller;
 
+import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
@@ -8,12 +9,14 @@ import com.theelixrlabs.healthcare.service.PatientService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import java.util.List;
 
 /**
  * Patient Controller layer, which interacts with the user.
@@ -37,7 +40,7 @@ public class PatientController {
      * @return ResponseEntity containing a SuccessResponse with the created PatientDTO and HTTP status 201 (created).
      * @throws CustomException if validation fails or if there are errors during patient creation.
      */
-    @PostMapping(PatientConstants.CREATE_PATIENT_ENDPOINT)
+    @PostMapping(ApiPathsConstant.CREATE_PATIENT_ENDPOINT)
     public ResponseEntity<SuccessResponse<PatientDto>> addPatientDetails(@RequestBody @Valid PatientDto patientDto) throws CustomException {
         return new ResponseEntity<>(new SuccessResponse<>(true, patientService.addPatientDetails(patientDto)), HttpStatus.CREATED);
     }
@@ -49,7 +52,7 @@ public class PatientController {
      * @return ResponseEntity containing a SuccessResponse with the Patient Associated with the ID and HTTP status 200 (OK)
      * @throws CustomException if validation fails or if there are errors during getting patient through ID.
      */
-    @GetMapping(PatientConstants.PATIENT_BY_ID_ENDPOINT)
+    @GetMapping(ApiPathsConstant.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<?> getPatientById(@PathVariable String patientId) throws CustomException {
         return new ResponseEntity<>(new SuccessResponse<>(true, patientService.getPatientById(patientId)), HttpStatus.OK);
     }
@@ -61,8 +64,20 @@ public class PatientController {
      * @return ResponseEntity containing a SuccessResponse indicating success or failure.
      * @throws CustomException if there's an issue during the deletion process.
      */
-    @DeleteMapping(PatientConstants.PATIENT_BY_ID_ENDPOINT)
+    @DeleteMapping(ApiPathsConstant.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<String>> deletePatientById(@PathVariable String patientId) throws CustomException {
         return new ResponseEntity<>(new SuccessResponse<>(true, patientService.deletePatientById(patientId)), HttpStatus.OK);
+    }
+
+    /**
+     * Retrieves a list of patients whose first or last name starts with the specified name.
+     *
+     * @param patientName The partial name to search for patients. It matches both first and last names.
+     * @return A ResponseEntity containing a SuccessResponse with the list of matching PatientDTO objects and HTTP status OK.
+     */
+    @GetMapping(ApiPathsConstant.GET_PATIENTS_BY_NAME_ENDPOINT)
+    public ResponseEntity<SuccessResponse<List<PatientDto>>> getPatientsByName(@RequestParam(PatientConstants.PATIENT_NAME_PARAM) String patientName) {
+        List<PatientDto> patientDtoList = patientService.getPatientsByName(patientName);
+        return new ResponseEntity<>(new SuccessResponse<>(true, patientDtoList), HttpStatus.OK);
     }
 }
