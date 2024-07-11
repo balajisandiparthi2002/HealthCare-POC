@@ -13,7 +13,6 @@ public class PatientConstants {
     public static final String INVALID_UUID_KEY = "invalid.uuid";
     public static final String LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY = "last.name.should.not.be.empty";
     public static final String MESSAGE_RESOURCE_CLASSPATH_NAME = "classpath:messages";
-    public static final String PATCH_PATIENT_ENDPOINT = "/patchPatient/{patientId}";
     public static final String PATIENTS_COLLECTION_NAME = "patients";
     public static final String PATIENT_DELETE_SUCCESS_MESSAGE = "patient.delete.success.message";
     public static final String PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR = "patient.deletion.failed.assigned.to.doctor";

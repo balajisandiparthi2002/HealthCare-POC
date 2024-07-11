@@ -1,6 +1,7 @@
 package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.DoctorPatientAssignmentConstants;
+import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.repository.DoctorPatientAssignmentRepository;
 import com.theelixrlabs.healthcare.dto.DoctorPatientAssignmentDto;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
@@ -10,7 +11,6 @@ import com.theelixrlabs.healthcare.repository.PatientRepository;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
@@ -81,10 +81,10 @@ public class DoctorPatientAssignmentService {
 
     private void validateDoctorPatientExistence(UUID doctorId, UUID patientId) throws CustomException {
         if (!doctorRepository.existsById(doctorId)) {
-            throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_NOT_FOUND_KEY));
+            throw new ResourceNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_NOT_FOUND_KEY));
         }
         if (!patientRepository.existsById(patientId)) {
-            throw new CustomException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_NOT_FOUND_KEY));
+            throw new ResourceNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_NOT_FOUND_KEY));
         }
     }
 

@@ -104,7 +104,7 @@ public class PatientService {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
         if (patientModelOptional.isEmpty())
-            throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
+            throw new ResourceNotFoundException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
         PatientModel patientModel = patientModelOptional.get();
         //mapping patient model to patientDTO
         return PatientDto.builder()

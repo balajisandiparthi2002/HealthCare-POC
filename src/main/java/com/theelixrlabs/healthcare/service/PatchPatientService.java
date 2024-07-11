@@ -12,7 +12,6 @@ import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.UUID;
 

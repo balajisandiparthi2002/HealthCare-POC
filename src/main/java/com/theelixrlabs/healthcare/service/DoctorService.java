@@ -12,7 +12,6 @@ import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
@@ -90,10 +89,10 @@ public class DoctorService {
      * @throws CustomException    Class to handle custom exception
      */
     public DoctorDto getDoctorById(String doctorId) throws CustomException {
-        UUID validDoctorId = validator.validateAndConvertToUUID(doctorId, MessageConstants.DOCTOR_ID_NOT_FOUND);
+        UUID validDoctorId = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
         Optional<DoctorModel> doctorModelOptional = doctorRepository.findById(validDoctorId);
         if (doctorModelOptional.isEmpty()) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_ID_NOT_FOUND));
+            throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_ID_NOT_FOUND));
         }
         DoctorModel doctorModel = doctorModelOptional.get();
         return DoctorDto.builder()
@@ -139,7 +138,7 @@ public class DoctorService {
         validator.validateNonEmptyString(doctorName, messageUtil.getMessage(MessageConstants.DOCTOR_NAME_CANNOT_BE_EMPTY));
         List<DoctorModel> doctorModelList = doctorRepository.searchByDoctorName(doctorName);
         if (doctorModelList.isEmpty()) {
-            throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_ID_NOT_FOUND));
+            throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_NAME_NOT_FOUND));
         }
         List<DoctorDto> doctorDtoList = new ArrayList<>();
         for (DoctorModel doctorModel : doctorModelList) {

@@ -4,7 +4,6 @@ import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatchPatientService;
-import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -16,11 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class PatchPatientController {
 
     private final PatchPatientService patchPatientService;
-    private final Validator validator;
 
-    public PatchPatientController(PatchPatientService patchPatientService, Validator validator) {
+    public PatchPatientController(PatchPatientService patchPatientService) {
         this.patchPatientService = patchPatientService;
-        this.validator = validator;
     }
 
     /**
@@ -33,6 +30,6 @@ public class PatchPatientController {
     @PatchMapping(ApiPathsConstant.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<PatientDto>> patchPatientById(@PathVariable String patientId, @RequestBody PatientDto patientDto) {
         PatientDto updatedPatient = patchPatientService.patchPatientById(patientId, patientDto);
-        return new ResponseEntity<>(new SuccessResponse<>(true, updatedPatient), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, updatedPatient, null), HttpStatus.OK);
     }
 }

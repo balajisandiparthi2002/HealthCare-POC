@@ -10,7 +10,6 @@ import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,14 +32,15 @@ public class PatchDoctorService {
     /**
      * Replace existing doctor details based on request.
      *
-     * @param doctorId  Doctor unique UUID
-     * @param doctorDto Data transfer object containing doctor information.
+     * @param doctorId    Doctor unique UUID as a String
+     * @param doctorDto    Data transfer object containing doctor information.
      * @return The replaced doctor details.
      * @throws CustomException If validation fails or doctor already exists.
      */
-    public DoctorDto patchDoctorById(UUID doctorId, DoctorDto doctorDto) throws CustomException {
+    public DoctorDto patchDoctorById(String doctorId, DoctorDto doctorDto) throws CustomException {
+        UUID validDoctorId = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
         validator.validateDoctor(doctorDto);
-        Optional<DoctorModel> optionalDoctor = doctorRepository.findById(doctorId);
+        Optional<DoctorModel> optionalDoctor = doctorRepository.findById(validDoctorId);
         if (optionalDoctor.isPresent()) {
             DoctorModel existingDoctor = optionalDoctor.get();
             if (doctorDto.getFirstName() != null && !doctorDto.getFirstName().equals(existingDoctor.getFirstName())) {
