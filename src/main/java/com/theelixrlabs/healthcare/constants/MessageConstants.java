@@ -28,4 +28,6 @@ public class MessageConstants {
     public static final String PATIENT_FIRST_NAME_NOT_NULL = "{patient.first.name.notnull}";
     public static final String PATIENT_ID_IS_MANDATORY = "{validation.patient.id.mandatory}";
     public static final String PATIENT_LAST_NAME_NOT_NULL = "{patient.last.name.notnull}";
+    public static final String PATIENT_NAME_CANNOT_BE_EMPTY = "patient.name.cannot.be.empty";
+    public static final String PATIENT_NAME_NOT_FOUND = "patient.name.not.found";
 }
