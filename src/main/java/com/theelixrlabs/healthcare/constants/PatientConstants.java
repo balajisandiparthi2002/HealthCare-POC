@@ -20,5 +20,7 @@ public class PatientConstants {
     public static final String PATIENT_BY_ID_ENDPOINT = "/patient/{patientId}";
     public static final String PATIENT_DELETE_SUCCESS_MESSAGE = "patient.delete.success.message";
     public static final String PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR = "patient.deletion.failed.assigned.to.doctor";
+    public static final String PATIENT_NAME_PARAM = "name";
     public static final String PATIENT_NOT_FOUND_KEY = "patient.not.found";
+    public static final String PATIENTS_COLLECTION_NAME = "patients";
 }

@@ -1,12 +1,12 @@
 package com.theelixrlabs.healthcare.controller;
 
+import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
-import com.theelixrlabs.healthcare.validation.DoctorModelValidator;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +28,7 @@ public class DoctorController {
     private final DoctorService doctorService;
     private final MessageUtil messageUtil;
 
-    public DoctorController(DoctorService doctorService, DoctorModelValidator doctorModelValidator, MessageUtil messageUtil) {
+    public DoctorController(DoctorService doctorService, MessageUtil messageUtil) {
         this.doctorService = doctorService;
         this.messageUtil = messageUtil;
     }
@@ -40,7 +39,7 @@ public class DoctorController {
      * @param doctorDto : DTO object containing doctor object.
      * @return ResponseEntity containing a success response with created dto.
      */
-    @PostMapping(DoctorConstants.CREATE_DOCTOR_END_POINT)
+    @PostMapping(ApiPathsConstant.CREATE_DOCTOR_END_POINT)
     public ResponseEntity<SuccessResponse<DoctorDto>> createDoctor(@Valid @RequestBody DoctorDto doctorDto) {
         DoctorDto createdDoctor = doctorService.saveDoctor(doctorDto);
         return new ResponseEntity<>(new SuccessResponse<>(true, createdDoctor), HttpStatus.OK);
@@ -52,7 +51,7 @@ public class DoctorController {
      * @param id The ID of the doctor as a String, which will be converted to a UUID.
      * @return ResponseEntity containing a success response with the retrieved DoctorDto.
      */
-    @GetMapping(DoctorConstants.GET_DOCTOR_BY_ID_ENDPOINT)
+    @GetMapping(ApiPathsConstant.GET_DOCTOR_BY_ID_ENDPOINT)
     public ResponseEntity<?> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String id) {
         UUID doctorId;
         try {
@@ -70,7 +69,7 @@ public class DoctorController {
      * @param doctorName the name of the doctor to search for
      * @return a ResponseEntity containing a SuccessResponse with a list of matching DoctorDto objects
      */
-    @GetMapping(DoctorConstants.GET_DOCTORS_BY_NAME_ENDPOINT)
+    @GetMapping(ApiPathsConstant.GET_DOCTORS_BY_NAME_ENDPOINT)
     public ResponseEntity<SuccessResponse<List<DoctorDto>>> getDoctorsByName
     (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) {
         List<DoctorDto> doctorDtoList = doctorService.getDoctorsByName(doctorName);
