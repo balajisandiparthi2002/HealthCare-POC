@@ -12,7 +12,8 @@ import com.theelixrlabs.healthcare.repository.PatientRepository;
 import com.theelixrlabs.healthcare.validation.Validator;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -130,5 +131,31 @@ public class PatientService {
         }
         patientRepository.deleteById(validPatientId);
         return messageUtil.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, new Object[]{validPatientId});
+    }
+
+    /**
+     * Retrieves a list of patients whose first or last name starts with the given name.
+     *
+     * @param patientName The name to search for. This should be a string representing
+     *                    the starting letters of the patient's first or last name.
+     * @return A list of PatientDTO objects representing the matching patients.
+     */
+    public List<PatientDto> getPatientsByName(String patientName) {
+        validator.validateNonEmptyString(patientName, messageUtil.getMessage(MessageConstants.PATIENT_NAME_CANNOT_BE_EMPTY));
+        List<PatientModel> patientModelList = patientRepository.searchByPatientName(patientName);
+        if (patientModelList.isEmpty()) {
+            throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.PATIENT_NAME_NOT_FOUND));
+        }
+        List<PatientDto> patientDtoList = new ArrayList<>();
+        for (PatientModel patientModel : patientModelList) {
+            PatientDto patientDto = PatientDto.builder()
+                    .id(patientModel.getId())
+                    .patientFirstName(patientModel.getPatientFirstName())
+                    .patientLastName(patientModel.getPatientLastName())
+                    .patientAadhaarNumber(patientModel.getPatientAadhaarNumber())
+                    .build();
+            patientDtoList.add(patientDto);
+        }
+        return patientDtoList;
     }
 }

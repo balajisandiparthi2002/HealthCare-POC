@@ -1,6 +1,6 @@
 package com.theelixrlabs.healthcare.controller;
 
-import com.theelixrlabs.healthcare.constants.DoctorConstants;
+import com.theelixrlabs.healthcare.constants.ApiPathsConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.UUID;
 
 /**
@@ -38,7 +37,7 @@ public class PatchDoctorController {
      * @param doctorDto     Data transfer object containing doctor information.
      * @return ResponseEntity containing success response alone with modified doctor details.
      */
-    @PatchMapping(DoctorConstants.PATCH_DOCTOR_ENDPOINT)
+    @PatchMapping(ApiPathsConstants.PATCH_DOCTOR_ENDPOINT)
     public ResponseEntity<SuccessResponse<DoctorDto>> patchDoctorById(@PathVariable String doctorId, @RequestBody DoctorDto doctorDto) {
         UUID uuid = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
         DoctorDto updatedDoctorDto = patchDoctorService.patchDoctorById(uuid, doctorDto);

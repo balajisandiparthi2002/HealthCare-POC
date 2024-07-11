@@ -1,5 +1,6 @@
 package com.theelixrlabs.healthcare.controller;
 
+import com.theelixrlabs.healthcare.constants.ApiPathsConstants;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.service.DoctorService;
@@ -31,7 +32,7 @@ public class DoctorController {
     /**
      * End point to create new doctor based on provided dto.
      *
-     * @param doctorDto    DTO object containing doctor object.
+     * @param doctorDto : DTO object containing doctor object.
      * @return ResponseEntity containing a success response with created dto.
      */
     @PostMapping(DoctorConstants.CREATE_DOCTOR_END_POINT)
@@ -46,7 +47,7 @@ public class DoctorController {
      * @param doctorId    The ID of the doctor as a String, which will be converted to a UUID.
      * @return ResponseEntity containing a success response with the retrieved DoctorDto.
      */
-    @GetMapping(DoctorConstants.DOCTOR_BY_ID_ENDPOINT)
+    @GetMapping(ApiPathsConstants.DOCTOR_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<DoctorDto>> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String doctorId) throws CustomException {
         DoctorDto doctorDto = doctorService.getDoctorById(doctorId);
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDto, null), HttpStatus.OK);
@@ -59,7 +60,7 @@ public class DoctorController {
      * @return ResponseEntity containing a SuccessResponse indicating the success status of the deletion operation.
      * @throws CustomException    If there's an issue with deleting the doctor.
      */
-    @DeleteMapping(DoctorConstants.DOCTOR_BY_ID_ENDPOINT)
+    @DeleteMapping(ApiPathsConstants.DOCTOR_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<String>> deleteDoctorById(@PathVariable String doctorId) throws CustomException {
         return new ResponseEntity<>((new SuccessResponse<>(true, null, doctorService.deleteDoctorById(doctorId))),HttpStatus.OK);
     }
@@ -70,7 +71,7 @@ public class DoctorController {
      * @param doctorName    the name of the doctor to search for
      * @return a ResponseEntity containing a SuccessResponse with a list of matching DoctorDto objects
      */
-    @GetMapping(DoctorConstants.GET_DOCTORS_BY_NAME_ENDPOINT)
+    @GetMapping(ApiPathsConstants.GET_DOCTORS_BY_NAME_ENDPOINT)
     public ResponseEntity<SuccessResponse<List<DoctorDto>>> getDoctorsByName
     (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) {
         List<DoctorDto> doctorDtoList = doctorService.getDoctorsByName(doctorName);
