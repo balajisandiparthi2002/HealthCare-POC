@@ -2,10 +2,10 @@ package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
+import com.theelixrlabs.healthcare.exceptionHandler.PatientException;
+import com.theelixrlabs.healthcare.exceptionHandler.PatientNotFound;
 import com.theelixrlabs.healthcare.repository.DoctorPatientAssignmentRepository;
 import com.theelixrlabs.healthcare.dto.PatientDto;
-import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
-import com.theelixrlabs.healthcare.exceptionHandler.ResourceNotFoundException;
 import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.PatientRepository;
@@ -55,9 +55,8 @@ public class PatientService {
      *
      * @param patientDto    The data transfer object containing patient information.
      * @return The PatientDTO of the newly created patient, with ID populated.
-     * @throws CustomException    If validation fails or if the Aadhaar number already exists.
      */
-    public PatientDto addPatientDetails(PatientDto patientDto) throws CustomException {
+    public PatientDto addPatientDetails(PatientDto patientDto) {
 
         //Validate the incoming patientDto
         validator.validatePatientDto(patientDto);
@@ -68,7 +67,7 @@ public class PatientService {
 
         //Check if aadhaar number already exists.
         if (patientRepository.findByPatientAadhaarNumber(formattedAadhaarNumber).isPresent()) {
-            throw new CustomException(messageUtil.getMessage(MessageConstants.PATIENT_AADHAAR_NUMBER_EXISTS));
+            throw new PatientException(messageUtil.getMessage(MessageConstants.PATIENT_AADHAAR_NUMBER_EXISTS));
         }
         //Generate UUID for new Patient
         UUID uuid = UUID.randomUUID();
@@ -98,13 +97,12 @@ public class PatientService {
      *
      * @param patientId    Patient ID as UUID
      * @return PatientDTO object for the ID
-     * @throws CustomException    If no patient found with the ID
      */
-    public PatientDto getPatientById(String patientId) throws CustomException {
+    public PatientDto getPatientById(String patientId) {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
         if (patientModelOptional.isEmpty())
-            throw new ResourceNotFoundException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
+            throw new PatientNotFound(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
         PatientModel patientModel = patientModelOptional.get();
         //mapping patient model to patientDTO
         return PatientDto.builder()
@@ -120,14 +118,13 @@ public class PatientService {
      *
      * @param patientId    The ID of the patient to delete.
      * @return A success message upon successful deletion.
-     * @throws CustomException    If the patient is not found or is currently assigned to a doctor.
      */
-    public String deletePatientById(String patientId) throws CustomException {
+    public String deletePatientById(String patientId) {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         if (!patientRepository.existsById(validPatientId))
-            throw new ResourceNotFoundException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
+            throw new PatientNotFound(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
         if (isPatientAssignedToDoctor(validPatientId)) {
-            throw new CustomException(messageUtil.getMessage(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR));
+            throw new PatientException(messageUtil.getMessage(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR));
         }
         patientRepository.deleteById(validPatientId);
         return messageUtil.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, new Object[]{validPatientId});
@@ -144,7 +141,7 @@ public class PatientService {
         validator.validateNonEmptyString(patientName, messageUtil.getMessage(MessageConstants.PATIENT_NAME_CANNOT_BE_EMPTY));
         List<PatientModel> patientModelList = patientRepository.searchByPatientName(patientName);
         if (patientModelList.isEmpty()) {
-            throw new ResourceNotFoundException(messageUtil.getMessage(MessageConstants.PATIENT_NAME_NOT_FOUND));
+            throw new PatientNotFound(messageUtil.getMessage(MessageConstants.PATIENT_NAME_NOT_FOUND));
         }
         List<PatientDto> patientDtoList = new ArrayList<>();
         for (PatientModel patientModel : patientModelList) {

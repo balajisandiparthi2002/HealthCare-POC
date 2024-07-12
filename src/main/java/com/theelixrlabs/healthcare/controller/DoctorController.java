@@ -2,7 +2,6 @@ package com.theelixrlabs.healthcare.controller;
 
 import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
-import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 
 /**
@@ -44,11 +44,11 @@ public class DoctorController {
     /**
      * Retrieves a doctor by their UUID.
      *
-     * @param doctorId    The ID of the doctor as a String, which will be converted to a UUID.
+     * @param doctorId The ID of the doctor as a String, which will be converted to a UUID.
      * @return ResponseEntity containing a success response with the retrieved DoctorDto.
      */
     @GetMapping(ApiPathsConstant.DOCTOR_BY_ID_ENDPOINT)
-    public ResponseEntity<SuccessResponse<DoctorDto>> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String doctorId) throws CustomException {
+    public ResponseEntity<SuccessResponse<DoctorDto>> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String doctorId) {
         DoctorDto doctorDto = doctorService.getDoctorById(doctorId);
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDto, null), HttpStatus.OK);
     }
@@ -56,19 +56,18 @@ public class DoctorController {
     /**
      * Deletes a doctor by their ID.
      *
-     * @param doctorId    The ID of the doctor to delete, obtained from the URL path.
+     * @param doctorId The ID of the doctor to delete, obtained from the URL path.
      * @return ResponseEntity containing a SuccessResponse indicating the success status of the deletion operation.
-     * @throws CustomException    If there's an issue with deleting the doctor.
      */
     @DeleteMapping(ApiPathsConstant.DOCTOR_BY_ID_ENDPOINT)
-    public ResponseEntity<SuccessResponse<String>> deleteDoctorById(@PathVariable String doctorId) throws CustomException {
-        return new ResponseEntity<>((new SuccessResponse<>(true, null, doctorService.deleteDoctorById(doctorId))),HttpStatus.OK);
+    public ResponseEntity<SuccessResponse<String>> deleteDoctorById(@PathVariable String doctorId) {
+        return new ResponseEntity<>((new SuccessResponse<>(true, null, doctorService.deleteDoctorById(doctorId))), HttpStatus.OK);
     }
 
     /**
      * Retrieves a list of doctors by their name.
      *
-     * @param doctorName    the name of the doctor to search for
+     * @param doctorName the name of the doctor to search for
      * @return a ResponseEntity containing a SuccessResponse with a list of matching DoctorDto objects
      */
     @GetMapping(ApiPathsConstant.GET_DOCTORS_BY_NAME_ENDPOINT)
