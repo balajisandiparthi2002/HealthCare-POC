@@ -5,7 +5,7 @@ import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.dto.PatientDto;
-import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
+import com.theelixrlabs.healthcare.exceptionHandler.DataException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorException;
 import com.theelixrlabs.healthcare.exceptionHandler.PatientException;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
@@ -30,12 +30,12 @@ public class Validator {
      * @param errorMessage    The error message to use in the CustomException if validation fails.
      * @return The UUID object parsed from the input string.
      */
-    public UUID validateAndConvertToUUID(String id, String errorMessage) {
+    public UUID validateAndConvertToUUID(String id, String errorMessage) throws DataException{
         UUID uuid;
         try {
             uuid = UUID.fromString(id);
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(messageUtil.getMessage(errorMessage));
+            throw new DataException(messageUtil.getMessage(errorMessage));
         }
         return uuid;
     }
@@ -45,7 +45,7 @@ public class Validator {
      *
      * @param patientDto The data transfer object containing patient information.
      */
-    public void validatePatientDto(PatientDto patientDto) {
+    public void validatePatientDto(PatientDto patientDto) throws PatientException {
 
         //Validate first name
         if (patientDto.getPatientFirstName().isEmpty()) {
@@ -68,9 +68,9 @@ public class Validator {
      *
      * @param inputString The string to be validated.
      */
-    public void validateNonEmptyString(String inputString, String errorMessage) {
+    public void validateNonEmptyString(String inputString, String errorMessage) throws DataException{
         if (StringUtils.isBlank(inputString)) {
-            throw new CustomException(errorMessage);
+            throw new DataException(errorMessage);
         }
     }
 
@@ -79,7 +79,7 @@ public class Validator {
      *
      * @param doctorDto Data transfer object containing doctor information.
      */
-    public void validateDoctor(DoctorDto doctorDto) {
+    public void validateDoctor(DoctorDto doctorDto) throws DoctorException{
         if (doctorDto.getFirstName() != null) {
             if (doctorDto.getFirstName().isEmpty()) {
                 throw new DoctorException(messageUtil.getMessage(MessageConstants.DOCTOR_FIRST_NAME_SHOULD_NOT_BE_EMPTY));
@@ -116,7 +116,7 @@ public class Validator {
      *
      * @param patientDto Data transfer object containing patient information.
      */
-    public void validatePatchPatient(PatientDto patientDto) {
+    public void validatePatchPatient(PatientDto patientDto) throws PatientException{
         if (patientDto.getPatientFirstName() != null) {
             if (patientDto.getPatientFirstName().isEmpty()) {
                 throw new PatientException(messageUtil.getMessage(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY));

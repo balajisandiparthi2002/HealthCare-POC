@@ -37,13 +37,13 @@ public class GlobalExceptionHandler {
     /**
      * Exception handler for custom exceptions and validations.
      *
-     * @param customException customException instance thrown during runtime.
+     * @param dataException customException instance thrown during runtime.
      * @return ResponseEntity failure response with error messages.
      */
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<FailureResponse> handleCustomException(CustomException customException) {
+    @ExceptionHandler(DataException.class)
+    public ResponseEntity<FailureResponse> handleCustomException(DataException dataException) {
         List<String> errors = new ArrayList<>();
-        errors.add(customException.getMessage());
+        errors.add(dataException.getMessage());
         return new ResponseEntity<>(new FailureResponse(false, errors), HttpStatus.BAD_REQUEST);
     }
 
@@ -53,8 +53,8 @@ public class GlobalExceptionHandler {
      * @param doctorNotFoundException doctorNotFoundException instance thrown during runtime.
      * @return ResponseEntity failure response with error messages.
      */
-    @ExceptionHandler(DoctorNotFound.class)
-    public ResponseEntity<FailureResponse> handleDoctorNotFoundException(DoctorNotFound doctorNotFoundException) {
+    @ExceptionHandler(DoctorNotFoundException.class)
+    public ResponseEntity<FailureResponse> handleDoctorNotFoundException(DoctorNotFoundException doctorNotFoundException) {
         List<String> errorMessagesList = Collections.singletonList(doctorNotFoundException.getMessage());
         return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.NOT_FOUND);
     }
@@ -77,8 +77,8 @@ public class GlobalExceptionHandler {
      * @param patientNotFoundException patientNotFoundException instance thrown during runtime.
      * @return ResponseEntity failure response with error messages.
      */
-    @ExceptionHandler(PatientNotFound.class)
-    public ResponseEntity<FailureResponse> handlePatientNotFoundException(PatientNotFound patientNotFoundException) {
+    @ExceptionHandler(PatientNotFoundException.class)
+    public ResponseEntity<FailureResponse> handlePatientNotFoundException(PatientNotFoundException patientNotFoundException) {
         List<String> errorMessagesList = Collections.singletonList(patientNotFoundException.getMessage());
         return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.NOT_FOUND);
     }

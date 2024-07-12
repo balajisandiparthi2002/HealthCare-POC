@@ -3,8 +3,9 @@ package com.theelixrlabs.healthcare.service;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.PatientDto;
+import com.theelixrlabs.healthcare.exceptionHandler.DataException;
 import com.theelixrlabs.healthcare.exceptionHandler.PatientException;
-import com.theelixrlabs.healthcare.exceptionHandler.PatientNotFound;
+import com.theelixrlabs.healthcare.exceptionHandler.PatientNotFoundException;
 import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.repository.PatientRepository;
@@ -12,7 +13,6 @@ import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.utility.PatchUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,12 +39,12 @@ public class PatchPatientService {
      * @param patientDto Data transfer object containing patient information.
      * @return The replaced patient details.
      */
-    public PatientDto patchPatientById(String patientId, PatientDto patientDto) {
+    public PatientDto patchPatientById(String patientId, PatientDto patientDto) throws DataException, PatientException, PatientNotFoundException {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, MessageConstants.INVALID_UUID);
         validator.validatePatchPatient(patientDto);
         Optional<PatientModel> optionalPatient = patientRepository.findById(validPatientId);
         if (optionalPatient.isEmpty()) {
-            throw new PatientNotFound(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
+            throw new PatientNotFoundException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
         }
         PatientModel existingPatient = optionalPatient.get();
         if (patchUtil.hasValueForUpdate(patientDto.getPatientAadhaarNumber(), existingPatient.getPatientAadhaarNumber())) {

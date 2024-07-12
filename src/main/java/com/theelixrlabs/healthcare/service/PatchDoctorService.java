@@ -2,8 +2,9 @@ package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
+import com.theelixrlabs.healthcare.exceptionHandler.DataException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorException;
-import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFound;
+import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
@@ -38,12 +39,12 @@ public class PatchDoctorService {
      * @param doctorDto Data transfer object containing doctor information.
      * @return The replaced doctor details.
      */
-    public DoctorDto patchDoctorById(String doctorId, DoctorDto doctorDto) {
+    public DoctorDto patchDoctorById(String doctorId, DoctorDto doctorDto) throws DataException, DoctorException, DoctorNotFoundException {
         UUID validDoctorId = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
         validator.validateDoctor(doctorDto);
         Optional<DoctorModel> optionalDoctor = doctorRepository.findById(validDoctorId);
         if (optionalDoctor.isEmpty()) {
-            throw new DoctorNotFound(messageUtil.getMessage(MessageConstants.DOCTOR_ID_NOT_FOUND));
+            throw new DoctorNotFoundException(messageUtil.getMessage(MessageConstants.DOCTOR_ID_NOT_FOUND));
         }
         DoctorModel existingDoctor = optionalDoctor.get();
         if (patchUtil.hasValueForUpdate(doctorDto.getAadhaarNumber(), existingDoctor.getAadhaarNumber())) {

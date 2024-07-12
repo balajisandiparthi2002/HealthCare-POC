@@ -3,6 +3,9 @@ package com.theelixrlabs.healthcare.controller;
 import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.PatientDto;
+import com.theelixrlabs.healthcare.exceptionHandler.DataException;
+import com.theelixrlabs.healthcare.exceptionHandler.PatientException;
+import com.theelixrlabs.healthcare.exceptionHandler.PatientNotFoundException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatientService;
 import jakarta.validation.Valid;
@@ -39,7 +42,7 @@ public class PatientController {
      * @return ResponseEntity containing a SuccessResponse with the created PatientDTO and HTTP status 201 (created).
      */
     @PostMapping(ApiPathsConstant.CREATE_PATIENT_ENDPOINT)
-    public ResponseEntity<SuccessResponse<PatientDto>> addPatientDetails(@RequestBody @Valid PatientDto patientDto) {
+    public ResponseEntity<SuccessResponse<PatientDto>> addPatientDetails(@RequestBody @Valid PatientDto patientDto) throws PatientException {
         return new ResponseEntity<>(new SuccessResponse<>(true, patientService.addPatientDetails(patientDto), null), HttpStatus.CREATED);
     }
 
@@ -50,7 +53,7 @@ public class PatientController {
      * @return ResponseEntity containing a SuccessResponse with the Patient Associated with the ID and HTTP status 200 (OK)
      */
     @GetMapping(ApiPathsConstant.PATIENT_BY_ID_ENDPOINT)
-    public ResponseEntity<?> getPatientById(@PathVariable String patientId) {
+    public ResponseEntity<?> getPatientById(@PathVariable String patientId) throws DataException, PatientNotFoundException {
         return new ResponseEntity<>(new SuccessResponse<>(true, patientService.getPatientById(patientId), null), HttpStatus.OK);
     }
 
@@ -61,7 +64,7 @@ public class PatientController {
      * @return ResponseEntity containing a SuccessResponse indicating success or failure.
      */
     @DeleteMapping(ApiPathsConstant.PATIENT_BY_ID_ENDPOINT)
-    public ResponseEntity<SuccessResponse<String>> deletePatientById(@PathVariable String patientId) {
+    public ResponseEntity<SuccessResponse<String>> deletePatientById(@PathVariable String patientId) throws DataException, PatientException, PatientNotFoundException {
         return new ResponseEntity<>(new SuccessResponse<>(true, patientService.deletePatientById(patientId), null), HttpStatus.OK);
     }
 
@@ -72,7 +75,7 @@ public class PatientController {
      * @return A ResponseEntity containing a SuccessResponse with the list of matching PatientDTO objects and HTTP status OK.
      */
     @GetMapping(ApiPathsConstant.GET_PATIENTS_BY_NAME_ENDPOINT)
-    public ResponseEntity<SuccessResponse<List<PatientDto>>> getPatientsByName(@RequestParam(PatientConstants.PATIENT_NAME_PARAM) String patientName) {
+    public ResponseEntity<SuccessResponse<List<PatientDto>>> getPatientsByName(@RequestParam(PatientConstants.PATIENT_NAME_PARAM) String patientName) throws DataException, PatientNotFoundException {
         List<PatientDto> patientDtoList = patientService.getPatientsByName(patientName);
         return new ResponseEntity<>(new SuccessResponse<>(true, patientDtoList, null), HttpStatus.OK);
     }

@@ -1,6 +1,6 @@
 package com.theelixrlabs.healthcare.exceptionHandler;
 
-public class DoctorException extends RuntimeException{
+public class DoctorException extends Exception{
     /**
      * Constructor to create a DoctorException with a specific exception message.
      *
