@@ -2,9 +2,6 @@ package com.theelixrlabs.healthcare.controller;
 
 import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.constants.DoctorConstants;
-import com.theelixrlabs.healthcare.exceptionHandler.DataException;
-import com.theelixrlabs.healthcare.exceptionHandler.DoctorException;
-import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
@@ -38,7 +35,7 @@ public class DoctorController {
      * @return ResponseEntity containing a success response with created dto.
      */
     @PostMapping(ApiPathsConstant.CREATE_DOCTOR_END_POINT)
-    public ResponseEntity<SuccessResponse<DoctorDto>> createDoctor(@Valid @RequestBody DoctorDto doctorDto) throws DoctorException{
+    public ResponseEntity<SuccessResponse<DoctorDto>> createDoctor(@Valid @RequestBody DoctorDto doctorDto) throws Exception {
         DoctorDto createdDoctor = doctorService.saveDoctor(doctorDto);
         return new ResponseEntity<>(new SuccessResponse<>(true, createdDoctor, null), HttpStatus.OK);
     }
@@ -50,7 +47,7 @@ public class DoctorController {
      * @return ResponseEntity containing a success response with the retrieved DoctorDto.
      */
     @GetMapping(ApiPathsConstant.DOCTOR_BY_ID_ENDPOINT)
-    public ResponseEntity<SuccessResponse<DoctorDto>> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String doctorId) throws DoctorNotFoundException,DataException {
+    public ResponseEntity<SuccessResponse<DoctorDto>> getDoctorById(@PathVariable(DoctorConstants.PATH_VARIABLE_DOCTOR_ID) String doctorId) throws Exception {
         DoctorDto doctorDto = doctorService.getDoctorById(doctorId);
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDto, null), HttpStatus.OK);
     }
@@ -62,7 +59,7 @@ public class DoctorController {
      * @return ResponseEntity containing a SuccessResponse indicating the success status of the deletion operation.
      */
     @DeleteMapping(ApiPathsConstant.DOCTOR_BY_ID_ENDPOINT)
-    public ResponseEntity<SuccessResponse<String>> deleteDoctorById(@PathVariable String doctorId) throws DataException,DoctorNotFoundException, DoctorException {
+    public ResponseEntity<SuccessResponse<String>> deleteDoctorById(@PathVariable String doctorId) throws Exception {
         return new ResponseEntity<>((new SuccessResponse<>(true, null, doctorService.deleteDoctorById(doctorId))), HttpStatus.OK);
     }
 
@@ -74,7 +71,7 @@ public class DoctorController {
      */
     @GetMapping(ApiPathsConstant.GET_DOCTORS_BY_NAME_ENDPOINT)
     public ResponseEntity<SuccessResponse<List<DoctorDto>>> getDoctorsByName
-    (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) throws DataException, DoctorNotFoundException {
+    (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) throws Exception {
         List<DoctorDto> doctorDtoList = doctorService.getDoctorsByName(doctorName);
         return new ResponseEntity<>(new SuccessResponse<>(true, doctorDtoList, null), HttpStatus.OK);
     }

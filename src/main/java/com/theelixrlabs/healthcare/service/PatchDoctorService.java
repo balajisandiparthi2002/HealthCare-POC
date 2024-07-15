@@ -2,7 +2,6 @@ package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
-import com.theelixrlabs.healthcare.exceptionHandler.DataException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
 import com.theelixrlabs.healthcare.model.DoctorModel;
@@ -39,7 +38,7 @@ public class PatchDoctorService {
      * @param doctorDto Data transfer object containing doctor information.
      * @return The replaced doctor details.
      */
-    public DoctorDto patchDoctorById(String doctorId, DoctorDto doctorDto) throws DataException, DoctorException, DoctorNotFoundException {
+    public DoctorDto patchDoctorById(String doctorId, DoctorDto doctorDto) throws Exception {
         UUID validDoctorId = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
         validator.validateDoctor(doctorDto);
         Optional<DoctorModel> optionalDoctor = doctorRepository.findById(validDoctorId);

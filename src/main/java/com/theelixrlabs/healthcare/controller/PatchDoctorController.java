@@ -2,9 +2,6 @@ package com.theelixrlabs.healthcare.controller;
 
 import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
-import com.theelixrlabs.healthcare.exceptionHandler.DataException;
-import com.theelixrlabs.healthcare.exceptionHandler.DoctorException;
-import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatchDoctorService;
 import org.springframework.http.HttpStatus;
@@ -35,7 +32,7 @@ public class PatchDoctorController {
      * @return ResponseEntity containing success response alone with modified doctor details.
      */
     @PatchMapping(ApiPathsConstant.DOCTOR_BY_ID_ENDPOINT)
-    public ResponseEntity<SuccessResponse<DoctorDto>> patchDoctorById(@PathVariable String doctorId, @RequestBody DoctorDto doctorDto) throws DataException, DoctorNotFoundException, DoctorException {
+    public ResponseEntity<SuccessResponse<DoctorDto>> patchDoctorById(@PathVariable String doctorId, @RequestBody DoctorDto doctorDto) throws Exception {
         DoctorDto updatedDoctorDto = patchDoctorService.patchDoctorById(doctorId, doctorDto);
         return new ResponseEntity<>(new SuccessResponse<>(true, updatedDoctorDto, null), HttpStatus.OK);
     }

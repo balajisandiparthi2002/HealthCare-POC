@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DoctorException.class)
     public ResponseEntity<FailureResponse> handleDoctorException(DoctorException doctorException) {
         List<String> errorMessagesList = Collections.singletonList(doctorException.getMessage());
-        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PatientException.class)
     public ResponseEntity<FailureResponse> handlePatientException(PatientException patientException) {
         List<String> errorMessagesList = Collections.singletonList(patientException.getMessage());
-        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -104,6 +104,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DoctorPatientAssignmentException.class)
     public ResponseEntity<FailureResponse> handleDoctorPatientAssignmentException(DoctorPatientAssignmentException doctorPatientAssignmentException) {
         List<String> errorMessagesList = Collections.singletonList(doctorPatientAssignmentException.getMessage());
-        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.BAD_REQUEST);
     }
 }

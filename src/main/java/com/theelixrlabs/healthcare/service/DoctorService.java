@@ -1,7 +1,6 @@
 package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.MessageConstants;
-import com.theelixrlabs.healthcare.exceptionHandler.DataException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
 import com.theelixrlabs.healthcare.repository.DoctorPatientAssignmentRepository;
@@ -53,7 +52,7 @@ public class DoctorService {
      * @param doctorDto DoctorDto object containing doctor information.
      * @return The saved dto object.
      */
-    public DoctorDto saveDoctor(DoctorDto doctorDto) throws DoctorException{
+    public DoctorDto saveDoctor(DoctorDto doctorDto) throws Exception{
         validator.validateDoctor(doctorDto);
         String aadhaarNumber = doctorDto.getAadhaarNumber();
         String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + StringUtils.SPACE + aadhaarNumber.substring(4, 8) + StringUtils.SPACE + aadhaarNumber.substring(8, 12);
@@ -71,7 +70,7 @@ public class DoctorService {
      * @param doctorId UUID of doctor in String format.
      * @return DoctorDto object containing doctor information.
      */
-    public DoctorDto getDoctorById(String doctorId) throws DoctorNotFoundException,DataException {
+    public DoctorDto getDoctorById(String doctorId) throws Exception {
         UUID validDoctorId = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
         Optional<DoctorModel> doctorModelOptional = doctorRepository.findById(validDoctorId);
         if (doctorModelOptional.isEmpty()) {
@@ -87,7 +86,7 @@ public class DoctorService {
      * @param doctorId The string representation of the doctor's UUID.
      * @return A success message upon successful deletion.
      */
-    public String deleteDoctorById(String doctorId) throws DataException, DoctorNotFoundException, DoctorException {
+    public String deleteDoctorById(String doctorId) throws Exception {
         UUID validDoctorId = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
 
         // Check if a doctor with the validDoctorId exists in the repository.
@@ -110,7 +109,7 @@ public class DoctorService {
      * @param doctorName doctorName the name of the doctor to search for
      * @return a list of DoctorDto objects representing the matching doctors
      */
-    public List<DoctorDto> getDoctorsByName(String doctorName) throws DataException, DoctorNotFoundException {
+    public List<DoctorDto> getDoctorsByName(String doctorName) throws Exception {
         validator.validateNonEmptyString(doctorName, messageUtil.getMessage(MessageConstants.DOCTOR_NAME_CANNOT_BE_EMPTY));
         List<DoctorModel> doctorModelList = doctorRepository.searchByDoctorName(doctorName);
         if (doctorModelList.isEmpty()) {

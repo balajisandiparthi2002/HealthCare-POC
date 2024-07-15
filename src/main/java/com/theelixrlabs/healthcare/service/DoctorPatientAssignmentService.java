@@ -1,7 +1,6 @@
 package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.DoctorPatientAssignmentConstants;
-import com.theelixrlabs.healthcare.exceptionHandler.DataException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorPatientAssignmentException;
 import com.theelixrlabs.healthcare.exceptionHandler.PatientNotFoundException;
@@ -43,7 +42,7 @@ public class DoctorPatientAssignmentService {
      * @param doctorPatientAssignmentDto DTO object containing doctorId and patientId
      * @return DoctorPatientAssignmentDto
      */
-    public DoctorPatientAssignmentDto assignDoctorToPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws DoctorPatientAssignmentException,DataException,DoctorNotFoundException,PatientNotFoundException {
+    public DoctorPatientAssignmentDto assignDoctorToPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws Exception {
         UUID doctorId = validator.validateAndConvertToUUID(doctorPatientAssignmentDto.getDoctorId(),
                 DoctorPatientAssignmentConstants.DOCTOR_ID_INVALID_KEY);
         UUID patientId = validator.validateAndConvertToUUID(doctorPatientAssignmentDto.getPatientId(),
@@ -60,7 +59,7 @@ public class DoctorPatientAssignmentService {
      *
      * @param doctorPatientAssignmentDto DTO object containing doctorId and patientId
      */
-    public void unassignDoctorFromPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws DoctorPatientAssignmentException,DataException,DoctorNotFoundException,PatientNotFoundException{
+    public void unassignDoctorFromPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws Exception{
         UUID doctorId = validator.validateAndConvertToUUID(doctorPatientAssignmentDto.getDoctorId(),
                 DoctorPatientAssignmentConstants.DOCTOR_ID_INVALID_KEY);
         UUID patientId = validator.validateAndConvertToUUID(doctorPatientAssignmentDto.getPatientId(),
@@ -79,7 +78,7 @@ public class DoctorPatientAssignmentService {
         doctorPatientAssignmentRepository.save(activeDoctorPatientAssignmentModel);
     }
 
-    private void validateDoctorPatientExistence(UUID doctorId, UUID patientId) throws DoctorNotFoundException,PatientNotFoundException{
+    private void validateDoctorPatientExistence(UUID doctorId, UUID patientId) throws Exception{
         if (!doctorRepository.existsById(doctorId)) {
             throw new DoctorNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_NOT_FOUND_KEY));
         }

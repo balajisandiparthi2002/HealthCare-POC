@@ -2,7 +2,6 @@ package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
-import com.theelixrlabs.healthcare.exceptionHandler.DataException;
 import com.theelixrlabs.healthcare.exceptionHandler.PatientException;
 import com.theelixrlabs.healthcare.exceptionHandler.PatientNotFoundException;
 import com.theelixrlabs.healthcare.repository.DoctorPatientAssignmentRepository;
@@ -54,7 +53,7 @@ public class PatientService {
      * @param patientDto The data transfer object containing patient information.
      * @return The PatientDTO of the newly created patient, with ID populated.
      */
-    public PatientDto addPatientDetails(PatientDto patientDto) throws PatientException {
+    public PatientDto addPatientDetails(PatientDto patientDto) throws Exception {
 
         //Validate the incoming patientDto
         validator.validatePatientDto(patientDto);
@@ -96,7 +95,7 @@ public class PatientService {
      * @param patientId Patient ID as UUID
      * @return PatientDTO object for the ID
      */
-    public PatientDto getPatientById(String patientId) throws DataException, PatientNotFoundException {
+    public PatientDto getPatientById(String patientId) throws Exception {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         Optional<PatientModel> patientModelOptional = patientRepository.findById(validPatientId);
         if (patientModelOptional.isEmpty())
@@ -117,7 +116,7 @@ public class PatientService {
      * @param patientId The ID of the patient to delete.
      * @return A success message upon successful deletion.
      */
-    public String deletePatientById(String patientId) throws DataException, PatientNotFoundException, PatientException {
+    public String deletePatientById(String patientId) throws Exception {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY);
         if (!patientRepository.existsById(validPatientId))
             throw new PatientNotFoundException(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY));
@@ -135,7 +134,7 @@ public class PatientService {
      *                    the starting letters of the patient's first or last name.
      * @return A list of PatientDTO objects representing the matching patients.
      */
-    public List<PatientDto> getPatientsByName(String patientName) throws DataException, PatientNotFoundException {
+    public List<PatientDto> getPatientsByName(String patientName) throws Exception {
         validator.validateNonEmptyString(patientName, messageUtil.getMessage(MessageConstants.PATIENT_NAME_CANNOT_BE_EMPTY));
         List<PatientModel> patientModelList = patientRepository.searchByPatientName(patientName);
         if (patientModelList.isEmpty()) {
