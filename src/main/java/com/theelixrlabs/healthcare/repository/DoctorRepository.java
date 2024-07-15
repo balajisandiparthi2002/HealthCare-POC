@@ -18,10 +18,10 @@ public interface DoctorRepository extends MongoRepository<DoctorModel, UUID> {
     /**
      * Finds a doctor by their Aadhaar number.
      *
-     * @param AadhaarNumber The Aadhaar number of the doctor.
+     * @param aadhaarNumber The Aadhaar number of the doctor.
      * @return An Optional containing the DoctorModel if found, otherwise empty.
      */
-    Optional<DoctorModel> findByAadhaarNumber(String AadhaarNumber);
+    Optional<DoctorModel> findByAadhaarNumber(String aadhaarNumber);
 
     /**
      * Searches for doctors whose first name or last name starts with the specified letters.

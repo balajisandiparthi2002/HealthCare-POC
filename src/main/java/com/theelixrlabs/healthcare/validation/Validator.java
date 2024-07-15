@@ -5,7 +5,9 @@ import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.dto.PatientDto;
-import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
+import com.theelixrlabs.healthcare.exceptionHandler.DataException;
+import com.theelixrlabs.healthcare.exceptionHandler.DoctorException;
+import com.theelixrlabs.healthcare.exceptionHandler.PatientException;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -27,14 +29,13 @@ public class Validator {
      * @param id    The string representation of UUID to validate and convert.
      * @param errorMessage    The error message to use in the CustomException if validation fails.
      * @return The UUID object parsed from the input string.
-     * @throws CustomException    If the input string is not a valid UUID format.
      */
-    public UUID validateAndConvertToUUID(String id, String errorMessage) throws CustomException {
+    public UUID validateAndConvertToUUID(String id, String errorMessage) throws DataException{
         UUID uuid;
         try {
             uuid = UUID.fromString(id);
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw new CustomException(messageUtil.getMessage(errorMessage));
+            throw new DataException(messageUtil.getMessage(errorMessage));
         }
         return uuid;
     }
@@ -43,23 +44,21 @@ public class Validator {
      * Validates the PatientDTO before adding details.
      *
      * @param patientDto The data transfer object containing patient information.
-     * @throws CustomException If validation fails (e.g., empty first name or invalid characters).
-     * @throws CustomException If validation fails (e.g., empty first name or invalid characters).
      */
-    public void validatePatientDto(PatientDto patientDto) throws CustomException {
+    public void validatePatientDto(PatientDto patientDto) throws PatientException {
 
         //Validate first name
         if (patientDto.getPatientFirstName().isEmpty()) {
-            throw new CustomException(messageUtil.getMessage(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY));
+            throw new PatientException(messageUtil.getMessage(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY));
         } else if (!patientDto.getPatientFirstName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
-            throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_FIRST_NAME_KEY));
+            throw new PatientException(messageUtil.getMessage(PatientConstants.INVALID_FIRST_NAME_KEY));
         }
 
         //Validate last name
         if (patientDto.getPatientLastName().isEmpty()) {
-            throw new CustomException(messageUtil.getMessage(PatientConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY));
+            throw new PatientException(messageUtil.getMessage(PatientConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY));
         } else if (!patientDto.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
-            throw new CustomException(messageUtil.getMessage(PatientConstants.INVALID_LAST_NAME_KEY));
+            throw new PatientException(messageUtil.getMessage(PatientConstants.INVALID_LAST_NAME_KEY));
         }
     }
 
@@ -69,9 +68,9 @@ public class Validator {
      *
      * @param inputString The string to be validated.
      */
-    public void validateNonEmptyString(String inputString, String errorMessage) {
+    public void validateNonEmptyString(String inputString, String errorMessage) throws DataException{
         if (StringUtils.isBlank(inputString)) {
-            throw new CustomException(errorMessage);
+            throw new DataException(errorMessage);
         }
     }
 
@@ -79,36 +78,67 @@ public class Validator {
      * Validating method to validate based on incoming request.
      *
      * @param doctorDto Data transfer object containing doctor information.
-     * @throws CustomException If validation fails or doctor already exists .
      */
-    public void validateDoctor(DoctorDto doctorDto) throws CustomException {
+    public void validateDoctor(DoctorDto doctorDto) throws DoctorException{
         if (doctorDto.getFirstName() != null) {
             if (doctorDto.getFirstName().isEmpty()) {
-                throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_FIRST_NAME_SHOULD_NOT_BE_EMPTY));
+                throw new DoctorException(messageUtil.getMessage(MessageConstants.DOCTOR_FIRST_NAME_SHOULD_NOT_BE_EMPTY));
             }
             if (!doctorDto.getFirstName().matches(DoctorConstants.ALPHA_CHARACTERS_REGEX)) {
-                throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_FIRSTNAME));
+                throw new DoctorException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_FIRSTNAME));
             }
         }
         if (doctorDto.getLastName() != null) {
             if (doctorDto.getLastName().isEmpty()) {
-                throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY));
+                throw new DoctorException(messageUtil.getMessage(MessageConstants.DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY));
             }
             if (!doctorDto.getLastName().matches(DoctorConstants.ALPHA_CHARACTERS_REGEX)) {
-                throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_LASTNAME));
+                throw new DoctorException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_LASTNAME));
             }
         }
         if (doctorDto.getDepartment() != null) {
             if (doctorDto.getDepartment().isEmpty()) {
-                throw new CustomException(messageUtil.getMessage(MessageConstants.DEPARTMENT_SHOULD_NOT_BE_EMPTY));
+                throw new DoctorException(messageUtil.getMessage(MessageConstants.DEPARTMENT_SHOULD_NOT_BE_EMPTY));
             }
         }
         if (doctorDto.getAadhaarNumber() != null) {
             if (doctorDto.getAadhaarNumber().isEmpty()) {
-                throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_AADHAAR_NUMBER_SHOULD_NOT_BE_EMPTY));
+                throw new DoctorException(messageUtil.getMessage(MessageConstants.DOCTOR_AADHAAR_NUMBER_SHOULD_NOT_BE_EMPTY));
             }
             if (!(doctorDto.getAadhaarNumber().matches(DoctorConstants.AADHAAR_REGEX_PATTERN))) {
-                throw new CustomException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_AADHAAR_NUMBER));
+                throw new DoctorException(messageUtil.getMessage(MessageConstants.DOCTOR_INVALID_AADHAAR_NUMBER));
+            }
+        }
+    }
+
+    /**
+     * Validating method to validate based on incoming request.
+     *
+     * @param patientDto Data transfer object containing patient information.
+     */
+    public void validatePatchPatient(PatientDto patientDto) throws PatientException{
+        if (patientDto.getPatientFirstName() != null) {
+            if (patientDto.getPatientFirstName().isEmpty()) {
+                throw new PatientException(messageUtil.getMessage(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY));
+            }
+            if (!patientDto.getPatientFirstName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
+                throw new PatientException(messageUtil.getMessage(PatientConstants.INVALID_FIRST_NAME_KEY));
+            }
+        }
+        if (patientDto.getPatientLastName() != null) {
+            if (patientDto.getPatientLastName().isEmpty()) {
+                throw new PatientException(messageUtil.getMessage(PatientConstants.LAST_NAME_SHOULD_NOT_BE_EMPTY_KEY));
+            }
+            if (!patientDto.getPatientLastName().matches(PatientConstants.ALPHA_CHARACTERS_REGEX)) {
+                throw new PatientException(messageUtil.getMessage(PatientConstants.INVALID_LAST_NAME_KEY));
+            }
+        }
+        if (patientDto.getPatientAadhaarNumber() != null) {
+            if (patientDto.getPatientAadhaarNumber().isEmpty()) {
+                throw new PatientException(messageUtil.getMessage(MessageConstants.PATIENT_AADHAAR_NUMBER_SHOULD_NOT_BE_EMPTY));
+            }
+            if (!(patientDto.getPatientAadhaarNumber().matches(PatientConstants.AADHAAR_NUMBER_REGEX))) {
+                throw new PatientException(messageUtil.getMessage(MessageConstants.PATIENT_INVALID_AADHAAR_NUMBER));
             }
         }
     }

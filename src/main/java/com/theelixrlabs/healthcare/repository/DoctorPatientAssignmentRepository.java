@@ -3,7 +3,6 @@ package com.theelixrlabs.healthcare.repository;
 import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 import java.util.UUID;
 
