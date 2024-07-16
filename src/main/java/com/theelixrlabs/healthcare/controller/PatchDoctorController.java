@@ -1,18 +1,15 @@
 package com.theelixrlabs.healthcare.controller;
 
 import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
-import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatchDoctorService;
-import com.theelixrlabs.healthcare.validation.Validator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.UUID;
 
 /**
  * Controller layer for accepting user request and do patch operations.
@@ -23,24 +20,20 @@ public class PatchDoctorController {
 
     private final PatchDoctorService patchDoctorService;
 
-    private final Validator validator;
-
-    public PatchDoctorController(PatchDoctorService patchDoctorService, Validator validator) {
+    public PatchDoctorController(PatchDoctorService patchDoctorService) {
         this.patchDoctorService = patchDoctorService;
-        this.validator = validator;
     }
 
     /**
      * Controller method for handling incoming Patch request.
      *
-     * @param doctorId  Doctor id as string.
-     * @param doctorDto Data transfer object containing doctor information.
+     * @param doctorId    Doctor id as string.
+     * @param doctorDto    Data transfer object containing doctor information.
      * @return ResponseEntity containing success response alone with modified doctor details.
      */
-    @PatchMapping(ApiPathsConstant.PATCH_DOCTOR_ENDPOINT)
-    public ResponseEntity<SuccessResponse<DoctorDto>> patchDoctorById(@PathVariable String doctorId, @RequestBody DoctorDto doctorDto) {
-        UUID uuid = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
-        DoctorDto updatedDoctorDto = patchDoctorService.patchDoctorById(uuid, doctorDto);
-        return new ResponseEntity<>(new SuccessResponse<>(true, updatedDoctorDto), HttpStatus.OK);
+    @PatchMapping(ApiPathsConstant.DOCTOR_BY_ID_ENDPOINT)
+    public ResponseEntity<SuccessResponse<DoctorDto>> patchDoctorById(@PathVariable String doctorId, @RequestBody DoctorDto doctorDto) throws Exception {
+        DoctorDto updatedDoctorDto = patchDoctorService.patchDoctorById(doctorId, doctorDto);
+        return new ResponseEntity<>(new SuccessResponse<>(true, updatedDoctorDto, null), HttpStatus.OK);
     }
 }

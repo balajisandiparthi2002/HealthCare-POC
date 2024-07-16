@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
@@ -23,15 +22,15 @@ public class DoctorModel {
     @Id
     private UUID id;
 
-    @NotBlank(message = MessageConstants.DOCTOR_FIRST_NAME_SHOULD_BE_MANDATORY)
+    @NotNull(message = MessageConstants.DOCTOR_FIRST_NAME_SHOULD_BE_MANDATORY)
     private String firstName;
 
-    @NotBlank(message = MessageConstants.DOCTOR_LAST_NAME_SHOULD_BE_MANDATORY)
+    @NotNull(message = MessageConstants.DOCTOR_LAST_NAME_SHOULD_BE_MANDATORY)
     private String lastName;
 
-    @NotBlank(message = MessageConstants.DEPARTMENT_SHOULD_BE_MANDATORY)
+    @NotNull(message = MessageConstants.DEPARTMENT_SHOULD_BE_MANDATORY)
     private String department;
 
-    @NotBlank(message = MessageConstants.DOCTOR_AADHAAR_NUMBER_SHOULD_BE_MANDATORY)
+    @NotNull(message = MessageConstants.DOCTOR_AADHAAR_NUMBER_SHOULD_BE_MANDATORY)
     private String aadhaarNumber;
 }
