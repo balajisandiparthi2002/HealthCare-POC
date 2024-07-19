@@ -10,7 +10,7 @@ import java.util.UUID;
  * Repository interface for managing DoctorPatientAssignmentModel entities in MongoDB.
  */
 @Repository
-public interface DoctorPatientAssignmentRepository extends MongoRepository<DoctorPatientAssignmentModel, UUID> {
+public interface DoctorPatientAssignmentRepository extends MongoRepository<DoctorPatientAssignmentModel, UUID>, DoctorsByPatientIdRepository {
 
     /**
      * Retrieves an active assignment for a patient identified by the provided patientId,

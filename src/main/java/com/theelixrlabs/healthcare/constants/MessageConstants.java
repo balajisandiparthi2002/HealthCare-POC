@@ -34,4 +34,5 @@ public class MessageConstants {
     public static final String PATIENT_LAST_NAME_NOT_NULL = "{patient.last.name.notnull}";
     public static final String PATIENT_NAME_CANNOT_BE_EMPTY = "patient.name.cannot.be.empty";
     public static final String PATIENT_NAME_NOT_FOUND = "patient.name.not.found";
+    public static final String PATIENT_NOT_ASSIGNED_TO_DOCTORS = "patient.not.assigned.to.doctors";
 }

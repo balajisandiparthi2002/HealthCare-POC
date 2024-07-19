@@ -1,10 +1,12 @@
 package com.theelixrlabs.healthcare.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -27,4 +29,7 @@ public class DoctorDto {
 
     @NotNull(message = MessageConstants.DOCTOR_AADHAAR_NUMBER_SHOULD_BE_MANDATORY)
     private String aadhaarNumber;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Date dateOfAssignment;
 }
