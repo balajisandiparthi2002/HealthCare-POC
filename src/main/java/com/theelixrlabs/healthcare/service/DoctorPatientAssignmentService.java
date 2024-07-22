@@ -2,15 +2,11 @@ package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.DoctorPatientAssignmentConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
-import com.theelixrlabs.healthcare.dto.AssignedDoctorDto;
-import com.theelixrlabs.healthcare.dto.DoctorDto;
-import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.dto.DoctorPatientAssignmentDto;
-import com.theelixrlabs.healthcare.dto.DoctorsByPatientDto;
+import com.theelixrlabs.healthcare.dto.PatientWithAssignedDoctorsDto;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorPatientAssignmentException;
 import com.theelixrlabs.healthcare.exceptionHandler.PatientNotFoundException;
-import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.DoctorPatientAssignmentRepository;
 import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
@@ -88,27 +84,19 @@ public class DoctorPatientAssignmentService {
      * Retrieves patient details and their assigned doctors based on patient ID.
      *
      * @param patientId    The string representation of patient ID.
-     * @return DoctorsByPatientDto containing patient details and their assigned doctors.
+     * @return PatientWithAssignedDoctorsDto containing patient details and their assigned doctors.
      * @throws Exception    if patient is not found or not assigned to any doctors.
      */
-    public DoctorsByPatientDto getDoctorsByPatientId(String patientId) throws Exception {
+    public PatientWithAssignedDoctorsDto getDoctorsByPatientId(String patientId) throws Exception {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, MessageConstants.INVALID_UUID);
-        Optional<PatientModel> optionalPatientModel = patientRepository.findById(validPatientId);
-        if (optionalPatientModel.isEmpty()) {
+        if (!patientRepository.existsById(validPatientId)) {
             throw new PatientNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_NOT_FOUND_KEY));
         }
-        List<AssignedDoctorDto> assignedDoctorDtoList = doctorPatientAssignmentRepository.getDoctorsByPatientId(validPatientId);
-        if (assignedDoctorDtoList.isEmpty()) {
+        List<PatientWithAssignedDoctorsDto> patientWithAssignedDoctorsDtoList = doctorPatientAssignmentRepository.getDoctorsByPatientId(validPatientId);
+        if (patientWithAssignedDoctorsDtoList.isEmpty()) {
             throw new DoctorPatientAssignmentException(messageUtil.getMessage(MessageConstants.PATIENT_NOT_ASSIGNED_TO_DOCTORS, new Object[]{validPatientId}));
         }
-        List<DoctorDto> assignedDoctorsList = assignedDoctorDtoList.get(0).getAssignedDoctors();
-        PatientModel patientModel = optionalPatientModel.get();
-        PatientDto patientDto = PatientDto.builder()
-                .id(patientModel.getId())
-                .patientFirstName(patientModel.getPatientFirstName())
-                .patientLastName(patientModel.getPatientLastName())
-                .patientAadhaarNumber(patientModel.getPatientAadhaarNumber()).build();
-        return new DoctorsByPatientDto(patientDto, assignedDoctorsList);
+        return patientWithAssignedDoctorsDtoList.get(0);
     }
 
     private void validateDoctorPatientExistence(UUID doctorId, UUID patientId) throws Exception {

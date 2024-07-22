@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class DoctorsByPatientDto {
+public class PatientWithAssignedDoctorsDto {
     private PatientDto patient;
-    private List<DoctorDto> doctors;
+    private List<DoctorDto> assignedDoctors;
 }
