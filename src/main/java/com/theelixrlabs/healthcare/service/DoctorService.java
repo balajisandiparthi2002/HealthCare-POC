@@ -5,7 +5,6 @@ import com.theelixrlabs.healthcare.exceptionHandler.DoctorException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
 import com.theelixrlabs.healthcare.repository.DoctorPatientAssignmentRepository;
 import com.theelixrlabs.healthcare.model.DoctorModel;
-import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
@@ -42,8 +41,7 @@ public class DoctorService {
      * @return true if the doctor is assigned to at least one patient, false otherwise.
      */
     private boolean isDoctorAssignedToPatient(UUID validDoctorId) {
-        List<DoctorPatientAssignmentModel> doctorAssignmentList = doctorPatientAssignmentRepository.findByDoctorIdAndDateOfUnassignmentNull(validDoctorId);
-        return !doctorAssignmentList.isEmpty();
+        return doctorPatientAssignmentRepository.existsByDoctorIdAndDateOfUnassignmentNull(validDoctorId);
     }
 
     /**

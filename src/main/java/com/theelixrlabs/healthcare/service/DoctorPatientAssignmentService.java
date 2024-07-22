@@ -3,7 +3,7 @@ package com.theelixrlabs.healthcare.service;
 import com.theelixrlabs.healthcare.constants.DoctorPatientAssignmentConstants;
 import com.theelixrlabs.healthcare.constants.MessageConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
-import com.theelixrlabs.healthcare.dto.DoctorWithPatientsDto;
+import com.theelixrlabs.healthcare.dto.DoctorWithAssignedPatientsDto;
 import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorPatientAssignmentException;
@@ -55,9 +55,9 @@ public class DoctorPatientAssignmentService {
      */
     public DoctorPatientAssignmentDto assignDoctorToPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws Exception {
         UUID doctorId = validator.validateAndConvertToUUID(doctorPatientAssignmentDto.getDoctorId(),
-                DoctorPatientAssignmentConstants.DOCTOR_ID_INVALID_KEY);
+                DoctorPatientAssignmentConstants.INVALID_DOCTOR_ID_KEY);
         UUID patientId = validator.validateAndConvertToUUID(doctorPatientAssignmentDto.getPatientId(),
-                DoctorPatientAssignmentConstants.PATIENT_ID_INVALID_KEY);
+                DoctorPatientAssignmentConstants.INVALID_PATIENT_ID_KEY);
         validateDoctorPatientExistence(doctorId, patientId);
         if (isDoctorAlreadyAssigned(doctorId, patientId)) {
             throw new DoctorPatientAssignmentException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_ALREADY_ASSIGNED_KEY));
@@ -72,9 +72,9 @@ public class DoctorPatientAssignmentService {
      */
     public void unassignDoctorFromPatient(DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws Exception {
         UUID doctorId = validator.validateAndConvertToUUID(doctorPatientAssignmentDto.getDoctorId(),
-                DoctorPatientAssignmentConstants.DOCTOR_ID_INVALID_KEY);
+                DoctorPatientAssignmentConstants.INVALID_DOCTOR_ID_KEY);
         UUID patientId = validator.validateAndConvertToUUID(doctorPatientAssignmentDto.getPatientId(),
-                DoctorPatientAssignmentConstants.PATIENT_ID_INVALID_KEY);
+                DoctorPatientAssignmentConstants.INVALID_PATIENT_ID_KEY);
         validateDoctorPatientExistence(doctorId, patientId);
         Optional<DoctorPatientAssignmentModel> optionalDoctorPatientAssignmentModel =
                 doctorPatientAssignmentRepository.findByDoctorIdAndPatientIdAndDateOfUnassignmentNull(doctorId, patientId);
@@ -130,7 +130,7 @@ public class DoctorPatientAssignmentService {
      * @return A DoctorWithPatientsDto object containing the doctor's details and a list of assigned patients.
      * @throws Exception if the doctor ID is invalid, the doctor is not found, or if any patient assigned to the doctor is not found.
      */
-    public DoctorWithPatientsDto getPatientsByDoctorId(String doctorId) throws Exception {
+    public DoctorWithAssignedPatientsDto getPatientsByDoctorId(String doctorId) throws Exception {
         validator.validateNonEmptyString(doctorId, messageUtil.getMessage(MessageConstants.DOCTOR_ID_CANNOT_BE_EMPTY));
         UUID validatedDoctorId = validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID);
         DoctorModel doctorModel = doctorRepository.findById(validatedDoctorId)
@@ -161,6 +161,6 @@ public class DoctorPatientAssignmentService {
                     .build();
             patientsList.add(patientDto);
         }
-        return new DoctorWithPatientsDto(doctorDto, patientsList);
+        return new DoctorWithAssignedPatientsDto(doctorDto, patientsList);
     }
 }

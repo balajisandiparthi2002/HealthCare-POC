@@ -3,7 +3,7 @@ package com.theelixrlabs.healthcare.controller;
 import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.constants.DoctorPatientAssignmentConstants;
 import com.theelixrlabs.healthcare.dto.DoctorPatientAssignmentDto;
-import com.theelixrlabs.healthcare.dto.DoctorWithPatientsDto;
+import com.theelixrlabs.healthcare.dto.DoctorWithAssignedPatientsDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.DoctorPatientAssignmentService;
 import jakarta.validation.Valid;
@@ -55,8 +55,8 @@ public class DoctorPatientAssignmentController {
      * @throws Exception If any error occurs during the retrieval process, an exception is thrown.
      */
     @GetMapping(ApiPathsConstant.PATIENTS_BY_DOCTOR_ID_ENDPOINT)
-    public ResponseEntity<SuccessResponse<DoctorWithPatientsDto>> getPatientsByDoctorId(@RequestParam(DoctorPatientAssignmentConstants.DOCTOR_ID_PARAM) String doctorId) throws Exception {
-        DoctorWithPatientsDto doctorWithPatientsDto = doctorPatientAssignmentService.getPatientsByDoctorId(doctorId);
+    public ResponseEntity<SuccessResponse<DoctorWithAssignedPatientsDto>> getPatientsByDoctorId(@RequestParam(DoctorPatientAssignmentConstants.DOCTOR_ID_PARAM) String doctorId) throws Exception {
+        DoctorWithAssignedPatientsDto doctorWithPatientsDto = doctorPatientAssignmentService.getPatientsByDoctorId(doctorId);
         return ResponseEntity.ok(new SuccessResponse<>(true, doctorWithPatientsDto, null));
     }
 }

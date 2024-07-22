@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @SuperBuilder
-public class DoctorWithPatientsDto {
+public class DoctorWithAssignedPatientsDto {
     private DoctorDto doctor;
-    private List<PatientDto> patients;
+    private List<PatientDto> assignedPatientsList;
 }
