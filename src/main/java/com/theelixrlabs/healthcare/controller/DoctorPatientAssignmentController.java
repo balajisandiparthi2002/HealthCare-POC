@@ -1,8 +1,7 @@
 package com.theelixrlabs.healthcare.controller;
 
-import com.theelixrlabs.healthcare.constants.DoctorPatientAssignmentConstants;
+import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.dto.DoctorPatientAssignmentDto;
-import com.theelixrlabs.healthcare.exceptionHandler.CustomException;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.DoctorPatientAssignmentService;
 import jakarta.validation.Valid;
@@ -27,8 +26,20 @@ public class DoctorPatientAssignmentController {
      * @param doctorPatientAssignmentDto : DTO object containing doctorId and patientId.
      * @return ResponseEntity containing a success response with created dto.
      */
-    @PostMapping(DoctorPatientAssignmentConstants.ASSIGN_DOCTOR_TO_PATIENT_URL)
-    public ResponseEntity<SuccessResponse<DoctorPatientAssignmentDto>> assignDoctorToPatient(@Valid @RequestBody DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws CustomException {
-        return new ResponseEntity<>(new SuccessResponse<>(true, doctorPatientAssignmentService.assignDoctorToPatient(doctorPatientAssignmentDto)), HttpStatus.OK);
+    @PostMapping(ApiPathsConstant.ASSIGN_DOCTOR_TO_PATIENT_URL)
+    public ResponseEntity<SuccessResponse<DoctorPatientAssignmentDto>> assignDoctorToPatient(@Valid @RequestBody DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws Exception {
+        return new ResponseEntity<>(new SuccessResponse<>(true, doctorPatientAssignmentService.assignDoctorToPatient(doctorPatientAssignmentDto), null), HttpStatus.OK);
+    }
+
+    /**
+     * End point to  unassign doctor from patient based on provided dto.
+     *
+     * @param doctorPatientAssignmentDto : DTO object containing doctorId and patientId.
+     * @return ResponseEntity containing a success response with created dto.
+     */
+    @PostMapping(ApiPathsConstant.UNASSIGN_DOCTOR_FROM_PATIENT_URL)
+    public ResponseEntity<SuccessResponse<DoctorPatientAssignmentDto>> unassignDoctorFromPatient(@Valid @RequestBody DoctorPatientAssignmentDto doctorPatientAssignmentDto) throws Exception{
+        doctorPatientAssignmentService.unassignDoctorFromPatient(doctorPatientAssignmentDto);
+        return new ResponseEntity<>(new SuccessResponse<>(true, null, null), HttpStatus.OK);
     }
 }

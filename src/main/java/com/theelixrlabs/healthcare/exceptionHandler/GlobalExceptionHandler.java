@@ -9,7 +9,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,19 +37,73 @@ public class GlobalExceptionHandler {
     /**
      * Exception handler for custom exceptions and validations.
      *
-     * @param customException customException instance thrown during runtime.
+     * @param dataException customException instance thrown during runtime.
      * @return ResponseEntity failure response with error messages.
      */
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<FailureResponse> handleExistingData(CustomException customException) {
+    @ExceptionHandler(DataException.class)
+    public ResponseEntity<FailureResponse> handleCustomException(DataException dataException) {
         List<String> errors = new ArrayList<>();
-        errors.add(customException.getMessage());
+        errors.add(dataException.getMessage());
         return new ResponseEntity<>(new FailureResponse(false, errors), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<FailureResponse> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException) {
-        List<String> errorMessagesList = Collections.singletonList(resourceNotFoundException.getMessage());
+    /**
+     * Exception handler for custom exceptions and validations.
+     *
+     * @param doctorNotFoundException doctorNotFoundException instance thrown during runtime.
+     * @return ResponseEntity failure response with error messages.
+     */
+    @ExceptionHandler(DoctorNotFoundException.class)
+    public ResponseEntity<FailureResponse> handleDoctorNotFoundException(DoctorNotFoundException doctorNotFoundException) {
+        List<String> errorMessagesList = Collections.singletonList(doctorNotFoundException.getMessage());
         return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Exception handler for custom exceptions and validations.
+     *
+     * @param doctorException doctorException instance thrown during runtime.
+     * @return ResponseEntity failure response with error messages.
+     */
+    @ExceptionHandler(DoctorException.class)
+    public ResponseEntity<FailureResponse> handleDoctorException(DoctorException doctorException) {
+        List<String> errorMessagesList = Collections.singletonList(doctorException.getMessage());
+        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Exception handler for custom exceptions and validations.
+     *
+     * @param patientNotFoundException patientNotFoundException instance thrown during runtime.
+     * @return ResponseEntity failure response with error messages.
+     */
+    @ExceptionHandler(PatientNotFoundException.class)
+    public ResponseEntity<FailureResponse> handlePatientNotFoundException(PatientNotFoundException patientNotFoundException) {
+        List<String> errorMessagesList = Collections.singletonList(patientNotFoundException.getMessage());
+        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Exception handler for custom exceptions and validations.
+     *
+     * @param patientException patientException instance thrown during runtime.
+     * @return ResponseEntity failure response with error messages.
+     */
+    @ExceptionHandler(PatientException.class)
+    public ResponseEntity<FailureResponse> handlePatientException(PatientException patientException) {
+        List<String> errorMessagesList = Collections.singletonList(patientException.getMessage());
+        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Exception handler for custom exceptions and validations.
+     *
+     * @param doctorPatientAssignmentException doctorPatientAssignmentException instance thrown during runtime.
+     * @return ResponseEntity failure response with error messages.
+     */
+    @ExceptionHandler(DoctorPatientAssignmentException.class)
+    public ResponseEntity<FailureResponse> handleDoctorPatientAssignmentException(DoctorPatientAssignmentException doctorPatientAssignmentException) {
+        List<String> errorMessagesList = Collections.singletonList(doctorPatientAssignmentException.getMessage());
+        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.BAD_REQUEST);
     }
 }
