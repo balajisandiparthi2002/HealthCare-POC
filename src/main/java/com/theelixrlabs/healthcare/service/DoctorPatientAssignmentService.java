@@ -94,7 +94,7 @@ public class DoctorPatientAssignmentService {
             throw new DoctorNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.DOCTOR_NOT_FOUND_KEY));
         }
         if (!patientRepository.existsById(patientId)) {
-            throw new PatientNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_NOT_FOUND_KEY));
+            throw new PatientNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_ID_NOT_FOUND_KEY));
         }
     }
 
@@ -151,7 +151,7 @@ public class DoctorPatientAssignmentService {
         List<PatientDto> patientsList = new ArrayList<>();
         for (DoctorPatientAssignmentModel doctorPatientAssignment : doctorPatientAssignmentsList) {
             PatientModel patientModel = patientRepository.findById(doctorPatientAssignment.getPatientId())
-                    .orElseThrow(() -> new PatientNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_NOT_FOUND_KEY)));
+                    .orElseThrow(() -> new PatientNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_ID_NOT_FOUND_KEY)));
             PatientDto patientDto = PatientDto.builder()
                     .id(patientModel.getId())
                     .patientFirstName(patientModel.getPatientFirstName())
