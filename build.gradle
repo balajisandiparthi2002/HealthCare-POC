@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.1-SNAPSHOT'
 	id 'io.spring.dependency-management' version '1.1.5'
+	id 'com.palantir.docker' version '0.36.0'
 }
 
 group = 'com.theelixrlabs'
@@ -22,6 +23,14 @@ configurations {
 repositories {
 	mavenCentral()
 	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+docker {
+	name 'healthcare-poc'
+	dockerfile = file('Dockerfile')
+	files fileTree('build/libs'){
+		include 'HealthCare-POC-0.0.1-SNAPSHOT.jar'
+	}
 }
 
 dependencies {
