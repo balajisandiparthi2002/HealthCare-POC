@@ -5,7 +5,6 @@ import com.theelixrlabs.healthcare.exceptionHandler.DoctorException;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
 import com.theelixrlabs.healthcare.repository.DoctorPatientAssignmentRepository;
 import com.theelixrlabs.healthcare.model.DoctorModel;
-import com.theelixrlabs.healthcare.model.DoctorPatientAssignmentModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
@@ -42,8 +41,7 @@ public class DoctorService {
      * @return true if the doctor is assigned to at least one patient, false otherwise.
      */
     private boolean isDoctorAssignedToPatient(UUID validDoctorId) {
-        Optional<DoctorPatientAssignmentModel> doctorAssignmentList = doctorPatientAssignmentRepository.findByDoctorIdAndDateOfUnassignmentNull(validDoctorId);
-        return doctorAssignmentList.isPresent();
+        return doctorPatientAssignmentRepository.existsByDoctorIdAndDateOfUnassignmentNull(validDoctorId);
     }
 
     /**
@@ -52,7 +50,7 @@ public class DoctorService {
      * @param doctorDto DoctorDto object containing doctor information.
      * @return The saved dto object.
      */
-    public DoctorDto saveDoctor(DoctorDto doctorDto) throws Exception{
+    public DoctorDto saveDoctor(DoctorDto doctorDto) throws Exception {
         validator.validateDoctor(doctorDto);
         String aadhaarNumber = doctorDto.getAadhaarNumber();
         String formattedAadhaarNumber = aadhaarNumber.substring(0, 4) + StringUtils.SPACE + aadhaarNumber.substring(4, 8) + StringUtils.SPACE + aadhaarNumber.substring(8, 12);
@@ -117,7 +115,13 @@ public class DoctorService {
         }
         List<DoctorDto> doctorDtoList = new ArrayList<>();
         for (DoctorModel doctorModel : doctorModelList) {
-            DoctorDto doctorDto = DoctorDto.builder().id(doctorModel.getId()).firstName(doctorModel.getFirstName()).lastName(doctorModel.getLastName()).department(doctorModel.getDepartment()).aadhaarNumber(doctorModel.getAadhaarNumber()).build();
+            DoctorDto doctorDto = DoctorDto.builder()
+                    .id(doctorModel.getId())
+                    .firstName(doctorModel.getFirstName())
+                    .lastName(doctorModel.getLastName())
+                    .department(doctorModel.getDepartment())
+                    .aadhaarNumber(doctorModel.getAadhaarNumber())
+                    .build();
             doctorDtoList.add(doctorDto);
         }
         return doctorDtoList;
