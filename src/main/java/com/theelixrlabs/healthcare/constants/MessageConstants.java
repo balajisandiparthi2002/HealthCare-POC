@@ -14,6 +14,7 @@ public class MessageConstants {
     public static final String DOCTOR_DELETION_FAILED_ASSIGNED_TO_PATIENT = "doctor.deletion.failed.assigned.to.patient";
     public static final String DOCTOR_FIRST_NAME_SHOULD_BE_MANDATORY = "{doctor.first.name.mandatory}";
     public static final String DOCTOR_FIRST_NAME_SHOULD_NOT_BE_EMPTY = "doctor.first.name.should.not.be.empty";
+    public static final String DOCTOR_ID_CANNOT_BE_EMPTY = "doctor.id.cannot.be.empty";
     public static final String DOCTOR_ID_IS_MANDATORY = "{validation.doctor.id.mandatory}";
     public static final String DOCTOR_ID_NOT_FOUND = "doctor.id.not.found";
     public static final String DOCTOR_INVALID_AADHAAR_NUMBER = "doctor.invalid.aadhaar.number";

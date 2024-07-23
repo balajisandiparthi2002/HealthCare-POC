@@ -13,6 +13,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import java.util.UUID;
 
+/**
+ * Validator class for validating various healthcare-related DTOs and parameters.
+ * This class provides methods for validating UUIDs, non-empty strings, doctor details, and patient details.
+ */
 @Component
 public class Validator {
 
@@ -26,11 +30,11 @@ public class Validator {
      * Validates and converts a given string representation of UUID into a UUID object.
      * Throws a CustomException with a specific error message if the string is not a valid UUID format.
      *
-     * @param id    The string representation of UUID to validate and convert.
-     * @param errorMessage    The error message to use in the CustomException if validation fails.
+     * @param id           The string representation of UUID to validate and convert.
+     * @param errorMessage The error message to use in the CustomException if validation fails.
      * @return The UUID object parsed from the input string.
      */
-    public UUID validateAndConvertToUUID(String id, String errorMessage) throws DataException{
+    public UUID validateAndConvertToUUID(String id, String errorMessage) throws DataException {
         UUID uuid;
         try {
             uuid = UUID.fromString(id);
@@ -68,7 +72,7 @@ public class Validator {
      *
      * @param inputString The string to be validated.
      */
-    public void validateNonEmptyString(String inputString, String errorMessage) throws DataException{
+    public void validateNonEmptyString(String inputString, String errorMessage) throws DataException {
         if (StringUtils.isBlank(inputString)) {
             throw new DataException(errorMessage);
         }
@@ -79,7 +83,7 @@ public class Validator {
      *
      * @param doctorDto Data transfer object containing doctor information.
      */
-    public void validateDoctor(DoctorDto doctorDto) throws DoctorException{
+    public void validateDoctor(DoctorDto doctorDto) throws DoctorException {
         if (doctorDto.getFirstName() != null) {
             if (doctorDto.getFirstName().isEmpty()) {
                 throw new DoctorException(messageUtil.getMessage(MessageConstants.DOCTOR_FIRST_NAME_SHOULD_NOT_BE_EMPTY));
@@ -116,7 +120,7 @@ public class Validator {
      *
      * @param patientDto Data transfer object containing patient information.
      */
-    public void validatePatchPatient(PatientDto patientDto) throws PatientException{
+    public void validatePatchPatient(PatientDto patientDto) throws PatientException {
         if (patientDto.getPatientFirstName() != null) {
             if (patientDto.getPatientFirstName().isEmpty()) {
                 throw new PatientException(messageUtil.getMessage(PatientConstants.FIRST_NAME_NOT_EMPTY_KEY));
