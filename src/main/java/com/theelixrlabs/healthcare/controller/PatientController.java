@@ -5,6 +5,7 @@ import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.dto.PatientDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.PatientService;
+import com.theelixrlabs.healthcare.utility.MessageUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +72,7 @@ public class PatientController {
      * @param patientName The partial name to search for patients. It matches both first and last names.
      * @return A ResponseEntity containing a SuccessResponse with the list of matching PatientDTO objects and HTTP status OK.
      */
-    @GetMapping(ApiPathsConstant.GET_PATIENTS_BY_NAME_ENDPOINT)
+    @GetMapping(ApiPathsConstant.PATIENTS_BY_NAME_ENDPOINT)
     public ResponseEntity<SuccessResponse<List<PatientDto>>> getPatientsByName(@RequestParam(PatientConstants.PATIENT_NAME_PARAM) String patientName) throws Exception {
         List<PatientDto> patientDtoList = patientService.getPatientsByName(patientName);
         return new ResponseEntity<>(new SuccessResponse<>(true, patientDtoList, null), HttpStatus.OK);

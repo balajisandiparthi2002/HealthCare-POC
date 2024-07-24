@@ -69,7 +69,7 @@ public class DoctorController {
      * @param doctorName the name of the doctor to search for
      * @return a ResponseEntity containing a SuccessResponse with a list of matching DoctorDto objects
      */
-    @GetMapping(ApiPathsConstant.GET_DOCTORS_BY_NAME_ENDPOINT)
+    @GetMapping(ApiPathsConstant.DOCTORS_BY_NAME_ENDPOINT)
     public ResponseEntity<SuccessResponse<List<DoctorDto>>> getDoctorsByName
     (@RequestParam(DoctorConstants.DOCTOR_NAME_PARAM) String doctorName) throws Exception {
         List<DoctorDto> doctorDtoList = doctorService.getDoctorsByName(doctorName);
