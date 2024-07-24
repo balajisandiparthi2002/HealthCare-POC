@@ -4,6 +4,7 @@ import com.theelixrlabs.healthcare.constants.ApiPathsConstant;
 import com.theelixrlabs.healthcare.constants.DoctorPatientAssignmentConstants;
 import com.theelixrlabs.healthcare.dto.DoctorPatientAssignmentDto;
 import com.theelixrlabs.healthcare.dto.DoctorWithAssignedPatientsDto;
+import com.theelixrlabs.healthcare.dto.PatientWithAssignedDoctorsDto;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.DoctorPatientAssignmentService;
 import jakarta.validation.Valid;
@@ -58,5 +59,17 @@ public class DoctorPatientAssignmentController {
     public ResponseEntity<SuccessResponse<DoctorWithAssignedPatientsDto>> getPatientsByDoctorId(@RequestParam(DoctorPatientAssignmentConstants.DOCTOR_ID_PARAM) String doctorId) throws Exception {
         DoctorWithAssignedPatientsDto doctorWithPatientsDto = doctorPatientAssignmentService.getPatientsByDoctorId(doctorId);
         return ResponseEntity.ok(new SuccessResponse<>(true, doctorWithPatientsDto, null));
+    }
+
+    /**
+     * GET endpoint to retrieve assigned doctors for a patient by patient ID.
+     *
+     * @param patientId The string representation of patient ID obtained from request parameter.
+     * @return ResponseEntity containing SuccessResponse with PatientWithAssignedDoctorsDto if successful, or error details if exception occurs.
+     * @throws Exception if there's an error during retrieval of assigned doctors.
+     */
+    @GetMapping(ApiPathsConstant.ASSIGNED_DOCTORS_BY_PATIENT_ID)
+    public ResponseEntity<SuccessResponse<PatientWithAssignedDoctorsDto>> getAssignedDoctorsByPatientId(@RequestParam String patientId) throws Exception {
+        return new ResponseEntity<>(new SuccessResponse<>(true, doctorPatientAssignmentService.getDoctorsByPatientId(patientId), null), HttpStatus.OK);
     }
 }
