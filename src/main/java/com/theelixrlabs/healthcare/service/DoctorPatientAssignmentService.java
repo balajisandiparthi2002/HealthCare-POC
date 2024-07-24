@@ -101,7 +101,7 @@ public class DoctorPatientAssignmentService {
     public PatientWithAssignedDoctorsDto getDoctorsByPatientId(String patientId) throws Exception {
         UUID validPatientId = validator.validateAndConvertToUUID(patientId, MessageConstants.INVALID_UUID);
         if (!patientRepository.existsById(validPatientId)) {
-            throw new PatientNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.INVALID_PATIENT_ID_KEY));
+            throw new PatientNotFoundException(messageUtil.getMessage(DoctorPatientAssignmentConstants.PATIENT_ID_NOT_FOUND_KEY));
         }
         List<PatientWithAssignedDoctorsDto> patientWithAssignedDoctorsDtoList = doctorPatientAssignmentRepository.getDoctorsByPatientId(validPatientId);
         if (patientWithAssignedDoctorsDtoList.isEmpty()) {
