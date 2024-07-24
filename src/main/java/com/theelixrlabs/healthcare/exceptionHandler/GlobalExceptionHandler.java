@@ -106,4 +106,17 @@ public class GlobalExceptionHandler {
         List<String> errorMessagesList = Collections.singletonList(doctorPatientAssignmentException.getMessage());
         return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * Exception handler method to handle any Exception thrown within the controller or service layer.
+     * It returns a ResponseEntity with a FailureResponse object containing the error messages and HTTP status code.
+     *
+     * @param exception The Exception that was thrown
+     * @return ResponseEntity containing a FailureResponse with error messages and HTTP status code INTERNAL_SERVER_ERROR
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<FailureResponse> handleExternalServerError(Exception exception) {
+        List<String> errorMessagesList = Collections.singletonList(exception.getMessage());
+        return new ResponseEntity<>(new FailureResponse(false, errorMessagesList), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
