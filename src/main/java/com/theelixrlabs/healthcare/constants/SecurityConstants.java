@@ -5,6 +5,6 @@ package com.theelixrlabs.healthcare.constants;
  */
 public class SecurityConstants {
     public static final String DEV_PROFILE_CONSTANT = "dev";
-    public static final String GOOGLE_JWK_SET_URI = "https://www.googleapis.com/oauth2/v3/certs";
-    public static final String RESPONSE_CONTENT_TYPE = "application/json";
+    public static final String GOOGLE_JWK_SET_URI = "${spring.security.oauth2.client.provider.google.jwk-set-uri}";
+    public static final String PROD_PROFILE_CONSTANT = "prod";
 }

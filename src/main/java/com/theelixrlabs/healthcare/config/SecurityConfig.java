@@ -2,6 +2,7 @@ package com.theelixrlabs.healthcare.config;
 
 import com.theelixrlabs.healthcare.constants.SecurityConstants;
 import com.theelixrlabs.healthcare.utility.AuthenticationEntryPointUtility;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
@@ -20,9 +22,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Profile(SecurityConstants.DEV_PROFILE_CONSTANT)
 public class SecurityConfig {
 
+
+    private final String JWK_SET_URI;
     private final AuthenticationEntryPointUtility authenticationEntryPointUtility;
 
-    public SecurityConfig(AuthenticationEntryPointUtility authenticationEntryPointUtility) {
+    public SecurityConfig(@Value(SecurityConstants.GOOGLE_JWK_SET_URI) String jwkSetUri, AuthenticationEntryPointUtility authenticationEntryPointUtility) {
+        JWK_SET_URI = jwkSetUri;
         this.authenticationEntryPointUtility = authenticationEntryPointUtility;
     }
 
@@ -53,6 +58,6 @@ public class SecurityConfig {
      */
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri(SecurityConstants.GOOGLE_JWK_SET_URI).build();
+        return NimbusJwtDecoder.withJwkSetUri(JWK_SET_URI).build();
     }
 }
