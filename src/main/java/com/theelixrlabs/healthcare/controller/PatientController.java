@@ -51,7 +51,7 @@ public class PatientController {
      * @return ResponseEntity containing a SuccessResponse with the Patient Associated with the ID and HTTP status 200 (OK)
      */
     @GetMapping(ApiPathsConstant.PATIENT_BY_ID_ENDPOINT)
-    public ResponseEntity<?> getPatientById(@PathVariable String patientId) throws Exception {
+    public ResponseEntity<SuccessResponse<PatientDto>> getPatientById(@PathVariable String patientId) throws Exception {
         return new ResponseEntity<>(new SuccessResponse<>(true, patientService.getPatientById(patientId), null), HttpStatus.OK);
     }
 
