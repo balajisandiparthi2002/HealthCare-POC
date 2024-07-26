@@ -69,7 +69,7 @@ public class PatchDoctorControllerTest {
      * @throws Exception if assertion or request fails
      */
     @Test
-    public void patchSuccessfulTest() throws Exception {
+    public void patchDoctorById_SuccessfulUpdate_ReturnsUpdatedDoctor() throws Exception {
         when(patchDoctorService.patchDoctorById(doctorId, doctorDto)).thenReturn(doctorDto);
         ResultActions response = mockMvc.perform(MockMvcRequestBuilders.patch("/doctor/" + doctorId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -87,7 +87,7 @@ public class PatchDoctorControllerTest {
      *  @throws Exception if assertion or request fails
      */
     @Test
-    public void patchTestInvalidUUID() throws Exception {
+    public void patchDoctorById_InvalidUUID_ReturnsBadRequestWithErrorMessage() throws Exception {
         String invalidUUId = "6890q372-780h-diu8-3";
         when(patchDoctorService.patchDoctorById(eq(invalidUUId), any())).thenThrow(new DoctorException("Invalid uuid"));
         ResultActions response = mockMvc.perform(MockMvcRequestBuilders.patch("/doctor/" + invalidUUId)

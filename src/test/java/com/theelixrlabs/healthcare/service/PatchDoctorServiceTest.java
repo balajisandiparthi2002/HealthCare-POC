@@ -78,7 +78,7 @@ public class PatchDoctorServiceTest {
      * @throws Exception if the patch operation fails
      */
     @Test
-    public void testPatchDoctorById_successfulPatch() throws Exception {
+    public void patchDoctorById_SuccessfulPatch_ReturnsUpdatedDoctorDto() throws Exception {
         when(validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID)).thenReturn(uuid);
         when(doctorRepository.findById(uuid)).thenReturn(Optional.ofNullable(doctorModel));
         when(doctorRepository.save(Mockito.any(DoctorModel.class))).thenReturn(doctorModel);
@@ -92,7 +92,7 @@ public class PatchDoctorServiceTest {
      * @throws DataException if the exception is not thrown as expected.
      */
     @Test
-    public void testPatchDoctorById_doctorNotFound() throws DataException {
+    public void patchDoctorById_DoctorNotFound_ThrowsDoctorNotFoundException() throws DataException {
         UUID uuid = UUID.fromString("44fdebfc-7f49-455f-b98b-7d5eef4fe4fb");
         String doctorId = uuid.toString();
         when(validator.validateAndConvertToUUID(doctorId, MessageConstants.INVALID_UUID))
