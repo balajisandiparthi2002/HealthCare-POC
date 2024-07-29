@@ -42,7 +42,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         String activeProfile = environment.getProperty(SecurityConstants.ACTIVE_PROFILE);
-        if (!activeProfile.equals(SecurityConstants.PROD_PROFILE_CONSTANT)) {
+        if (!activeProfile.equals(SecurityConstants.DEV_PROFILE_CONSTANT)) {
             httpSecurity
                     .authorizeHttpRequests(authorize -> authorize
                             .anyRequest().authenticated())
