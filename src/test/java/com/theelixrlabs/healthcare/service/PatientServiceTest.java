@@ -1,8 +1,8 @@
 package com.theelixrlabs.healthcare.service;
 
 import com.theelixrlabs.healthcare.constants.PatientConstants;
+import com.theelixrlabs.healthcare.constants.TestConstants;
 import com.theelixrlabs.healthcare.dto.PatientDto;
-import com.theelixrlabs.healthcare.exceptionHandler.PatientNotFoundException;
 import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.PatientRepository;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
@@ -18,7 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 /**
@@ -55,7 +57,7 @@ public class PatientServiceTest {
      * @throws Exception if anything fails
      */
     @Test
-    public void getPatientByIdSuccessTest() throws Exception {
+    public void getPatientById_Success() throws Exception {
         String patientId = patientModel.getId().toString();
         UUID validPatientId = UUID.fromString(patientId);
         when(validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY)).thenReturn(validPatientId);
@@ -76,14 +78,14 @@ public class PatientServiceTest {
      * @throws Exception if anything fails
      */
     @Test
-    public void getPatientByIdFailureTest() throws Exception {
+    public void getPatientById_Failure() throws Exception {
         String patientId = UUID.randomUUID().toString();
         UUID validPatientId = UUID.fromString(patientId);
         when(validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY)).thenReturn(validPatientId);
         when(patientRepository.findById(validPatientId)).thenReturn(Optional.empty());
-        when(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY)).thenReturn("Patient not found");
-        PatientNotFoundException patientNotFoundException =
-                assertThrows(PatientNotFoundException.class, () -> patientService.getPatientById(patientId));
-        assertEquals("Patient not found", patientNotFoundException.getMessage());
+        when(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY)).thenReturn(TestConstants.PATIENT_NOT_FOUND_MESSAGE);
+        Exception actualExceptionResponse =
+                assertThrows(Exception.class, () -> patientService.getPatientById(patientId));
+        assertEquals(TestConstants.PATIENT_NOT_FOUND_MESSAGE, actualExceptionResponse.getMessage());
     }
 }
