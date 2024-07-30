@@ -123,7 +123,6 @@ public class PatientService {
         if (isPatientAssignedToDoctor(validPatientId)) {
             throw new PatientException(messageUtil.getMessage(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR));
         }
-        System.out.println("It is working...");
         patientRepository.deleteById(validPatientId);
         return messageUtil.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, new Object[]{validPatientId});
     }
