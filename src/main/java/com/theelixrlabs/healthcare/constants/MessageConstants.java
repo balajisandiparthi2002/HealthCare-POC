@@ -23,8 +23,9 @@ public class MessageConstants {
     public static final String DOCTOR_LAST_NAME_SHOULD_BE_MANDATORY = "{doctor.last.name.mandatory}";
     public static final String DOCTOR_LAST_NAME_SHOULD_NOT_BE_EMPTY = "doctor.last.name.should.not.be.empty";
     public static final String DOCTOR_NAME_CANNOT_BE_EMPTY = "doctor.name.cannot.be.empty";
-    public static final String INVALID_UUID = "invalid.uuid";
     public static final String DOCTOR_NAME_NOT_FOUND = "doctor.name.not.found";
+    public static final String INVALID_UUID = "invalid.uuid";
+    public static final String NOT_AUTHORISED = "user.not.authorized";
     public static final String PATIENT_AADHAAR_NUMBER_EXISTS = "patient.aadhaar.number.exists";
     public static final String PATIENT_AADHAAR_NUMBER_INVALID = "{patient.aadhaar.number.invalid}";
     public static final String PATIENT_AADHAAR_NUMBER_NOTNULL = "{patient.aadhaar.number.notnull}";
