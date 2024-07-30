@@ -1,5 +1,6 @@
 package com.theelixrlabs.healthcare.controller;
 
+import com.theelixrlabs.healthcare.constants.TestConstants;
 import com.theelixrlabs.healthcare.exceptionHandler.PatientNotFoundException;
 import com.theelixrlabs.healthcare.service.PatientService;
 import org.junit.jupiter.api.Test;
@@ -24,22 +25,24 @@ public class PatientControllerTest {
 
     @Test
     public void deletePatientById_Success() throws Exception {
-        String patientId = "641cb90a-9d64-468d-8e17-7efdd26482c3";
-        when(patientService.deletePatientById(patientId)).thenReturn("Patient deleted successfully.");
-        mockMvc.perform(delete("/patient/{patientId}", patientId))
+        String patientId = TestConstants.PATIENT_ID;
+        when(patientService.deletePatientById(patientId)).thenReturn(TestConstants.PATIENT_DELETED_SUCCESSFULLY);
+        String expectedResult = TestConstants.PATIENT_DELETED_SUCCESSFULLY;
+        mockMvc.perform(delete(TestConstants.PATIENT_BY_ID, patientId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.responseMessage").value("Patient deleted successfully."));
+                .andExpect(jsonPath(TestConstants.SUCCESS_EXPRESSION).value(true))
+                .andExpect(jsonPath(TestConstants.RESPONSE_MESSAGE_EXPRESSION).value(expectedResult));
     }
 
     @Test
     public void deletePatientById_Failure() throws Exception {
-        String patientId = "641cb90a-9d64-468d-8e17-7efdd26482c3";
-        when(patientService.deletePatientById(patientId)).thenThrow(new PatientNotFoundException("Patient not found."));
-        mockMvc.perform(delete("/patient/{patientId}", patientId))
+        String patientId = TestConstants.PATIENT_ID;
+        when(patientService.deletePatientById(patientId)).thenThrow(new PatientNotFoundException(TestConstants.PATIENT_NOT_FOUND));
+        String expectedResult = TestConstants.PATIENT_NOT_FOUND;
+        mockMvc.perform(delete(TestConstants.PATIENT_BY_ID, patientId))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors[0]").value("Patient not found."));
+                .andExpect(jsonPath(TestConstants.SUCCESS_EXPRESSION).value(false))
+                .andExpect(jsonPath(TestConstants.ERRORS_ARRAY_EXPRESSION).isArray())
+                .andExpect(jsonPath(TestConstants.TEST_RESULT_ARRAY_EXPRESSION).value(expectedResult));
     }
 }

@@ -42,7 +42,7 @@ public class PatientService {
      * @param validPatientId The UUID of the patient to check assignment for.
      * @return true if the patient is assigned to at least one doctor, false otherwise.
      */
-    public boolean isPatientAssignedToDoctor(UUID validPatientId) {
+    private boolean isPatientAssignedToDoctor(UUID validPatientId) {
         Optional<DoctorPatientAssignmentModel> patientAssignmentList = doctorPatientAssignmentRepository.findByPatientIdAndDateOfUnassignmentNull(validPatientId);
         return patientAssignmentList.isPresent();
     }
@@ -123,6 +123,7 @@ public class PatientService {
         if (isPatientAssignedToDoctor(validPatientId)) {
             throw new PatientException(messageUtil.getMessage(PatientConstants.PATIENT_DELETION_FAILED_ASSIGNED_TO_DOCTOR));
         }
+        System.out.println("It is working...");
         patientRepository.deleteById(validPatientId);
         return messageUtil.getMessage(PatientConstants.PATIENT_DELETE_SUCCESS_MESSAGE, new Object[]{validPatientId});
     }
