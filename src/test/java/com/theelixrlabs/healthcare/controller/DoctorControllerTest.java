@@ -87,7 +87,7 @@ public class DoctorControllerTest {
      * @throws Exception if any error occurs during the test
      */
     @Test
-    public void getDoctorsByName_Failure() throws Exception {
+    public void getDoctorsByName_ReturnsNotFoundException() throws Exception {
         String doctorName = TestConstants.DOCTOR_NAME;
         when(doctorService.getDoctorsByName(doctorName)).thenThrow(new DoctorNotFoundException(TestConstants.DOCTOR_NAME_NOT_FOUND));
         ResultActions response = mockMvc.perform(get(ApiPathsConstant.DOCTORS_BY_NAME_ENDPOINT)

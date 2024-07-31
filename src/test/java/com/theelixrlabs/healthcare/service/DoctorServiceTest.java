@@ -8,6 +8,8 @@ import com.theelixrlabs.healthcare.model.DoctorModel;
 import com.theelixrlabs.healthcare.repository.DoctorRepository;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
 import com.theelixrlabs.healthcare.validation.Validator;
+import org.assertj.core.api.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -92,12 +94,13 @@ public class DoctorServiceTest {
      * @throws Exception if any error occurs during the test
      */
     @Test
-    public void getDoctorsByName_Failure() throws Exception {
+    public void getDoctorsByName_ReturnsNotFoundException() throws Exception {
         String doctorName = TestConstants.DOCTOR_NAME;
         when(messageUtil.getMessage(MessageConstants.DOCTOR_NAME_NOT_FOUND)).thenReturn(TestConstants.DOCTOR_NAME_NOT_FOUND);
         when(doctorRepository.searchByDoctorName(doctorName)).thenReturn(new ArrayList<>());
         try {
             doctorService.getDoctorsByName(doctorName);
+            Assertions.fail("Expected DoctorNotFoundException was not thrown.");
         } catch (DoctorNotFoundException doctorNotFoundException) {
             assertEquals(TestConstants.DOCTOR_NAME_NOT_FOUND, doctorNotFoundException.getMessage());
         }
