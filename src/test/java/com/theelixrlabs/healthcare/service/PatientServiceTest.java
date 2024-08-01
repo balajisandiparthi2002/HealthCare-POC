@@ -3,6 +3,7 @@ package com.theelixrlabs.healthcare.service;
 import com.theelixrlabs.healthcare.constants.PatientConstants;
 import com.theelixrlabs.healthcare.constants.TestConstants;
 import com.theelixrlabs.healthcare.dto.PatientDto;
+import com.theelixrlabs.healthcare.exceptionHandler.PatientNotFoundException;
 import com.theelixrlabs.healthcare.model.PatientModel;
 import com.theelixrlabs.healthcare.repository.PatientRepository;
 import com.theelixrlabs.healthcare.utility.MessageUtil;
@@ -21,6 +22,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -58,7 +60,7 @@ public class PatientServiceTest {
      */
     @Test
     public void getPatientById_Success() throws Exception {
-        String patientId = patientModel.getId().toString();
+        String patientId = String.valueOf(patientModel.getId());
         UUID validPatientId = UUID.fromString(patientId);
         when(validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY)).thenReturn(validPatientId);
         when(patientRepository.findById(validPatientId)).thenReturn(Optional.of(patientModel));
@@ -68,7 +70,7 @@ public class PatientServiceTest {
         assertEquals(patientModel.getPatientFirstName(), patientDto.getPatientFirstName());
         assertEquals(patientModel.getPatientLastName(), patientDto.getPatientLastName());
         assertEquals(patientModel.getPatientAadhaarNumber(), patientDto.getPatientAadhaarNumber());
-        Mockito.verify(patientRepository, Mockito.times(1)).findById(validPatientId);
+        verify(patientRepository, Mockito.times(1)).findById(validPatientId);
     }
 
     /**
@@ -79,13 +81,13 @@ public class PatientServiceTest {
      */
     @Test
     public void getPatientById_Failure() throws Exception {
-        String patientId = UUID.randomUUID().toString();
+        String patientId = String.valueOf(UUID.randomUUID());
         UUID validPatientId = UUID.fromString(patientId);
         when(validator.validateAndConvertToUUID(patientId, PatientConstants.INVALID_UUID_KEY)).thenReturn(validPatientId);
         when(patientRepository.findById(validPatientId)).thenReturn(Optional.empty());
         when(messageUtil.getMessage(PatientConstants.PATIENT_NOT_FOUND_KEY)).thenReturn(TestConstants.PATIENT_NOT_FOUND_MESSAGE);
         Exception actualExceptionResponse =
-                assertThrows(Exception.class, () -> patientService.getPatientById(patientId));
+                assertThrows(PatientNotFoundException.class, () -> patientService.getPatientById(patientId));
         assertEquals(TestConstants.PATIENT_NOT_FOUND_MESSAGE, actualExceptionResponse.getMessage());
     }
 }
