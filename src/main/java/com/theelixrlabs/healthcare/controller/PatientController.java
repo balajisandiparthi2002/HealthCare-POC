@@ -62,7 +62,7 @@ public class PatientController {
      */
     @DeleteMapping(ApiPathsConstant.PATIENT_BY_ID_ENDPOINT)
     public ResponseEntity<SuccessResponse<String>> deletePatientById(@PathVariable String patientId) throws Exception {
-        return new ResponseEntity<>(new SuccessResponse<>(true, patientService.deletePatientById(patientId), null), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResponse<>(true, null, patientService.deletePatientById(patientId)), HttpStatus.OK);
     }
 
     /**

@@ -23,19 +23,20 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Contains test methods for Patient ControllerTest
- * uses mock mvc to simulate Http requests and verify the behaviour of each method
- */
 public class PatientControllerTest {
 
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+
     @Mock
     private PatientService patientService;
+
+    private ObjectMapper objectMapper;
+
     private PatientDto patientDto;
 
     @BeforeEach
@@ -51,6 +52,30 @@ public class PatientControllerTest {
                 .patientLastName("Sahu")
                 .patientAadhaarNumber("456783452698")
                 .build();
+    }
+
+    @Test
+    public void deletePatientById_Success() throws Exception {
+        String patientId = TestConstants.PATIENT_ID;
+        when(patientService.deletePatientById(patientId)).thenReturn(TestConstants.PATIENT_DELETED_SUCCESSFULLY);
+        String expectedResult = TestConstants.PATIENT_DELETED_SUCCESSFULLY;
+        mockMvc.perform(delete(TestConstants.PATIENT_BY_ID, patientId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(TestConstants.SUCCESS_EXPRESSION).value(true))
+                .andExpect(jsonPath(TestConstants.RESPONSE_MESSAGE_EXPRESSION).value(expectedResult));
+    }
+
+    @Test
+    public void deletePatientById_Failure() throws Exception {
+        String patientId = TestConstants.PATIENT_ID;
+        when(patientService.deletePatientById(patientId)).thenThrow(new PatientNotFoundException(TestConstants.PATIENT_NOT_FOUND));
+        String expectedResult = TestConstants.PATIENT_NOT_FOUND;
+        mockMvc.perform(delete(TestConstants.PATIENT_BY_ID, patientId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath(TestConstants.SUCCESS_EXPRESSION).value(false))
+                .andExpect(jsonPath(TestConstants.ERRORS_ARRAY_EXPRESSION).isArray())
+                .andExpect(jsonPath(TestConstants.TEST_RESULT_ARRAY_EXPRESSION).value(expectedResult));
+
     }
 
     /**
@@ -81,12 +106,12 @@ public class PatientControllerTest {
     @Test
     public void getPatientById_Failure() throws Exception {
         String patientId = String.valueOf(UUID.randomUUID());
-        when(patientService.getPatientById(patientId)).thenThrow(new PatientNotFoundException(TestConstants.PATIENT_NOT_FOUND_MESSAGE));
+        when(patientService.getPatientById(patientId)).thenThrow(new PatientNotFoundException(TestConstants.PATIENT_NOT_FOUND));
         ResultActions response = mockMvc.perform(get(ApiPathsConstant.PATIENT_BY_ID_ENDPOINT, patientId)
                 .contentType(MediaType.APPLICATION_JSON));
         response.andExpect(status().isNotFound());
         String actualResponseData = response.andReturn().getResponse().getContentAsString();
-        FailureResponse failureResponse = new FailureResponse(false, Arrays.asList(TestConstants.PATIENT_NOT_FOUND_MESSAGE));
+        FailureResponse failureResponse = new FailureResponse(false, Arrays.asList(TestConstants.PATIENT_NOT_FOUND));
         String expectedResponseData = objectMapper.writeValueAsString(failureResponse);
         assertEquals(expectedResponseData, actualResponseData);
     }
