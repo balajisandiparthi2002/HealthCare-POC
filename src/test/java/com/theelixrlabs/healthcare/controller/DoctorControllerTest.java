@@ -6,17 +6,19 @@ import com.theelixrlabs.healthcare.constants.DoctorConstants;
 import com.theelixrlabs.healthcare.constants.TestConstants;
 import com.theelixrlabs.healthcare.dto.DoctorDto;
 import com.theelixrlabs.healthcare.exceptionHandler.DoctorNotFoundException;
+import com.theelixrlabs.healthcare.exceptionHandler.GlobalExceptionHandler;
 import com.theelixrlabs.healthcare.response.FailureResponse;
 import com.theelixrlabs.healthcare.response.SuccessResponse;
 import com.theelixrlabs.healthcare.service.DoctorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,22 +31,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Contains test methods for Doctor Controller.
  * Uses MockMvc to simulate HTTP requests and verify the behavior of each method.
  */
-@WebMvcTest(DoctorController.class)
 public class DoctorControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @Mock
     private DoctorService doctorService;
 
     private List<DoctorDto> doctorDtoList;
 
     @BeforeEach
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(new DoctorController(doctorService))
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
+        objectMapper = new ObjectMapper();
         doctorDtoList = new ArrayList<>();
         doctorDtoList.add(DoctorDto.builder()
                 .id(UUID.randomUUID())

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -44,6 +45,7 @@ public class SecurityConfig {
         String activeProfile = environment.getProperty(SecurityConstants.ACTIVE_PROFILE);
         if (!activeProfile.equals(SecurityConstants.DEV_PROFILE_CONSTANT)) {
             httpSecurity
+                    .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(authorize -> authorize
                             .anyRequest().authenticated())
                     .oauth2Login(withDefaults())
@@ -54,6 +56,7 @@ public class SecurityConfig {
             return httpSecurity.build();
         }
         httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().permitAll());
         return httpSecurity.build();
