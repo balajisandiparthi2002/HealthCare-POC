@@ -55,6 +55,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: hc-build-artifact
+          name: hcpoc-build-artifact
           path: artifact.tar.gz
 
