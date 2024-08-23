@@ -50,11 +50,11 @@ jobs:
           category: "/language:${{matrix.language}}"
 
       - name: Create Artifact
-        run: tar -czf hc-artifact.tar.gz build/libs/
+        run: tar -czf artifact.tar.gz build/libs/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build-artifact
-          path: hc-artifact.tar.gz
+          name: hc-build-artifact
+          path: artifact.tar.gz
 
